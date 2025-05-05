@@ -1,9 +1,6 @@
-using UnityEngine;
-
-public class ColorTileType
+public class ColorTileType : DropTIleType
 {
-    public bool IsDropTile()
-    {
-        return true;
+    public void Blasted(ref Tile[,] tileMap,ref Tile thisTile, TileUtils tileUtils){
+        // if()
     }
 }

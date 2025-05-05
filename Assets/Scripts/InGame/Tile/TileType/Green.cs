@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Green
+public class Green : ColorTileType, ITileType
 {
-    
+    //상속 참조
 }

@@ -1,14 +1,9 @@
 using UnityEngine;
 
-public class Blast : ITileType
+public class Blast : NotDropTileType, ITileType
 {
-    public bool IsDropTile()
+    public void Blasted(ref Tile[,] tileMap, ref Tile thisTile, TileUtils tileUtils)
     {
-        return false;
-    }
-
-    public void Blasted(ref Tile[,] tileMap, ref Tile thisTile)
-    {
-        throw new System.NotImplementedException("Blast is not implemented yet.");
+        throw new System.NotImplementedException("Blast can't be Blasted.");
     }
 }

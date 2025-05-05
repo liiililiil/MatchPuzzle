@@ -12,7 +12,7 @@ public struct StagePlacement{
 
 [System.Serializable]
 public struct StageQuest{
-    public tileType targetTileType;
+    public ITileType targetTileType;
     public byte targetBlastCount;
     public byte timeLimit;
     public byte movementLimit;

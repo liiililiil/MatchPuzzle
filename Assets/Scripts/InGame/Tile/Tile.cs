@@ -7,10 +7,7 @@ public class Tile
     public Chain totalChain;
     public ITileType tileType;
 
-    public void SetTileType(ITileType newTileType)
-    {
-        tileType = newTileType;
-    }
+
 
     
 

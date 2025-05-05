@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class YBomb
+public class YBomb : NotDropTileType, ITileType
 {
-    
+    public void Blasted(ref Tile[,] tileMap, ref Tile thisTIl, TileUtils tileUtils){
+
+    }
 }

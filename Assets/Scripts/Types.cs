@@ -1,26 +1,25 @@
 using System;
 using System.Runtime.CompilerServices;
 
-[Serializable]
-public enum tileType : byte{
-    Blast,
-    Block,
-    Blue,
-    Green,
-    Purple,
-    Red,
-    Box,
-    XBomb,
-    YBomb,
-    BigBomb,
-    ColorBomb
-}
+// [Serializable]
+// public enum tileType : byte{
+//     Blast,
+//     Block,
+//     Blue,
+//     Green,
+//     Purple,
+//     Red,
+//     Box,
+//     XBomb,
+//     YBomb,
+//     BigBomb,
+//     ColorBomb
+// }
 
 public struct Chain{
     private ushort _self;
     private ushort _total;
-    public ushort self
-{
+    public ushort self{
         get => _self;
         set => _self = value;
     }
@@ -67,8 +66,10 @@ public struct Vector2Byte{
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 
     public Vector2Byte(short x, short y){
-        if(x > 255 || y > 255 || x < 0 || y < 0) throw new ArgumentOutOfRangeException($"x or y is out of range 0~255 (x:{x}, y:{y})");
-        _x = (byte)x;
+        const Byte MAX_RANGE = 255;
+        const Byte MIN_RANGE = 0;
+        if(x > MAX_RANGE || y > MAX_RANGE || x < MIN_RANGE || y < MIN_RANGE) throw new ArgumentOutOfRangeException($"x or y is out of range 0~255 (x:{x}, y:{y})");
+        _x = (byte)x;  
         _y = (byte)y;
     }
     

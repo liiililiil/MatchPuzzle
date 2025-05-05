@@ -1,14 +1,10 @@
 using UnityEngine;
 
-public class Block : ITileType
+public class Block : NotDropTileType, ITileType
 {
-    public bool IsDropTile()
-    {
-        return false;
-    }  
 
-    public void Blasted(ref Tile[,] tileMap, ref Tile thisTile)
+    public void Blasted(ref Tile[,] tileMap, ref Tile thisTile, TileUtils tileUtils)
     {
-        thisTile.SetTileType(new Blast());
+        
     }
 }
