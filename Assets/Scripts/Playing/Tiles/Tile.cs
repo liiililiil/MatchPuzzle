@@ -90,12 +90,8 @@ public abstract class Tile : MonoBehaviour, ITile
         this.yChainTotal = 0;
         this.totalChainTotal = 0;
 
-        //반복용
-        Vector2[] xDirections = { Vector2.left, Vector2.right };
-        Vector2[] yDirections = { Vector2.up, Vector2.down };
-
         //X축 방향으로 검사
-        foreach (var direction in xDirections){
+        foreach (var direction in Utils.xDirections){
 
             ITile tile = Raycast(direction);
             if (tile != null && !tile.isCalculated){
@@ -108,7 +104,7 @@ public abstract class Tile : MonoBehaviour, ITile
         }
 
         //Y축 방향으로 검사
-        foreach (var direction in yDirections){
+        foreach (var direction in Utils.yDirections){
             if (direction == exceptionDirection) continue;
 
             ITile tile = Raycast(direction);
