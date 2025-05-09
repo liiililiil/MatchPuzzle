@@ -90,13 +90,6 @@ public abstract class Tile : MonoBehaviour, ITile
         this.yChainTotal = 0;
         this.totalChainTotal = 0;
 
-        RaycastNearby(ref totalHashSet, exceptionDirection);
-    }
-
-    
-    //주변에 같은 타일을 검사합니다.
-    private void RaycastNearby(ref HashSet<ITile> totalHashSet, Vector2 exceptionDirection){
-
         //반복용
         Vector2[] xDirections = { Vector2.left, Vector2.right };
         Vector2[] yDirections = { Vector2.up, Vector2.down };
@@ -127,8 +120,9 @@ public abstract class Tile : MonoBehaviour, ITile
                 if (direction != exceptionDirection) tile.NearbyCheck(ref totalHashSet, -direction);
             }
         }
-
     }
+
+    
 
     private ITile Raycast(Vector2 direction){
         int myLayerMask = 1 << gameObject.layer;
