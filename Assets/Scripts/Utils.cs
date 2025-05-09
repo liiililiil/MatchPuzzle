@@ -1,8 +1,5 @@
-// using UnityEngine;
-// using System.Diagnostics;
-
-// public static class Utils{
-//     public static void LogError(string message){
-//         UnityEngine.Debug.LogError(message);
-//     }
-// }
+public static class Utils
+{
+    public const float TILE_SIZE = 1f;
+    public const float RAYCAST_LENGHT = 1f;
+}
