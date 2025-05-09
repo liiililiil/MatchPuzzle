@@ -6,6 +6,7 @@ public abstract class Tile : MonoBehaviour, ITile
     private Chain _xChain;
     private Chain _yChain;
     private Chain _totalChain;
+    private bool _isCalculated;
     public ushort xChainSelf
     {
         get => _xChain.self;
@@ -43,6 +44,12 @@ public abstract class Tile : MonoBehaviour, ITile
         set => _totalChain.total = value;
     }
 
+    public bool isCalculated
+    {
+        get => _isCalculated;
+        set => _isCalculated = value;
+    }
+
 
 
     
@@ -73,6 +80,7 @@ public abstract class Tile : MonoBehaviour, ITile
 
     public void NearbyCheck(ref HashSet<ITile> totalHashSet, Vector2 exceptionDirection){
         totalHashSet.Add(this);
+        isCalculated = true;
 
         //초기화
         this.xChainSelf = 0;
@@ -82,12 +90,12 @@ public abstract class Tile : MonoBehaviour, ITile
         this.yChainTotal = 0;
         this.totalChainTotal = 0;
 
-        RaycastNearby(ref totalHashSet, exceptionDirection);
+        RaycastNearby(totalHashSet, exceptionDirection);
     }
 
     
     //주변에 같은 타일을 검사합니다.
-    public void RaycastNearby(ref HashSet<ITile> totalHashSet, Vector2 exceptionDirection){
+    private void RaycastNearby(HashSet<ITile> totalHashSet, Vector2 exceptionDirection){
 
         //반복용
         Vector2[] xDirections = { Vector2.left, Vector2.right };
@@ -97,7 +105,7 @@ public abstract class Tile : MonoBehaviour, ITile
         foreach (var direction in xDirections){
 
             ITile tile = Raycast(direction);
-            if (tile != null && !totalHashSet.Contains(tile)){
+            if (tile != null && !tile.isCalculated){
                 this.xChainSelf = (ushort)Mathf.Max(tile.xChainSelf + 1, this.xChainSelf);
                 this.totalChainSelf = (ushort)Mathf.Max(tile.totalChainSelf + 1, this.totalChainSelf);
 
@@ -122,7 +130,8 @@ public abstract class Tile : MonoBehaviour, ITile
         }
 
     }
-    public ITile Raycast(Vector2 direction){
+
+    private ITile Raycast(Vector2 direction){
         int myLayerMask = 1 << gameObject.layer;
 
         RaycastHit2D hit = Physics2D.Raycast(gameObject.transform.position, direction, Utils.RAYCAST_LENGHT, myLayerMask);
