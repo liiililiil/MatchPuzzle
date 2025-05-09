@@ -11,9 +11,8 @@ public interface ITile{
     public ushort yChainTotal { get; set; }
     public ushort totalChainTotal { get; set; }
 
+    public bool isCalculated { get; set; }
+
     public void StartNearbyCheck();
     public void NearbyCheck(ref HashSet<ITile> totalStack, Vector2 exceptionDirection);
-
-    public void RaycastNearby(ref HashSet<ITile> totalStack, Vector2 exceptionDirection);
-    public ITile Raycast(Vector2 direction);
 }
