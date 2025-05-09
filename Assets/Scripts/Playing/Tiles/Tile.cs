@@ -55,22 +55,22 @@ public abstract class Tile : MonoBehaviour, ITile
     
 
     public void StartNearbyCheck(){
-        HashSet<ITile> totalHashSet = new HashSet<ITile>();
+        Stack<ITile> totalStack = new Stack<ITile>();
 
-        NearbyCheck(ref totalHashSet, Vector2.zero);
+        NearbyCheck(ref totalStack, Vector2.zero);
 
         ushort xMax = 0;
         ushort yMax = 0;
         ushort totalMax = 0;
 
         //최대값을 구합니다.
-        foreach (ITile tile in totalHashSet) {
+        foreach (ITile tile in totalStack) {
             xMax = (ushort)Mathf.Max(tile.xChainSelf, xMax);
             yMax = (ushort)Mathf.Max(tile.yChainSelf, yMax);
             totalMax = (ushort)Mathf.Max(tile.totalChainSelf, totalMax);
         }
 
-        foreach (ITile tile in totalHashSet) {
+        foreach (ITile tile in totalStack) {
             tile.xChainTotal = xMax;
             tile.yChainTotal = yMax;
             tile.totalChainTotal = totalMax;
@@ -78,8 +78,8 @@ public abstract class Tile : MonoBehaviour, ITile
 
     }
 
-    public void NearbyCheck(ref HashSet<ITile> totalHashSet, Vector2 exceptionDirection){
-        totalHashSet.Add(this);
+    public void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection){
+        totalStack.Push(this);
         isCalculated = true;
 
         //초기화
@@ -103,7 +103,7 @@ public abstract class Tile : MonoBehaviour, ITile
                 this.totalChainSelf = (ushort)Mathf.Max(tile.totalChainSelf + 1, this.totalChainSelf);
 
                 //재귀적으로
-                if (direction != exceptionDirection) tile.NearbyCheck(ref totalHashSet, -direction);
+                if (direction != exceptionDirection) tile.NearbyCheck(ref totalStack, -direction);
             }
         }
 
@@ -112,12 +112,12 @@ public abstract class Tile : MonoBehaviour, ITile
             if (direction == exceptionDirection) continue;
 
             ITile tile = Raycast(direction);
-            if (tile != null && !totalHashSet.Contains(tile)){
+            if (tile != null && !totalStack.Contains(tile)){
                 this.yChainSelf = (ushort)Mathf.Max(tile.yChainSelf + 1, this.yChainSelf);
                 this.totalChainSelf = (ushort)Mathf.Max(tile.totalChainSelf + 1, this.totalChainSelf);
 
                 //재귀적으로
-                if (direction != exceptionDirection) tile.NearbyCheck(ref totalHashSet, -direction);
+                if (direction != exceptionDirection) tile.NearbyCheck(ref totalStack, -direction);
             }
         }
     }

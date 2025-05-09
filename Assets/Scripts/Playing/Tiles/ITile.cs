@@ -14,5 +14,5 @@ public interface ITile{
     public bool isCalculated { get; set; }
 
     public void StartNearbyCheck();
-    public void NearbyCheck(ref HashSet<ITile> totalStack, Vector2 exceptionDirection);
+    public void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection);
 }
