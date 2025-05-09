@@ -50,6 +50,15 @@ public abstract class Tile : MonoBehaviour, ITile
         set => _isCalculated = value;
     }
 
+    public void ChainClear(){
+        this.xChainSelf = 0;
+        this.yChainSelf = 0;
+        this.totalChainSelf = 0;
+        this.xChainTotal = 0;
+        this.yChainTotal = 0;
+        this.totalChainTotal = 0;
+    }
+
 
 
     
@@ -83,12 +92,7 @@ public abstract class Tile : MonoBehaviour, ITile
         isCalculated = true;
 
         //초기화
-        this.xChainSelf = 0;
-        this.yChainSelf = 0;
-        this.totalChainSelf = 0;
-        this.xChainTotal = 0;
-        this.yChainTotal = 0;
-        this.totalChainTotal = 0;
+        ChainClear();
 
         //X축 방향으로 검사
         foreach (var direction in Utils.xDirections){
