@@ -114,7 +114,6 @@ public abstract class Tile : MonoBehaviour, ITile
             }
         }
 
-
         //Y축 방향으로 검사
         foreach (var direction in yDirections){
             if (direction == exceptionDirection) continue;
