@@ -13,6 +13,13 @@ public interface ITile{
 
     public bool isCalculated { get; set; }
 
-    public void StartNearbyCheck();
+    public void Calculate();
     public void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection);
+    public void Blasted();
+    public void ForceBlasted();
+    public void Drop();
+
+    public void Bind(SpawnManager spawnManager);
+
+    
 }
