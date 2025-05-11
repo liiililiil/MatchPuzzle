@@ -20,3 +20,17 @@ public struct Chain{
         };
     }
 }
+
+[System.Serializable]
+public enum TileType: ushort{
+    Red = 0,
+    Green = 1,
+    Blue = 2,
+    Purple = 3,
+    BigBomb = 4,
+    XBomb = 5,
+    YBomb = 6,
+    ColorBomb = 7,
+    box = 8
+    
+}
