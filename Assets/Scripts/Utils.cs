@@ -1,8 +1,15 @@
 using UnityEngine;
 public static class Utils
 {
-    public const float TILE_SIZE = 0.25f;
+    public const float TILE_SIZE = 1f;
+
+    public const float TILE_GAP = 0.5f;
     public const float RAYCAST_LENGHT = 0.3f;
+
+    public const float WAIT_POS_X = 100f;
+    public const float WAIT_Pos_Y = 100f;
+    
+
 
     //반복용
     public static readonly Vector2[] xDirections = { Vector2.left, Vector2.right };
