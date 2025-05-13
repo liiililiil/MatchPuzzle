@@ -2,16 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public interface ITile{
-
-    public ushort xChainSelf { get; set; }
-    public ushort yChainSelf { get; set; }
-    public ushort totalChainSelf { get; set; }
-    
-    public ushort xChainTotal { get; set; }
-    public ushort yChainTotal { get; set; }
-    public ushort totalChainTotal { get; set; }
+    public Chain xChain {get; set;}
+    public Chain yChain {get; set;}
+    public Chain totalChain { get; set; }
 
     public bool isCalculated { get; set; }
+
+    public TileType tileType {get;}
+
 
     public void Calculate();
     public void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection);
