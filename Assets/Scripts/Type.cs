@@ -1,4 +1,4 @@
-public struct Chain{
+public class Chain{
     private ushort _self;
     private ushort _total;
     public ushort self{
@@ -9,6 +9,11 @@ public struct Chain{
     public ushort total{
         get => _total;
         set => _total = value;
+    }
+
+    public void Reset(){
+        _self = 0;
+        _total = 0;
     }
 
     public static Chain operator +(Chain a, Chain b)
