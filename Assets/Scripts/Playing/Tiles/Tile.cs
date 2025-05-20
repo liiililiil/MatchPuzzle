@@ -5,9 +5,10 @@ using UnityEngine;
 public abstract class Tile : MonoBehaviour, ITile
 {
 
-    protected Chain _xChain;
-    protected Chain _yChain;
-    protected Chain _totalChain;
+    
+    protected Chain _xChain = new Chain();
+    protected Chain _yChain = new Chain();
+    protected Chain _totalChain = new Chain();
     protected bool _isCalculated;
     protected SpawnManager spawnManager;
     protected BoxCollider2D boxCollider2D;
@@ -34,37 +35,26 @@ public abstract class Tile : MonoBehaviour, ITile
     }
     protected ITile Raycast(Vector2 direction, int lenghtMultiple, bool isGlobal)
     {
-        // 박스 콜라이더 지정
         if(boxCollider2D == null)
             boxCollider2D = GetComponent<BoxCollider2D>();
 
-        // 자기 레이어만 감지하도록 설정
         int layerMask;
-
-        // 레이어 마스크 설정
         if(isGlobal) layerMask = -1;
         else layerMask = 1 << gameObject.layer;
 
-        // 로컬 기준 direction을 월드 방향으로 변환
-        Vector2 worldDirection = transform.TransformDirection(direction);
+        Vector2 worldDirection = transform.TransformDirection(direction).normalized;
 
-        //사격전 자신은 제외시키기
-        
+        // 콜라이더 바깥으로 Raycast 시작 지점 계산
+        Vector2 start = (Vector2)transform.position + worldDirection * (boxCollider2D.bounds.extents.magnitude + 0.01f);
 
         // Raycast 수행
-        // Debug.Log("Raycast from: " + transform.position + " to: " +  worldDirection + " with layerMask: " + layerMask);
-        boxCollider2D.enabled = false;
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, worldDirection, Utils.RAYCAST_LENGHT * lenghtMultiple, layerMask);
-        boxCollider2D.enabled = true;
+        RaycastHit2D hit = Physics2D.Raycast(start, worldDirection, Utils.TILE_GAP/2 * lenghtMultiple, layerMask);
 
-        // Debug.Log("Raycast hit: " + hit.collider);
-
-
-        // 결과 반환
         return hit ? hit.collider.GetComponent<ITile>() : null;
     }
 
-    public  void ForceBlasted(){
+
+    public void ForceBlasted(){
         pooling();
     }
 
@@ -94,10 +84,10 @@ public abstract class Tile : MonoBehaviour, ITile
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + (new Vector3(1, 0) * Utils.RAYCAST_LENGHT));
-        Gizmos.DrawLine(transform.position, transform.position + (new Vector3(-1, 0) * Utils.RAYCAST_LENGHT));
-        Gizmos.DrawLine(transform.position, transform.position + (new Vector3(0, 1) * Utils.RAYCAST_LENGHT));
-        Gizmos.DrawLine(transform.position, transform.position + (new Vector3(0, -1) * Utils.RAYCAST_LENGHT));
+        Gizmos.DrawLine(transform.position, transform.position + (new Vector3(1, 0) * Utils.TILE_GAP));
+        Gizmos.DrawLine(transform.position, transform.position + (new Vector3(-1, 0) * Utils.TILE_GAP));
+        Gizmos.DrawLine(transform.position, transform.position + (new Vector3(0, 1) * Utils.TILE_GAP));
+        Gizmos.DrawLine(transform.position, transform.position + (new Vector3(0, -1) * Utils.TILE_GAP));
         Gizmos.DrawCube(transform.position, new Vector3(Utils.TILE_SIZE/4, Utils.TILE_SIZE/4, 1));
     }
 }

@@ -3,11 +3,12 @@ public static class Utils
 {
     public const float TILE_SIZE = 1f;
 
-    public const float TILE_GAP = 0.5f;
-    public const float RAYCAST_LENGHT = 0.3f;
+    public const float TILE_GAP = 0.4f;
 
     public const float WAIT_POS_X = 100f;
     public const float WAIT_Pos_Y = 100f;
+
+    public const float MOVEMENT_SPEED = 1f;
     
 
 

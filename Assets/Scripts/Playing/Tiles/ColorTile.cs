@@ -19,7 +19,11 @@ public abstract class ColorTile : DropTile, ITile
             xMax = (ushort)Mathf.Max(tile.xChain.self, xMax);
             yMax = (ushort)Mathf.Max(tile.yChain.self, yMax);
             totalMax = (ushort)Mathf.Max(tile.totalChain.self, totalMax);
+
+            // Debug.Log($"{tile.xChain.self},{tile}");
         }
+
+        // Debug.Log($"{xMax},{yMax},{totalMax}");
 
         foreach (ITile tile in totalStack) {
             tile.xChain.total = xMax;
@@ -30,7 +34,7 @@ public abstract class ColorTile : DropTile, ITile
             tile.isCalculated = false;
 
             //터지는 조건이 되면 폭발
-            if(tile.totalChain.total >= 3){
+            if(tile.totalChain.total >= 2){
                 tile.Blasted();
             }
         }
@@ -79,6 +83,7 @@ public abstract class ColorTile : DropTile, ITile
             
         }
 
-        pooling();
+        // Debug.Log("터지는 조건 충족");
+        // pooling();
     }
 }

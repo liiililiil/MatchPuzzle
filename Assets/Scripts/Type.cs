@@ -1,3 +1,4 @@
+
 public class Chain{
     private ushort _self;
     private ushort _total;
