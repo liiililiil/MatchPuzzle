@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public abstract class ColorTile : DropTile, ITile
 {
@@ -76,11 +77,28 @@ public abstract class ColorTile : DropTile, ITile
             }
         }
     }
-    public sealed override void Blasted(){
-        if(true){
 
-        } else {
-            
+    public sealed override void Organize(){} //색 타일은 정리당하지 않음
+    public sealed override void Blasted()
+    {
+        //4 방향으로 Ray 쏘기
+        foreach (var (xDir, yDir) in Utils.xDirections.Zip(Utils.yDirections, (x, y) => (x, y)))
+        {
+            Vector2 direction = new Vector2(xDir.x, yDir.y);
+
+            // Raycast를 이용해 타일을 찾고 정리 수행
+            ITile tile = Raycast(direction, 1, true);
+            tile?.Organize();
+        }
+
+
+        if (true)
+        {
+
+        }
+        else
+        {
+
         }
 
         // Debug.Log("터지는 조건 충족");
