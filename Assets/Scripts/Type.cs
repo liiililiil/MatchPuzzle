@@ -28,7 +28,8 @@ public class Chain{
 }
 
 [System.Serializable]
-public enum TileType: ushort{
+public enum TileType : ushort
+{
     Red = 0,
     Green = 1,
     Blue = 2,
@@ -37,6 +38,6 @@ public enum TileType: ushort{
     XBomb = 5,
     YBomb = 6,
     ColorBomb = 7,
-    box = 8
-    
+    Box = 8,
+
 }
