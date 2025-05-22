@@ -76,6 +76,8 @@ public abstract class Tile : MonoBehaviour, ITile
     public abstract void Calculate();
     public abstract void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection);
 
+    public abstract void Organize();
+
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -89,7 +91,7 @@ public abstract class Tile : MonoBehaviour, ITile
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.blue;
         Gizmos.DrawCube(transform.position, Utils.FloatToVector2(Utils.TILE_SIZE));
     }
     

@@ -16,6 +16,7 @@ public interface ITile{
     public void Blasted();
     public void ForceBlasted();
     public void Drop();
+    public void Organize();
 
     public void Bind(SpawnManager spawnManager);
 
