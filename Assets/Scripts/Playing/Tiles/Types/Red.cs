@@ -10,7 +10,7 @@ public class Red : ColorTile, ITile
     {
         if(cal) Calculate();
         if(drop){
-            drop =false;
+            drop = false;
             Drop();
         }
 
