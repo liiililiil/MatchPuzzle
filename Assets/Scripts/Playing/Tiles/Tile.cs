@@ -5,74 +5,82 @@ using UnityEngine;
 public abstract class Tile : MonoBehaviour, ITile
 {
 
-    
+
     protected Chain _xChain = new Chain();
     protected Chain _yChain = new Chain();
     protected Chain _totalChain = new Chain();
     protected bool _isCalculated;
     protected SpawnManager spawnManager;
     protected BoxCollider2D boxCollider2D;
+    protected Rigidbody2D rigidbody2D;
 
 
 
     private Vector2 direction;
-    public Chain xChain {get => _xChain; set => _xChain = value;}
-    public Chain yChain {get => _yChain; set => _yChain = value;}
-    public Chain totalChain {get => _totalChain; set => _totalChain = value;}
-    public bool isCalculated {get => _isCalculated; set => _isCalculated = value;}
+    public Chain xChain { get => _xChain; set => _xChain = value; }
+    public Chain yChain { get => _yChain; set => _yChain = value; }
+    public Chain totalChain { get => _totalChain; set => _totalChain = value; }
+    public bool isCalculated { get => _isCalculated; set => _isCalculated = value; }
 
     public abstract TileType tileType { get; }
 
-    public void ChainReset(){
+    public void ChainReset()
+    {
         xChain.Reset();
         yChain.Reset();
         totalChain.Reset();
-    
+
     }
 
-    public void Bind(SpawnManager spawnManager){
+    public void Bind(SpawnManager spawnManager)
+    {
         this.spawnManager = spawnManager;
+        boxCollider2D = GetComponent<BoxCollider2D>();
     }
     protected ITile Raycast(Vector2 direction, int lenghtMultiple, bool isGlobal)
     {
-        if(boxCollider2D == null)
+        if (boxCollider2D == null)
             boxCollider2D = GetComponent<BoxCollider2D>();
 
         int layerMask;
-        if(isGlobal) layerMask = -1;
+        if (isGlobal) layerMask = -1;
         else layerMask = 1 << gameObject.layer;
 
         Vector2 worldDirection = transform.TransformDirection(direction).normalized;
 
         // 콜라이더 바깥으로 Raycast 시작 지점 계산
-        Vector2 start = (Vector2)transform.position + worldDirection * (boxCollider2D.bounds.extents.magnitude + 0.01f);
+        Vector2 start = (Vector2)transform.position + worldDirection * Utils.RAYCASY_REVISION;
 
         // Raycast 수행
-        RaycastHit2D hit = Physics2D.Raycast(start, worldDirection, Utils.TILE_GAP/2 * lenghtMultiple, layerMask);
+        Debug.DrawRay(start, worldDirection * (Utils.RAYCASY_LENGHT * lenghtMultiple), Color.red, 0.1f);
+        RaycastHit2D hit = Physics2D.Raycast(start, worldDirection, Utils.RAYCASY_LENGHT * lenghtMultiple, layerMask);
 
         return hit ? hit.collider.GetComponent<ITile>() : null;
     }
 
 
-    public void ForceBlasted(){
+    public void ForceBlasted()
+    {
         pooling();
     }
 
-    public void pooling(){
-        gameObject.transform.position = new Vector2(Utils.WAIT_POS_X,Utils.WAIT_Pos_Y);
+    public void pooling()
+    {
+        gameObject.transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_Pos_Y);
         spawnManager.Pooling(gameObject, tileType);
 
     }
-    
+
     // public abstract void MoveMent(Vector2 target);
 
     public abstract void Blasted();
     public abstract void Drop();
     public abstract void Calculate();
     public abstract void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection);
-    
 
-    private void OnCollisionEnter(Collision collision){
+
+    private void OnCollisionEnter(Collision collision)
+    {
         //자신은 강제 삭제
         ForceBlasted();
 
@@ -84,10 +92,8 @@ public abstract class Tile : MonoBehaviour, ITile
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + (new Vector3(1, 0) * Utils.TILE_GAP));
-        Gizmos.DrawLine(transform.position, transform.position + (new Vector3(-1, 0) * Utils.TILE_GAP));
-        Gizmos.DrawLine(transform.position, transform.position + (new Vector3(0, 1) * Utils.TILE_GAP));
-        Gizmos.DrawLine(transform.position, transform.position + (new Vector3(0, -1) * Utils.TILE_GAP));
-        Gizmos.DrawCube(transform.position, new Vector3(Utils.TILE_SIZE/4, Utils.TILE_SIZE/4, 1));
+        Gizmos.DrawCube(transform.position, Utils.FloatToVector2(Utils.TILE_SIZE));
     }
+    
+    
 }
