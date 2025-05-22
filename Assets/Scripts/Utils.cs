@@ -8,7 +8,7 @@ public static class Utils
     public const float RAYCASY_REVISION = 0.22f; 
     public const float WAIT_POS_X = 100f;
     public const float WAIT_Pos_Y = 100f;
-    public const float MOVEMENT_SPEED = 5f;
+    public const float MOVEMENT_SPEED = 2f;
     public const int TILETYPE_LENGHT = 8;
 
 
