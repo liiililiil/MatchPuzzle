@@ -12,8 +12,6 @@ public abstract class Tile : MonoBehaviour, ITile
     protected bool _isCalculated;
     protected SpawnManager spawnManager;
     protected BoxCollider2D boxCollider2D;
-    protected Rigidbody2D rigidbody2D;
-
 
 
     private Vector2 direction;
