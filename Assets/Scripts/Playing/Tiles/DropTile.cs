@@ -8,6 +8,8 @@ public abstract class DropTile : Tile, ITile
     public override sealed void Drop()
     {
         acceleration = 1;
+
+
         DropCalculation();
     }
 
@@ -24,7 +26,7 @@ public abstract class DropTile : Tile, ITile
             ITile aboveTile = Raycast(Vector2.up, 1, true);
 
             //이동
-            StartCoroutine(moveMent2D((Vector2.down * Utils.TILE_GAP) + (Vector2)transform.position));
+            StartCoroutine(moveMent2D((-transform.up.normalized * Utils.TILE_GAP) + transform.position));
 
             //위 하강 등록
             aboveTile?.Drop();
@@ -38,16 +40,13 @@ public abstract class DropTile : Tile, ITile
         // 원래 위치 저장
         Vector2 startPos = transform.position;
         float time = 0;
-
-
         isMoving = true;
-
         
         while (time <= 1)
         {
             transform.position = Vector2.Lerp(startPos, targetPos, time);
             time += Time.deltaTime * Utils.MOVEMENT_SPEED * acceleration;
-            acceleration += 0.1f;
+            acceleration += 0.2f;
 
             // Debug.Log(time);
 
@@ -58,8 +57,8 @@ public abstract class DropTile : Tile, ITile
         transform.position = targetPos;
 
         boxCollider2D.enabled = true;
-
         isMoving = false;
+
         DropCalculation();
     }
 }
