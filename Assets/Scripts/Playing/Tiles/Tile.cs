@@ -11,6 +11,7 @@ public abstract class Tile : MonoBehaviour, ITile
     protected Chain _totalChain = new Chain();
     protected bool _isCalculated;
     protected SpawnManager spawnManager;
+    protected EventManager eventManager;
     protected BoxCollider2D boxCollider2D;
 
 
@@ -30,9 +31,10 @@ public abstract class Tile : MonoBehaviour, ITile
 
     }
 
-    public void Bind(SpawnManager spawnManager)
+    public void Initialize(SpawnManager spawnManager, EventManager eventManager)
     {
         this.spawnManager = spawnManager;
+        this.eventManager = eventManager;
         boxCollider2D = GetComponent<BoxCollider2D>();
     }
     protected ITile Raycast(Vector2 direction, int lenghtMultiple, bool isGlobal)

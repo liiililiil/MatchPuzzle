@@ -18,7 +18,7 @@ public interface ITile{
     public void Drop();
     public void Organize();
 
-    public void Bind(SpawnManager spawnManager);
+    public void Initialize(SpawnManager spawnManager, EventManager eventManager);
 
     
 }

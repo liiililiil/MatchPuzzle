@@ -19,6 +19,7 @@ public abstract class DropTile : Tile, ITile
         if (isMoving) throw new System.Exception("움직이는 중 하강 연산이 요청되었습니다!");
         //자신의 밑 타일이 없다면
         ITile belowTile = Raycast(Vector2.down, 1, true);
+        Debug.Log(belowTile);
 
         if (belowTile == null)
         {
@@ -46,7 +47,7 @@ public abstract class DropTile : Tile, ITile
         {
             transform.position = Vector2.Lerp(startPos, targetPos, time);
             time += Time.deltaTime * Utils.MOVEMENT_SPEED * acceleration;
-            acceleration += 0.2f;
+            acceleration += 0.1f;
 
             // Debug.Log(time);
 

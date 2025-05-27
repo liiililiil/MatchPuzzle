@@ -1,18 +1,22 @@
 
-public class Chain{
+public class Chain
+{
     private ushort _self;
     private ushort _total;
-    public ushort self{
+    public ushort self
+    {
         get => _self;
         set => _self = value;
     }
 
-    public ushort total{
+    public ushort total
+    {
         get => _total;
         set => _total = value;
     }
 
-    public void Reset(){
+    public void Reset()
+    {
         _self = 0;
         _total = 0;
     }
@@ -28,16 +32,25 @@ public class Chain{
 }
 
 [System.Serializable]
-public enum TileType : ushort
-{
-    Red = 0,
-    Green = 1,
-    Blue = 2,
-    Purple = 3,
-    BigBomb = 4,
-    XBomb = 5,
-    YBomb = 6,
-    ColorBomb = 7,
-    Box = 8,
+public enum TileType : ushort{
+    Block = 0,
+    Red = 1,
+    Green = 2,
+    Blue = 3,
+    Purple = 4,
+    BigBomb = 5,
+    XBomb = 6,
+    YBomb = 7,
+    ColorBomb = 8,
+    Box = 9
 
 }
+[System.Serializable]
+public class TileData
+{
+    public UnityEngine.GameObject prefab;
+    public TileType tileType;
+    public System.Collections.Generic.Queue<UnityEngine.GameObject> pooling;
+
+}
+
