@@ -10,8 +10,7 @@ public abstract class Tile : MonoBehaviour, ITile
     protected Chain _yChain = new Chain();
     protected Chain _totalChain = new Chain();
     protected bool _isCalculated;
-    protected SpawnManager spawnManager;
-    protected EventManager eventManager;
+
     protected BoxCollider2D boxCollider2D;
 
 
