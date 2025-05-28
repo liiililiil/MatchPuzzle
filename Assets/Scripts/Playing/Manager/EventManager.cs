@@ -12,8 +12,7 @@ public class EventManager : MonoBehaviour
 
     [HideInInspector]
     public UnityEvent OnCalculate = new UnityEvent();
-    void Awake(){
-        
+    void Awake(){   
         //싱글톤
         if (Instance == null){
             Instance = this;

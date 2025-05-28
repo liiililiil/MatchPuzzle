@@ -17,8 +17,7 @@ public interface ITile{
     public void ForceBlasted();
     public void Drop();
     public void Organize();
-
-    public void Initialize(SpawnManager spawnManager, EventManager eventManager);
+    public void CalReset();
 
     
 }

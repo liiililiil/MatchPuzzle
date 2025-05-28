@@ -31,12 +31,12 @@ public abstract class Tile : MonoBehaviour, ITile
 
     }
 
-    public void Initialize(SpawnManager spawnManager, EventManager eventManager)
+    public void CalReset()
     {
-        this.spawnManager = spawnManager;
-        this.eventManager = eventManager;
-        boxCollider2D = GetComponent<BoxCollider2D>();
+        EventManager.Instance.OnCalReset.RemoveListener(CalReset);
+        isCalculated = false;
     }
+
     protected ITile Raycast(Vector2 direction, int lenghtMultiple, bool isGlobal)
     {
         if (boxCollider2D == null)
