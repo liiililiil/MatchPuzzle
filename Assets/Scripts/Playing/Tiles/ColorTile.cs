@@ -6,7 +6,7 @@ public abstract class ColorTile : DropTile, ITile
 {
     public override sealed void Calculate(){
         //등록 해제
-        eventManager.OnCalculate.RemoveListener(Calculate);
+        EventManager.Instance.OnCalculate.RemoveListener(Calculate);
 
         Stack<ITile> totalStack = new Stack<ITile>();
 

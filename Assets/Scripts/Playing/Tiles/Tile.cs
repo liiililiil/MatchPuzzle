@@ -66,7 +66,7 @@ public abstract class Tile : MonoBehaviour, ITile
     public void pooling()
     {
         gameObject.transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_Pos_Y);
-        spawnManager.Pooling(gameObject, tileType);
+        SpawnManager.Instance.Pooling(gameObject, tileType);
 
     }
 

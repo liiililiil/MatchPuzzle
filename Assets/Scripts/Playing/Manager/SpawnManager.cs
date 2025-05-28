@@ -56,7 +56,7 @@ public class SpawnManager : MonoBehaviour{
     }
 
     public void SpawnTile(TileType tileType, Vector2 position, Quaternion rotate){
-       GetTile(tileDataIndex[(ushort)tileType], position, rotate).GetComponent<ITile>()?.Initialize(SpawnManager.Instance, EventManager.Instance);
+       GetTile(tileDataIndex[(ushort)tileType], position, rotate);
     }
 
     public void Pooling(GameObject gameObject, TileType tileType){
