@@ -16,7 +16,7 @@ public abstract class ColorTile : DropTile, ITile
         ushort yMax = 0;
         ushort totalMax = 0;
 
-        Debug.Log("totalStack Count: " + totalStack.Count);
+        // Debug.Log("totalStack Count: " + totalStack.Count);
 
         //최대값을 구합니다.
         foreach (ITile tile in totalStack) {

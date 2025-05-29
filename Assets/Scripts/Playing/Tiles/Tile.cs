@@ -20,8 +20,6 @@ public abstract class Tile : MonoBehaviour, ITile
     public Chain totalChain { get => _totalChain; set => _totalChain = value; }
     public bool isCalculated { get => _isCalculated; set => _isCalculated = value; }
 
-    public abstract TileType tileType { get; }
-
     public void ChainReset()
     {
         xChain.Reset();
@@ -66,7 +64,7 @@ public abstract class Tile : MonoBehaviour, ITile
     public void pooling()
     {
         gameObject.transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_Pos_Y);
-        SpawnManager.Instance.Pooling(gameObject, tileType);
+        SpawnManager.Instance.Pooling(gameObject, this);
 
     }
 

@@ -1,4 +1,6 @@
 
+using System.Numerics;
+
 public class Chain
 {
     private ushort _self;
@@ -54,3 +56,35 @@ public class TileData
 
 }
 
+// 클리어 조건 구조
+[System.Serializable]
+public struct StageGoal
+{
+    TileBurstGoal[] tileBurstGoals;
+    int movementLimit;
+    float time;
+    float extraTime;
+}
+
+[System.Serializable]
+public struct TileBurstGoal
+{
+    TileType type;
+    int goalCount;
+}
+
+[System.Serializable]
+public struct StageSpawnRate
+{
+    TileType tile;
+    float weight;
+}
+
+[System.Serializable]
+public struct TileStartInfo
+{
+    TileType tile;
+    
+    Vector2 pos;
+
+}

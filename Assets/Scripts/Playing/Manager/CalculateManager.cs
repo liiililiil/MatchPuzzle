@@ -4,7 +4,7 @@ using UnityEngine;
 public class CalculateManager : MonoBehaviour
 {
 
-    public static CalculateManager Instance;
+    public static CalculateManager Instance { get; private set; }
     public int Calculating = 0;
 
     private void Awake()

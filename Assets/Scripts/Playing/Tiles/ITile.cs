@@ -8,8 +8,6 @@ public interface ITile{
 
     public bool isCalculated { get; set; }
 
-    public TileType tileType {get;}
-
 
     public void Calculate();
     public void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection);
