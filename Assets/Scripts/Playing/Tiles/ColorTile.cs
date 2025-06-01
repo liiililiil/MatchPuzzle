@@ -5,6 +5,9 @@ using System.Linq;
 public abstract class ColorTile : DropTile, ITile
 {
     public override sealed void Calculate(){
+        //등록 해제
+        EventManager.Instance.OnCalculate.RemoveListener(Calculate);
+
         Stack<ITile> totalStack = new Stack<ITile>();
 
         NearbyCheck(ref totalStack, Vector2.zero);
@@ -13,7 +16,7 @@ public abstract class ColorTile : DropTile, ITile
         ushort yMax = 0;
         ushort totalMax = 0;
 
-        Debug.Log("totalStack Count: " + totalStack.Count);
+        // Debug.Log("totalStack Count: " + totalStack.Count);
 
         //최대값을 구합니다.
         foreach (ITile tile in totalStack) {
@@ -30,12 +33,12 @@ public abstract class ColorTile : DropTile, ITile
             tile.xChain.total = xMax;
             tile.yChain.total = yMax;
             tile.totalChain.total = totalMax;
+
+            EventManager.Instance.OnCalReset.AddListener(tile.CalReset);
             
-
-            tile.isCalculated = false;
-
             //터지는 조건이 되면 폭발
-            if(tile.totalChain.total >= 2){
+            if (tile.totalChain.total >= 2)
+            {
                 tile.Blasted();
             }
         }

@@ -8,14 +8,16 @@ public interface ITile{
 
     public bool isCalculated { get; set; }
 
-    public TileType tileType {get;}
-
 
     public void Calculate();
     public void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection);
     public void Blasted();
     public void ForceBlasted();
     public void Organize();
+<<<<<<< HEAD
+=======
+    public void CalReset();
+>>>>>>> d1f69d8f193b86ed4ece814b85ee5827ace50507
 
     
 }

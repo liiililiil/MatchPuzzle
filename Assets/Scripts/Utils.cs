@@ -11,6 +11,8 @@ public static class Utils
     public const float MOVEMENT_SPEED = 2f;
     public const int TILETYPE_LENGHT = 8;
 
+    // public const string StagePath = @"\Stage\"
+
 
 
     //반복용

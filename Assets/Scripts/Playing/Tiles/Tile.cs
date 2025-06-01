@@ -9,10 +9,16 @@ public abstract class Tile : MonoBehaviour, ITile
     protected Chain _xChain = new Chain();
     protected Chain _yChain = new Chain();
     protected Chain _totalChain = new Chain();
+<<<<<<< HEAD
     protected byte bitFlag;
     protected CircleCollider2D circleCollider2D;
     protected new Rigidbody2D rigidbody2D;
     
+=======
+    protected bool _isCalculated;
+
+    protected BoxCollider2D boxCollider2D;
+>>>>>>> d1f69d8f193b86ed4ece814b85ee5827ace50507
 
 
     private Vector2 direction;
@@ -22,8 +28,6 @@ public abstract class Tile : MonoBehaviour, ITile
     public bool isCalculated { get => (bitFlag & 1 << 0) != 0; set => bitFlag = (byte)(value ? bitFlag | 1<<0 : bitFlag & ~(1<<0)); }
     // public bool isDrop { get => (bitFlag & 1 << 1) != 0; set => bitFlag = (byte)(value ? bitFlag | 1<<1 : bitFlag & ~(1<<1)); }
 
-    public abstract TileType tileType { get; }
-
     public void ChainReset()
     {
         xChain.Reset();
@@ -32,8 +36,22 @@ public abstract class Tile : MonoBehaviour, ITile
 
     }
 
+<<<<<<< HEAD
     protected ITile Raycast(Vector2 direction, float lenghtMultiple, bool isGlobal)
     {
+=======
+    public void CalReset()
+    {
+        EventManager.Instance.OnCalReset.RemoveListener(CalReset);
+        isCalculated = false;
+    }
+
+    protected ITile Raycast(Vector2 direction, int lenghtMultiple, bool isGlobal)
+    {
+        if (boxCollider2D == null)
+            boxCollider2D = GetComponent<BoxCollider2D>();
+
+>>>>>>> d1f69d8f193b86ed4ece814b85ee5827ace50507
         int layerMask;
         if (isGlobal) layerMask = -1;
         else layerMask = 1 << gameObject.layer;
@@ -59,7 +77,11 @@ public abstract class Tile : MonoBehaviour, ITile
     public void pooling()
     {
         gameObject.transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_Pos_Y);
+<<<<<<< HEAD
         SpawnManager.Instance.Pooling(gameObject, tileType);
+=======
+        SpawnManager.Instance.Pooling(gameObject, this);
+>>>>>>> d1f69d8f193b86ed4ece814b85ee5827ace50507
 
     }
 
