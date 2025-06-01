@@ -15,10 +15,7 @@ public interface ITile{
     public void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection);
     public void Blasted();
     public void ForceBlasted();
-    public void Drop();
     public void Organize();
-
-    public void Initialize(SpawnManager spawnManager, EventManager eventManager);
 
     
 }
