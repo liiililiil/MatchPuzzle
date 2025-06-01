@@ -4,7 +4,7 @@ public static class Utils
 {
     public const float TILE_SIZE = 0.6f;
     public const float TILE_GAP = 0.6f;
-    public const float RAYCASY_LENGHT = 0.2f;
+    public const float RAYCASY_LENGHT = 0.3f;
     public const float RAYCASY_REVISION = 0.22f; 
     public const float WAIT_POS_X = 100f;
     public const float WAIT_Pos_Y = 100f;
