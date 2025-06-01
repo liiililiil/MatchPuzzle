@@ -56,11 +56,10 @@ public class SpawnManager : MonoBehaviour{
 
         return gameObject;
     }
-
-<<<<<<< HEAD
-    public void SpawnTile(TileType tileType, Vector2 position, Quaternion rotate){
+    public void SpawnTile(TileType tileType, Vector2 position, Quaternion rotate)
+    {
         GetTile(tileDataIndex[(ushort)tileType], position, rotate);
-=======
+    }
     private int GetTileType(ITile tile)
     {
 
@@ -69,14 +68,7 @@ public class SpawnManager : MonoBehaviour{
 
         Debug.LogError("지정되지 않은 타일!");
         return 0;
->>>>>>> d1f69d8f193b86ed4ece814b85ee5827ace50507
     }
-
-    public void SpawnTile(TileType tileType, Vector2 position, Quaternion rotate)
-    {
-        GetTile(tileDataIndex[(ushort)tileType], position, rotate);
-    }
-
     public void Pooling(GameObject gameObject, ITile tile){
         tileDataIndex[GetTileType(tile)].pooling.Enqueue(gameObject);
     }
