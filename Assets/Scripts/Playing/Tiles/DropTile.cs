@@ -7,10 +7,11 @@ public abstract class DropTile : Tile, ITile
     {
         if (rigidbody2D == null) rigidbody2D = GetComponent<Rigidbody2D>();
 
-        Vector2 dir = -transform.forward;
-        rigidbody2D.AddForce(9.81f * dir, ForceMode2D.Force);
+        Vector2 dir = -transform.up.normalized;
+        // Debug.Log(transform.up.normalized);
+        rigidbody2D.AddForce(9.81f * dir * Time.fixedDeltaTime * 0.01f, ForceMode2D.Force);
 
-        Debug.Log(rigidbody2D.totalForce);
+        // Debug.Log(rigidbody2D.totalForce);
     }
     
 

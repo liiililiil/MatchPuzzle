@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Block : NonDropTile, ITile
 {
-    public sealed override TileType tileType { get => TileType.Block; }
     public override void Calculate()
     {
         // 블록은 계산하지 않음
