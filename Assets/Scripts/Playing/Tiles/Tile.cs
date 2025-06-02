@@ -49,6 +49,7 @@ public abstract class Tile : MonoBehaviour, ITile
         // Raycast 수행
         Debug.DrawRay(start, worldDirection * (Utils.RAYCASY_LENGHT * lenghtMultiple), Color.red, 0.1f);
         RaycastHit2D hit = Physics2D.Raycast(start, worldDirection, Utils.RAYCASY_LENGHT * lenghtMultiple, layerMask);
+        // Debug.Log(hit.collider.name
 
         return hit.collider ? hit.collider.GetComponent<ITile>() : null;
     }

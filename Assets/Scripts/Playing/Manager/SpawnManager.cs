@@ -69,6 +69,7 @@ public class SpawnManager : MonoBehaviour{
         Debug.LogError("지정되지 않은 타일!");
         return 0;
     }
+
     public void Pooling(GameObject gameObject, ITile tile){
         tileDataIndex[GetTileType(tile)].pooling.Enqueue(gameObject);
     }
