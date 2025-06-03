@@ -7,7 +7,13 @@ public class Red : ColorTile, ITile
 
     void Update()
     {
-        if(cal) Calculate();
+        if (cal) Calculate();
+
+        if (drop)
+        {
+            drop = false;
+            Drop();
+        }
 
     }
 
