@@ -10,7 +10,6 @@ public static class Utils
     public const float WAIT_Pos_Y = 100f;
     public const float ACCELERATION_SPEED = 50f;
     public const float MOVEMENT_SPEED = 20f;
-    public const int TILETYPE_LENGHT = 8;
 
     // public const string StagePath = @"\Stage\"
 
