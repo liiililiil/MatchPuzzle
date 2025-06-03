@@ -38,11 +38,14 @@ public abstract class ColorTile : DropTile, ITile
             tile.totalChain.total = totalMax;
 
             EventManager.Instance.OnCalReset.AddListener(tile.CalReset);
-            
+
             //터지는 조건이 되면 폭발
-            if (tile.totalChain.total >= 2)
+            
+            Debug.Log(tile.totalChain.total);
+            if (tile.totalChain.total >= 3)
             {
                 tile.Blasted();
+                tile.Drop();
             }
         }
 
@@ -105,6 +108,6 @@ public abstract class ColorTile : DropTile, ITile
         }
 
         Debug.Log("터지는 조건 충족");
-        pooling();
+        Disable();
     }
 }
