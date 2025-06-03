@@ -2,11 +2,10 @@
 using System;
 using System.Numerics;
 
-[Serializable]
 public class Chain
 {
-    public ushort _self;
-    public ushort _total;
+    private ushort _total;
+    private ushort _self;
     public ushort self
     {
         get => _self;
@@ -54,7 +53,7 @@ public class TileData
 {
     public UnityEngine.GameObject prefab;
     public TileType tileType;
-    public System.Collections.Generic.Queue<UnityEngine.GameObject> pooling = new System.Collections.Generic.Queue<UnityEngine.GameObject>();
+    public System.Collections.Generic.Queue<UnityEngine.GameObject> Disable = new System.Collections.Generic.Queue<UnityEngine.GameObject>();
 
 }
 
