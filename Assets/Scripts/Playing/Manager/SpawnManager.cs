@@ -11,17 +11,21 @@ public class SpawnManager : MonoBehaviour{
     [SerializeField]
     private List<TileData> tileData;
 
-    private TileData[] tileDataIndex = new TileData[Utils.TILETYPE_LENGHT + 1];
+    private TileData[] tileDataIndex;
 
 
 
     void Awake(){
+        tileDataIndex = new TileData[tileData.Count + 1];
         
         //싱글톤
-        if (Instance == null){
+        if (Instance == null)
+        {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-        }else{
+        }
+        else
+        {
             Destroy(gameObject);
         }
     }
@@ -38,20 +42,15 @@ public class SpawnManager : MonoBehaviour{
         }
     }
 
-    private GameObject GetTile(TileData tileData, Vector2 position, Quaternion rotate)
+    private GameObject GetTile(TileData tileData)
     {
-        if (tileData.pooling.Count <= 0) return Instantiate(tileData.prefab, position, rotate);
-
-        GameObject gameObject = tileData.pooling.Dequeue();
-
-        gameObject.transform.position = position;
-        gameObject.transform.rotation = rotate;
-
-        return gameObject;
+        if (tileData.Disable.Count <= 0) return Instantiate(tileData.prefab);
+        return tileData.Disable.Dequeue();
     }
     public void SpawnTile(TileType tileType, Vector2 position, Quaternion rotate)
     {
-        GetTile(tileDataIndex[(ushort)tileType], position, rotate);
+        GameObject gameObject = GetTile(tileDataIndex[(ushort)tileType]);
+        gameObject.GetComponent<ITile>()?.Enable(position, rotate);
     }
     private int GetTileType(ITile tile)
     {
@@ -63,8 +62,8 @@ public class SpawnManager : MonoBehaviour{
         return 0;
     }
 
-    public void Pooling(GameObject gameObject, ITile tile){
-        tileDataIndex[GetTileType(tile)].pooling.Enqueue(gameObject);
+    public void pooling(GameObject gameObject, ITile tile){
+        tileDataIndex[GetTileType(tile)].Disable.Enqueue(gameObject);
     }
 
 }
