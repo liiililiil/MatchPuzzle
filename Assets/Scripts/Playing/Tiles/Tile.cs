@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public abstract class Tile : MonoBehaviour, ITile
 {
 
-
-    protected Chain _xChain = new Chain();
-    protected Chain _yChain = new Chain();
-    protected Chain _totalChain = new Chain();
+    [SerializeField]
+    public Chain _xChain = new Chain();
+    [SerializeField]
+    public Chain _yChain = new Chain();
+    [SerializeField]
+    public Chain _totalChain = new Chain();
     protected byte bitFlag;
-    protected CircleCollider2D circleCollider2D;
+    protected BoxCollider2D boxCollider2D;
     protected new Rigidbody2D rigidbody2D;
 
 

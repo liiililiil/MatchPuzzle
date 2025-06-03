@@ -1,10 +1,12 @@
 
+using System;
 using System.Numerics;
 
+[Serializable]
 public class Chain
 {
-    private ushort _self;
-    private ushort _total;
+    public ushort _self;
+    public ushort _total;
     public ushort self
     {
         get => _self;
@@ -52,7 +54,7 @@ public class TileData
 {
     public UnityEngine.GameObject prefab;
     public TileType tileType;
-    public System.Collections.Generic.Queue<UnityEngine.GameObject> pooling;
+    public System.Collections.Generic.Queue<UnityEngine.GameObject> pooling = new System.Collections.Generic.Queue<UnityEngine.GameObject>();
 
 }
 

@@ -25,23 +25,16 @@ public class SpawnManager : MonoBehaviour{
             Destroy(gameObject);
         }
     }
-    
-    private void Start() {
-        //다시 정렬
-        tileData.Sort((a, b) => a.tileType.CompareTo(b.tileType));
 
-        ushort point = 0;
+    private void Start()
+    {
 
-        //인덱스 해놓기
-        for (ushort i = 0; i < Utils.TILETYPE_LENGHT + 1; i++)
+        //인덱싱
+        foreach (var data in tileData)
         {
-            if (point >= tileData.Count) break;
-            
-            if ((ushort)tileData[point].tileType == i)
-            {
-                tileDataIndex[i] = tileData[point];
-                point++;
-            }
+            ushort type = (ushort)data.tileType;
+
+            if (tileDataIndex[type] == null) tileDataIndex[type] = data;
         }
     }
 

@@ -8,6 +8,9 @@ public abstract class ColorTile : DropTile, ITile
         //등록 해제
         EventManager.Instance.OnCalculate.RemoveListener(Calculate);
 
+        //계산 당했다면 안하기
+        if (isCalculated) return;
+
         Stack<ITile> totalStack = new Stack<ITile>();
 
         NearbyCheck(ref totalStack, Vector2.zero);
@@ -16,7 +19,7 @@ public abstract class ColorTile : DropTile, ITile
         ushort yMax = 0;
         ushort totalMax = 0;
 
-        // Debug.Log("totalStack Count: " + totalStack.Count);
+        Debug.Log("totalStack Count: " + totalStack.Count);
 
         //최대값을 구합니다.
         foreach (ITile tile in totalStack) {
@@ -27,7 +30,7 @@ public abstract class ColorTile : DropTile, ITile
             // Debug.Log($"{tile.xChain.self},{tile}");
         }
 
-        // Debug.Log($"{xMax},{yMax},{totalMax}");
+            // Debug.Log($"{xMax},{yMax},{totalMax}");
 
         foreach (ITile tile in totalStack) {
             tile.xChain.total = xMax;
@@ -46,23 +49,20 @@ public abstract class ColorTile : DropTile, ITile
     }
 
     public override sealed void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection){
-
         totalStack.Push(this);
         isCalculated = true;
 
-        //초기화
-        ChainReset();
 
         //X축 방향으로 검사
         foreach (var direction in Utils.xDirections){
 
-            ITile tile = Raycast(direction, 1, false);
-            if (tile != null && !tile.isCalculated){
+            ITile tile = Raycast(direction, 1, false);          
+            if (tile != null){
                 this.xChain.self = (ushort)Mathf.Max(tile.xChain.self + 1, this.xChain.self);
                 this.totalChain.self = (ushort)Mathf.Max(tile.totalChain.self + 1, this.totalChain.self);
 
                 //재귀적으로
-                if (direction != exceptionDirection) tile.NearbyCheck(ref totalStack, -direction);
+                if (direction != exceptionDirection && !tile.isCalculated) tile.NearbyCheck(ref totalStack, -direction);
             }
         }
 
@@ -71,12 +71,12 @@ public abstract class ColorTile : DropTile, ITile
             if (direction == exceptionDirection) continue;
 
             ITile tile = Raycast(direction, 1, false);
-            if (tile != null && !totalStack.Contains(tile)){
+            if (tile != null){
                 this.yChain.self = (ushort)Mathf.Max(tile.yChain.self + 1, this.yChain.self);
                 this.totalChain.self = (ushort)Mathf.Max(tile.totalChain.self + 1, this.totalChain.self);
 
                 //재귀적으로
-                if (direction != exceptionDirection) tile.NearbyCheck(ref totalStack, -direction);
+                if (direction != exceptionDirection && !tile.isCalculated) tile.NearbyCheck(ref totalStack, -direction);
             }
         }
     }
@@ -104,7 +104,7 @@ public abstract class ColorTile : DropTile, ITile
 
         }
 
-        // Debug.Log("터지는 조건 충족");
-        // pooling();
+        Debug.Log("터지는 조건 충족");
+        pooling();
     }
 }
