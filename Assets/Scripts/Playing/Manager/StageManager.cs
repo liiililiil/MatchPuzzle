@@ -28,6 +28,6 @@ public class StageManager : MonoBehaviour
 
     public void Success()
     {
-        s
+        
     }
 }
