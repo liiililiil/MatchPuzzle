@@ -53,7 +53,7 @@ public class TileData
 {
     public UnityEngine.GameObject prefab;
     public TileType tileType;
-    public System.Collections.Generic.Queue<UnityEngine.GameObject> Disable = new System.Collections.Generic.Queue<UnityEngine.GameObject>();
+    public System.Collections.Generic.Queue<UnityEngine.GameObject> pooling = new System.Collections.Generic.Queue<UnityEngine.GameObject>();
 
 }
 
