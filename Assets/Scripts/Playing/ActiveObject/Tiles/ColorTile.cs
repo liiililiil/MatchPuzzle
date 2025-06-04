@@ -4,7 +4,8 @@ using System.Linq;
 
 public abstract class ColorTile : DropTile, ITile
 {
-    public override sealed void Calculate(){
+    public override sealed void Calculate()
+    {
         //등록 해제
         EventManager.Instance.OnCalculate -= Calculate;
 
@@ -22,12 +23,13 @@ public abstract class ColorTile : DropTile, ITile
         Debug.Log("totalStack Count: " + totalStack.Count);
 
         //최대값을 구합니다.
-        foreach (ITile tile in totalStack) {
+        foreach (ITile tile in totalStack)
+        {
             xMax = (ushort)Mathf.Max(tile.xChain.self, xMax);
             yMax = (ushort)Mathf.Max(tile.yChain.self, yMax);
             totalMax = (ushort)Mathf.Max(tile.totalChain.self, totalMax);
         }
-        
+
         foreach (ITile tile in totalStack)
         {
             tile.xChain.total = xMax;
@@ -48,16 +50,19 @@ public abstract class ColorTile : DropTile, ITile
 
     }
 
-    public override sealed void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection){
+    public override sealed void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection)
+    {
         totalStack.Push(this);
         isCalculated = true;
 
 
         //X축 방향으로 검사
-        foreach (var direction in Utils.xDirections){
+        foreach (var direction in Utils.xDirections)
+        {
 
-            ITile tile = Raycast(direction, 1, false);          
-            if (tile != null){
+            ITile tile = Raycast(direction, 1, false);
+            if (tile != null)
+            {
                 this.xChain.self = (ushort)Mathf.Max(tile.xChain.self + 1, this.xChain.self);
                 this.totalChain.self = (ushort)Mathf.Max(tile.totalChain.self + 1, this.totalChain.self);
 
@@ -67,11 +72,13 @@ public abstract class ColorTile : DropTile, ITile
         }
 
         //Y축 방향으로 검사
-        foreach (var direction in Utils.yDirections){
+        foreach (var direction in Utils.yDirections)
+        {
             if (direction == exceptionDirection) continue;
 
             ITile tile = Raycast(direction, 1, false);
-            if (tile != null){
+            if (tile != null)
+            {
                 this.yChain.self = (ushort)Mathf.Max(tile.yChain.self + 1, this.yChain.self);
                 this.totalChain.self = (ushort)Mathf.Max(tile.totalChain.self + 1, this.totalChain.self);
 
@@ -81,7 +88,7 @@ public abstract class ColorTile : DropTile, ITile
         }
     }
 
-    public sealed override void Organize(){} //색 타일은 정리당하지 않음
+    public sealed override void Organize() { } //색 타일은 정리당하지 않음
     public sealed override void Blasted()
     {
         EventManager.Instance.OnBlastTile(this, transform.position);
@@ -96,17 +103,14 @@ public abstract class ColorTile : DropTile, ITile
             tile?.Organize();
         }
 
-
-        if (true)
-        {
-
-        }
-        else
-        {
-
-        }
+        CalculateSpawnBomb();
 
         Debug.Log("터지는 조건 충족");
         Disable();
+    }
+
+    private void CalculateSpawnBomb()
+    {
+        
     }
 }
