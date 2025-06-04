@@ -44,8 +44,8 @@ public class SpawnManager : MonoBehaviour{
 
     private GameObject GetTile(TileData tileData)
     {
-        if (tileData.Disable.Count <= 0) return Instantiate(tileData.prefab);
-        return tileData.Disable.Dequeue();
+        if (tileData.pooling.Count <= 0) return Instantiate(tileData.prefab);
+        return tileData.pooling.Dequeue();
     }
     public void SpawnTile(TileType tileType, Vector2 position, Quaternion rotate)
     {
@@ -63,7 +63,7 @@ public class SpawnManager : MonoBehaviour{
     }
 
     public void pooling(GameObject gameObject, ITile tile){
-        tileDataIndex[GetTileType(tile)].Disable.Enqueue(gameObject);
+        tileDataIndex[GetTileType(tile)].pooling.Enqueue(gameObject);
     }
 
 }
