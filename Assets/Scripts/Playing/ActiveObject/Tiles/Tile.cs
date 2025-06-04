@@ -71,6 +71,8 @@ public abstract class Tile : MonoBehaviour, ITile
         circleCollider2D.enabled = true;
         gameObject.transform.position = pos;
         gameObject.transform.rotation = rotate;
+
+        EventManager.Instance.OnSpawnTile(this, transform.position);
     }
 
     // public abstract void MoveMent(Vector2 target);
