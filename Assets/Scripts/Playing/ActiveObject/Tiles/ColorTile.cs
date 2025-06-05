@@ -44,7 +44,6 @@ public abstract class ColorTile : DropTile, ITile
             if (tile.totalChain.total >= 3)
             {
                 tile.Blasted();
-                tile.Drop();
             }
         }
 
@@ -91,7 +90,15 @@ public abstract class ColorTile : DropTile, ITile
     public sealed override void Organize() { } //색 타일은 정리당하지 않음
     public sealed override void Blasted()
     {
-        EventManager.Instance.OnBlastTile(this, transform.position);
+        try
+        {
+            EventManager.Instance.OnBlastTile(this, transform.position);
+
+        }
+        catch
+        {
+            Debug.LogWarning("터지는 액션에 구독된 함수가 하나도 없습니다!");
+        }
 
         //4 방향으로 Ray 쏘기
         foreach (var (xDir, yDir) in Utils.xDirections.Zip(Utils.yDirections, (x, y) => (x, y)))
