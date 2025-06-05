@@ -28,14 +28,25 @@ public abstract class Tile : MonoBehaviour, ITile
 
     public void CalReset()
     {
-        EventManager.Instance.OnCalReset -= CalReset;
+        try
+        {
+            EventManager.Instance.OnCalReset -= CalReset;
+
+        }
+        catch
+        {
+            Debug.LogWarning("독립적으로 실행되었습니다!");
+        }
+
         isCalculated = false;
+
+        ChainReset();
     }
 
     protected ITile Raycast(Vector2 direction, float lenghtMultiple, bool isGlobal)
     {
         int layerMask;
-        if (isGlobal) layerMask = -1;
+        if (isGlobal) layerMask = ~0;
         else layerMask = 1 << gameObject.layer;
 
         Vector2 worldDirection = transform.TransformDirection(direction).normalized;
@@ -59,9 +70,23 @@ public abstract class Tile : MonoBehaviour, ITile
 
     public void Disable()
     {
-        EventManager.Instance.OnDisableTile.Invoke(this, transform.position);
+        try
+        {
+            EventManager.Instance.OnDisableTile.Invoke(this, transform.position);
+        }
+        catch
+        {
+            Debug.LogWarning("타일 비활성화 액션에 구독된 함수가 하나도 없습니다!");
+        }
 
+        //위 타일에게 낙하를 명령
+
+        if (circleCollider2D == null) circleCollider2D = GetComponent<CircleCollider2D>();
         circleCollider2D.enabled = false;
+
+        ITile[] aboveTile = { Raycast(Vector2.up, 1, true), Raycast(Vector2.up + Vector2.right, 1.7f, true), Raycast(Vector2.up + Vector2.left, 1.7f, true) };
+        foreach (ITile tile in aboveTile) tile?.Drop();
+        
         gameObject.transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_Pos_Y);
         SpawnManager.Instance.pooling(gameObject, this);
     }
@@ -93,7 +118,7 @@ public abstract class Tile : MonoBehaviour, ITile
 
         EventManager.Instance.OnBlastTileByBomb(this, tileDestroyer, transform.position);
         
-        Blasted();
+        Disable();
     }
 
     void OnDrawGizmos()
