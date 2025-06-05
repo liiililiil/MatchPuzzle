@@ -5,8 +5,6 @@ public class Block : NonDropTile, ITile
 {
     public override void Calculate()
     {
-        // 블록은 계산하지 않음
-        isCalculated = true;
     }
     public override void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection)
     {
