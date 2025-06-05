@@ -18,7 +18,6 @@ public class EventManager : MonoBehaviour
     public Action<ITile, Vector2> OnSpawnTile;
 
 
-
     void Awake(){   
         //싱글톤
         if (Instance == null){
