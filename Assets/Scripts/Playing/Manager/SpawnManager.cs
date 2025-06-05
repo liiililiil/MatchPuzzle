@@ -9,14 +9,14 @@ public class SpawnManager : MonoBehaviour{
     public static SpawnManager Instance { get; private set; }
 
     [SerializeField]
-    private List<TileData> tileData;
+    private TileData[] tileData;
 
     private TileData[] tileDataIndex;
 
 
 
     void Awake(){
-        tileDataIndex = new TileData[tileData.Count + 1];
+        tileDataIndex = new TileData[Utils.TILETYPE_LENGHT];
         
         //싱글톤
         if (Instance == null)
@@ -38,6 +38,8 @@ public class SpawnManager : MonoBehaviour{
         {
             ushort type = (ushort)data.tileType;
 
+            // Debug.Log(data.tileType);
+
             if (tileDataIndex[type] == null) tileDataIndex[type] = data;
         }
     }
@@ -50,13 +52,15 @@ public class SpawnManager : MonoBehaviour{
     public void SpawnTile(TileType tileType, Vector2 position, Quaternion rotate)
     {
         GameObject gameObject = GetTile(tileDataIndex[(ushort)tileType]);
-        gameObject.GetComponent<ITile>()?.Enable(position, rotate);
+        ITile itile = gameObject.GetComponent<ITile>();
+        itile?.Enable(position, rotate);
     }
     private int GetTileType(ITile tile)
     {
 
-        if (tile is Block) return 0;
-        if (tile is Red) return 1;
+        if (tile is Block) return (int)TileType.Block;
+        if (tile is Red) return (int)TileType.Red;
+        if (tile is Purple) return (int)TileType.Purple;
 
         Debug.LogError("지정되지 않은 타일!");
         return 0;
