@@ -6,9 +6,6 @@ public abstract class ColorTile : DropTile, ITile
 {
     public override sealed void Calculate()
     {
-        //등록 해제
-        EventManager.Instance.OnCalculate -= Calculate;
-
         //계산 당했다면 안하기
         if (isCalculated) return;
 
@@ -36,7 +33,7 @@ public abstract class ColorTile : DropTile, ITile
             tile.yChain.total = yMax;
             tile.totalChain.total = totalMax;
 
-            EventManager.Instance.OnCalReset -= tile.CalReset;
+            EventManager.Instance.OnCalReset += tile.CalReset;
 
             //터지는 조건이 되면 폭발
 
@@ -92,7 +89,7 @@ public abstract class ColorTile : DropTile, ITile
     {
         try
         {
-            EventManager.Instance.OnBlastTile(this, transform.position);
+            EventManager.Instance.OnBlastedTile(this, transform.position);
 
         }
         catch
