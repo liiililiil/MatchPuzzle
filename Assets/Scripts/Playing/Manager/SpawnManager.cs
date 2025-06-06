@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using NUnit.Framework;
@@ -49,25 +50,17 @@ public class SpawnManager : MonoBehaviour{
         if (tileData.pooling.Count <= 0) return Instantiate(tileData.prefab);
         return tileData.pooling.Dequeue();
     }
+    public void pooling(GameObject gameObject, ITile tile){
+        tileDataIndex[(ushort)tile.tileType].pooling.Enqueue(gameObject);
+    }
     public void SpawnTile(TileType tileType, Vector2 position, Quaternion rotate)
     {
         GameObject gameObject = GetTile(tileDataIndex[(ushort)tileType]);
+        // Debug.Log("Go");
+
         ITile itile = gameObject.GetComponent<ITile>();
-        itile?.Enable(position, rotate);
-    }
-    private int GetTileType(ITile tile)
-    {
-
-        if (tile is Block) return (int)TileType.Block;
-        if (tile is Red) return (int)TileType.Red;
-        if (tile is Purple) return (int)TileType.Purple;
-
-        Debug.LogError("지정되지 않은 타일!");
-        return 0;
-    }
-
-    public void pooling(GameObject gameObject, ITile tile){
-        tileDataIndex[GetTileType(tile)].pooling.Enqueue(gameObject);
+        // Debug.Log("tile");
+        itile.Enable(position, rotate);
     }
 
 }
