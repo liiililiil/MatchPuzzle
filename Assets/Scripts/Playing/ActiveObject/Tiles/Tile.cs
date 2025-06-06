@@ -9,14 +9,26 @@ public abstract class Tile : MonoBehaviour, ITile
     public Chain _xChain = new Chain();
     public Chain _yChain = new Chain();
     public Chain _totalChain = new Chain();
+    public abstract TileType tileType { get; }
+    public abstract bool isCanDrop { get; }
     protected byte bitFlag;
-    protected CircleCollider2D circleCollider2D;
+    protected BoxCollider2D boxCollider2D;
     protected new Rigidbody2D rigidbody2D;
+    protected Coroutine coroutine;
     public Chain xChain { get => _xChain; set => _xChain = value; }
     public Chain yChain { get => _yChain; set => _yChain = value; }
     public Chain totalChain { get => _totalChain; set => _totalChain = value; }
     public bool isCalculated { get => (bitFlag & 1 << 0) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 0 : bitFlag & ~(1 << 0)); }
-    public bool isDrop { get => (bitFlag & 1 << 1) != 0; set => bitFlag = (byte)(value ? bitFlag | 1<<1 : bitFlag & ~(1<<1)); }
+    public bool isDrop { get => (bitFlag & 1 << 1) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 1 : bitFlag & ~(1 << 1)); }
+    public bool needCallDrop { get => (bitFlag & 1 << 2) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 2 : bitFlag & ~(1 << 2)); }
+
+    public bool isCoroutineRunning()
+    {
+        if (coroutine != null) return true;
+        return false;
+    }
+
+    
 
     public void ChainReset()
     {
@@ -28,16 +40,6 @@ public abstract class Tile : MonoBehaviour, ITile
 
     public void CalReset()
     {
-        try
-        {
-            EventManager.Instance.OnCalReset -= CalReset;
-
-        }
-        catch
-        {
-            Debug.LogWarning("독립적으로 실행되었습니다!");
-        }
-
         isCalculated = false;
 
         ChainReset();
@@ -49,16 +51,16 @@ public abstract class Tile : MonoBehaviour, ITile
         if (isGlobal) layerMask = ~0;
         else layerMask = 1 << gameObject.layer;
 
-        Vector2 worldDirection = transform.TransformDirection(direction).normalized;
+        Vector2 worldDirection = transform.TransformDirection(direction);
 
         // 콜라이더 바깥으로 Raycast 시작 지점 계산
         Vector2 start = (Vector2)transform.position + worldDirection * Utils.RAYCASY_REVISION;
 
         // Raycast 수행
-        Debug.DrawRay(start, worldDirection * (Utils.RAYCASY_LENGHT * lenghtMultiple), Color.red, 0.1f);
+        Debug.DrawRay(start, worldDirection* Utils.RAYCASY_LENGHT * lenghtMultiple, Color.red, 0.01f);
         RaycastHit2D hit = Physics2D.Raycast(start, worldDirection, Utils.RAYCASY_LENGHT * lenghtMultiple, layerMask);
-        // Debug.Log(hit.collider.name
 
+        // Debug.Log(hit.collider.name
         return hit.collider ? hit.collider.GetComponent<ITile>() : null;
     }
 
@@ -72,7 +74,7 @@ public abstract class Tile : MonoBehaviour, ITile
     {
         try
         {
-            EventManager.Instance.OnDisableTile.Invoke(this, transform.position);
+            EventManager.Instance.OnDisabledTile.Invoke(this, transform.position);
         }
         catch
         {
@@ -81,8 +83,8 @@ public abstract class Tile : MonoBehaviour, ITile
 
         //위 타일에게 낙하를 명령
 
-        if (circleCollider2D == null) circleCollider2D = GetComponent<CircleCollider2D>();
-        circleCollider2D.enabled = false;
+        if (boxCollider2D == null) boxCollider2D = GetComponent<BoxCollider2D>();
+        boxCollider2D.enabled = false;
 
         ITile[] aboveTile = { Raycast(Vector2.up, 1, true), Raycast(Vector2.up + Vector2.right, 1.7f, true), Raycast(Vector2.up + Vector2.left, 1.7f, true) };
         foreach (ITile tile in aboveTile) tile?.Drop();
@@ -93,11 +95,21 @@ public abstract class Tile : MonoBehaviour, ITile
 
     public void Enable(Vector2 pos, quaternion rotate)
     {
-        circleCollider2D.enabled = true;
-        gameObject.transform.position = pos;
-        gameObject.transform.rotation = rotate;
+        transform.position = pos;
+        transform.rotation = rotate;
 
-        EventManager.Instance.OnSpawnTile(this, transform.position);
+        try
+        {
+        EventManager.Instance.OnSpawnedTile(this, transform.position);
+        } catch{
+            
+        }
+
+
+        if (boxCollider2D == null) boxCollider2D = GetComponent<BoxCollider2D>();
+        boxCollider2D.enabled = true;
+
+        Drop();
     }
 
     // public abstract void MoveMent(Vector2 target);
@@ -116,7 +128,7 @@ public abstract class Tile : MonoBehaviour, ITile
 
         if(tileDestroyer == null) Debug.LogError("파괴자가 아닌 대상과 충돌하였습니다!");
 
-        EventManager.Instance.OnBlastTileByBomb(this, tileDestroyer, transform.position);
+        EventManager.Instance.OnBlastedTileByBomb(this, tileDestroyer, transform.position);
         
         Disable();
     }
