@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Block : NonDropTile, ITile
 {
+    public override TileType tileType { get => TileType.Block; }
     public override void Calculate()
     {
     }
@@ -22,6 +23,6 @@ public class Block : NonDropTile, ITile
         // 블록은 폭발하지 않음
         return;
     }
+
+
 }
-
-
