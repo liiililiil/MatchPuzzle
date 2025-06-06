@@ -1,6 +1,7 @@
 
 using System;
-using System.Numerics;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class Chain
 {
@@ -34,7 +35,7 @@ public class Chain
     }
 }
 
-[System.Serializable]
+[Serializable]
 public enum TileType : ushort{
     Block = 0,
     Red = 1,
@@ -48,13 +49,52 @@ public enum TileType : ushort{
     Box = 9
 
 }
-[System.Serializable]
+[Serializable]
 public class TileData
 {
-    public UnityEngine.GameObject prefab;
+    public GameObject prefab;
     public TileType tileType;
-    public System.Collections.Generic.Queue<UnityEngine.GameObject> pooling = new System.Collections.Generic.Queue<UnityEngine.GameObject>();
+    public Queue<GameObject> pooling = new Queue<GameObject>();
 
+}
+
+public class ActionStack
+{
+    private readonly Stack<Action> stack = new Stack<Action>();
+    private readonly HashSet<Action> hashSet = new HashSet<Action>();
+
+    public void Invoke()
+    {
+        while (stack.Count > 0)
+        {
+            var action = stack.Pop();
+            hashSet.Remove(action);
+            action.Invoke();
+        }
+    }
+
+    public void Push(Action action)
+    {
+        if (stack.Count >= 1000)
+        {
+            while (stack.Count > 0)
+            {
+                var _action = stack.Pop();
+                hashSet.Remove(action);
+            }
+
+           throw new Exception("무한 루프 감지됨!"); 
+        } 
+
+        if (hashSet.Add(action))
+            stack.Push(action);
+    }
+
+    public static ActionStack operator +(ActionStack actionStack, Action action)
+    {
+        actionStack.Push(action);
+        return actionStack;
+    }
 }
 
 // // 클리어 조건 구조
@@ -74,12 +114,15 @@ public class TileData
 //     int goalCount;
 // }
 
-// [System.Serializable]
-// public struct StageSpawnRate
-// {
-//     TileType tile;
-//     float weight;
-// }
+[Serializable]
+public class SpawnRate
+{
+    public TileType tile;
+    public float weight;
+
+    [HideInInspector]
+    public float cumulativeWeight;
+}
 
 // [System.Serializable]
 // public struct TileStartInfo
