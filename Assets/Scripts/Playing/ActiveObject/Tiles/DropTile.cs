@@ -78,7 +78,7 @@ public abstract class DropTile : Tile, ITile
         if (belowTile == null || belowTile.isDrop)
         {
             //일단 위에 타일 구하기
-            ITile[] aboveTile = { Raycast(Vector2.up, 3, true), Raycast(Vector2.up + Vector2.right, 5f, true), Raycast(Vector2.up + Vector2.left, 5f, true) };
+            ITile[] aboveTile = { Raycast(Vector2.up, 3f, true), Raycast(Vector2.up + Vector2.right, 3f, true), Raycast(Vector2.up + Vector2.left, 3f, true) };
 
             //이동
             isDrop = true;

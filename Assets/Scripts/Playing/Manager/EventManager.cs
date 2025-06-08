@@ -53,9 +53,9 @@ public class EventManager : MonoBehaviour
                 {
                     OnSpawnTile.Invoke();
                 }
-                catch
+                catch (Exception ex)
                 {
-
+                    Debug.LogError($"타일을 스폰하는데 오류가 발생하였습니다! {ex} \n {ex.StackTrace}");
                 }
 
             }
