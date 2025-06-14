@@ -56,7 +56,7 @@ public abstract class ColorTile : DropTile, ITile
         foreach (var direction in Utils.xDirections)
         {
 
-            ITile tile = Raycast(direction, 1, false);
+            ITile tile = GetTileFromWorld(direction);
             if (tile != null)
             {
                 this.xChain.self = (ushort)Mathf.Max(tile.xChain.self + 1, this.xChain.self);
@@ -72,7 +72,7 @@ public abstract class ColorTile : DropTile, ITile
         {
             if (direction == exceptionDirection) continue;
 
-            ITile tile = Raycast(direction, 1, false);
+            ITile tile = GetTileFromWorld(direction);
             if (tile != null)
             {
                 this.yChain.self = (ushort)Mathf.Max(tile.yChain.self + 1, this.yChain.self);
@@ -87,23 +87,15 @@ public abstract class ColorTile : DropTile, ITile
     public sealed override void Organize() { } //색 타일은 정리당하지 않음
     public sealed override void Blasted()
     {
-        try
-        {
-            EventManager.Instance.OnBlastedTile(this, transform.position);
-
-        }
-        catch
-        {
-            Debug.LogWarning("터지는 액션에 구독된 함수가 하나도 없습니다!");
-        }
+        EventManager.Instance.OnBlastedTile.Invoke(this, transform.position);
 
         //4 방향으로 Ray 쏘기
         foreach (var (xDir, yDir) in Utils.xDirections.Zip(Utils.yDirections, (x, y) => (x, y)))
         {
             Vector2 direction = new Vector2(xDir.x, yDir.y);
 
-            // Raycast를 이용해 타일을 찾고 정리 수행
-            ITile tile = Raycast(direction, 1, true);
+            // GetTileFromWorld를 이용해 타일을 찾고 정리 수행
+            ITile tile = GetTileFromWorld(direction, true);
             tile?.Organize();
         }
 
