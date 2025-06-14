@@ -28,7 +28,7 @@ public abstract class Tile : MonoBehaviour, ITile
         return false;
     }
 
-    
+
 
     public void ChainReset()
     {
@@ -45,24 +45,44 @@ public abstract class Tile : MonoBehaviour, ITile
         ChainReset();
     }
 
-    protected ITile Raycast(Vector2 direction, float lenghtMultiple, bool isGlobal)
+    protected ITile GetTileFromWorld(Vector2 direction, bool isGlobal = false)
     {
-        int layerMask;
-        if (isGlobal) layerMask = ~0;
-        else layerMask = 1 << gameObject.layer;
+        int layerMask = isGlobal ? ~0 : 1 << gameObject.layer;
 
         Vector2 worldDirection = transform.TransformDirection(direction);
 
-        // 콜라이더 바깥으로 Raycast 시작 지점 계산
+        // 콜라이더 바깥으로 GetTileFromWorld 시작 지점 계산
         Vector2 start = (Vector2)transform.position + worldDirection * Utils.RAYCASY_REVISION;
 
-        // Raycast 수행
-        Debug.DrawRay(start, worldDirection* Utils.RAYCASY_LENGHT * lenghtMultiple, Color.red, 0.01f);
-        RaycastHit2D hit = Physics2D.Raycast(start, worldDirection, Utils.RAYCASY_LENGHT * lenghtMultiple, layerMask);
+        // GetTileFromWorld 수행
+        #if UNITY_EDITOR
+        DrawOverlapBox(start,Utils.FloatToVector2(Utils.TILE_SIZE), transform.rotation.z, Color.red);
+        #endif
+        Collider2D hit = Physics2D.OverlapBox(start, Utils.FloatToVector2(Utils.TILE_SIZE), transform.rotation.z);
 
         // Debug.Log(hit.collider.name
-        return hit.collider ? hit.collider.GetComponent<ITile>() : null;
+        return hit ? hit.GetComponent<ITile>() : null;
     }
+
+    protected ITile GetTileFromWorld(Vector2 direction, int revisionMultiple, bool isGlobal = false)
+    {
+        int layerMask = isGlobal ? ~0 : 1 << gameObject.layer;
+
+        Vector2 worldDirection = transform.TransformDirection(direction);
+
+        // 콜라이더 바깥으로 GetTileFromWorld 시작 지점 계산
+        Vector2 start = (Vector2)transform.position + worldDirection * Utils.RAYCASY_REVISION * revisionMultiple;
+
+        // GetTileFromWorld 수행
+        #if UNITY_EDITOR
+        DrawOverlapBox(start,Utils.FloatToVector2(Utils.TILE_SIZE), transform.rotation.z, Color.red);
+        #endif
+        Collider2D hit = Physics2D.OverlapBox(start, Utils.FloatToVector2(Utils.TILE_SIZE), transform.rotation.z);
+
+        // Debug.Log(hit.collider.name
+        return hit ? hit.GetComponent<ITile>() : null;
+    }
+
 
 
     public void ForceBlasted()
@@ -72,23 +92,16 @@ public abstract class Tile : MonoBehaviour, ITile
 
     public void Disable()
     {
-        try
-        {
-            EventManager.Instance.OnDisabledTile.Invoke(this, transform.position);
-        }
-        catch
-        {
-            Debug.LogWarning("타일 비활성화 액션에 구독된 함수가 하나도 없습니다!");
-        }
 
+        EventManager.Instance.OnDisabledTile.Invoke(this, transform.position);
         //위 타일에게 낙하를 명령
 
         if (boxCollider2D == null) boxCollider2D = GetComponent<BoxCollider2D>();
         boxCollider2D.enabled = false;
 
-        ITile[] aboveTile = { Raycast(Vector2.up, 1, true), Raycast(Vector2.up + Vector2.right, 1.7f, true), Raycast(Vector2.up + Vector2.left, 1.7f, true) };
+        ITile[] aboveTile = { GetTileFromWorld(Vector2.up, true), GetTileFromWorld(Vector2.up + Vector2.right, true), GetTileFromWorld(Vector2.up + Vector2.left, true) };
         foreach (ITile tile in aboveTile) tile?.Drop();
-        
+
         gameObject.transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_Pos_Y);
         SpawnManager.Instance.pooling(gameObject, this);
     }
@@ -98,12 +111,7 @@ public abstract class Tile : MonoBehaviour, ITile
         transform.position = pos;
         transform.rotation = rotate;
 
-        try
-        {
-        EventManager.Instance.OnSpawnedTile(this, transform.position);
-        } catch{
-            
-        }
+        EventManager.Instance.OnSpawnedTile.Invoke(this, transform.position);
 
 
         if (boxCollider2D == null) boxCollider2D = GetComponent<BoxCollider2D>();
@@ -126,10 +134,10 @@ public abstract class Tile : MonoBehaviour, ITile
         //충돌한 대상의 파괴자 가져오기
         ITileDestroyer tileDestroyer = collision.gameObject.GetComponent<ITileDestroyer>();
 
-        if(tileDestroyer == null) Debug.LogError("파괴자가 아닌 대상과 충돌하였습니다!");
+        if (tileDestroyer == null) Debug.LogError("파괴자가 아닌 대상과 충돌하였습니다!");
 
-        EventManager.Instance.OnBlastedTileByBomb(this, tileDestroyer, transform.position);
-        
+        EventManager.Instance.OnBlastedTileByBomb.Invoke(this, tileDestroyer, transform.position);
+
         Disable();
     }
 
@@ -138,8 +146,31 @@ public abstract class Tile : MonoBehaviour, ITile
         Gizmos.color = Color.blue;
         Gizmos.DrawCube(transform.position, Utils.FloatToVector2(Utils.TILE_SIZE));
     }
-    
-    
-    
-    
+
+
+#if UNITY_EDITOR
+    void DrawOverlapBox(Vector2 center, Vector2 size, float angleDeg, Color color, float duration = 0.05f)
+    {
+        float angleRad = angleDeg * Mathf.Deg2Rad;
+        Vector2 right = new Vector2(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
+        Vector2 up = new Vector2(-right.y, right.x);
+
+        Vector2 extentsX = right * (size.x / 2f);
+        Vector2 extentsY = up * (size.y / 2f);
+
+        Vector2 topRight = center + extentsX + extentsY;
+        Vector2 topLeft = center - extentsX + extentsY;
+        Vector2 bottomLeft = center - extentsX - extentsY;
+        Vector2 bottomRight = center + extentsX - extentsY;
+
+        Debug.DrawLine(topLeft, topRight, color, duration);
+        Debug.DrawLine(topRight, bottomRight, color, duration);
+        Debug.DrawLine(bottomRight, bottomLeft, color, duration);
+        Debug.DrawLine(bottomLeft, topLeft, color, duration);
+    }
+#endif
+
+
+
+
 }
