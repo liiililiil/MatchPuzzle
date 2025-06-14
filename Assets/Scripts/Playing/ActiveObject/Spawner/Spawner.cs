@@ -7,7 +7,7 @@ public class Spawner : MonoBehaviour
     private SpawnRate[] spawnTable;
     private void Start()
     {
-        EventManager.Instance.OnSpawnTile += TrySpawn;
+        EventManager.Instance.OnSpawnTile.AddListener(TrySpawn);
 
         //확률 구하기
 
@@ -28,9 +28,9 @@ public class Spawner : MonoBehaviour
 
     private void TrySpawn()
     {
-        RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, Vector2.down, 0.1f);
+        Collider2D collider = Physics2D.OverlapBox(transform.position, Utils.FloatToVector2(Utils.TILE_SIZE), 0);
 
-        if (raycastHit2D.collider == null || raycastHit2D.collider.GetComponent<ITile>() == null)
+        if (collider == null || collider.GetComponent<ITile>() == null)
             SpawnManager.Instance.SpawnTile(GetTileFromTable(), gameObject.transform.position, Quaternion.identity);
     }
 
@@ -47,14 +47,7 @@ public class Spawner : MonoBehaviour
     
     ~Spawner()
     {
-        try
-        {
-            EventManager.Instance.OnSpawnTile -= TrySpawn;
-        }
-        catch
-        {
-            Debug.LogWarning("스포너가 등록되지 않은 상태에서 소멸이 확인되었습니다!");
-        }
+        EventManager.Instance.OnSpawnTile.RemoveListener(TrySpawn);
     }
 }
 
