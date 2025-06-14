@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EventManager : MonoBehaviour
 {
@@ -10,14 +11,21 @@ public class EventManager : MonoBehaviour
     public ActionStack OnDrop = new ActionStack();
     public ActionStack OnDispose = new ActionStack();
 
-    //타일 전체에 대한 액션
-    public Action OnSpawnTile;
-    public Action<ITile, Vector2> OnDisabledTile;
-    public Action<ITile, Vector2> OnBlastedTile;
-    public Action<ITile, ITileDestroyer, Vector2> OnBlastedTileByBomb;
-    public Action<ITile, Vector2> OnBombActived;
-    public Action<ITile, Vector2> OnOrganized;
-    public Action<ITile, Vector2> OnSpawnedTile;
+    //타일 전체에 대한 이벤트트
+    [HideInInspector]
+    public UnityEvent OnSpawnTile;
+    [HideInInspector]
+    public UnityEvent<ITile, Vector2> OnDisabledTile;
+    [HideInInspector]
+    public UnityEvent<ITile, Vector2> OnBlastedTile;
+    [HideInInspector]
+    public UnityEvent<ITile, ITileDestroyer, Vector2> OnBlastedTileByBomb;
+    [HideInInspector]
+    public UnityEvent<ITile, Vector2> OnBombActived;
+    [HideInInspector]
+    public UnityEvent<ITile, Vector2> OnOrganized;
+    [HideInInspector]
+    public UnityEvent<ITile, Vector2> OnSpawnedTile;
 
     public int movingTiles;
     private float time;
@@ -47,20 +55,16 @@ public class EventManager : MonoBehaviour
         {
             if (movingTiles == 0)
             {
+                OnCalReset.Invoke();
+                OnCalculate.Invoke();
                 OnDrop.Invoke();
-                
-                try
-                {
-                    OnSpawnTile.Invoke();
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError($"타일을 스폰하는데 오류가 발생하였습니다! {ex} \n {ex.StackTrace}");
-                }
+                OnSpawnTile.Invoke();
+
 
             }
         
             time -= 1;
+
 
         }
     }
