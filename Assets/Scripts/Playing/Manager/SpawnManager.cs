@@ -60,7 +60,7 @@ public class SpawnManager : MonoBehaviour{
 
         ITile itile = gameObject.GetComponent<ITile>();
         // Debug.Log("tile");
-        Debug.Log(itile);
+        // Debug.Log(itile);
         itile.Enable(position, rotate);
     }
 
