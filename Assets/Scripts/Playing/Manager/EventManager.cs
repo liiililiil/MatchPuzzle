@@ -50,19 +50,21 @@ public class EventManager : MonoBehaviour
     private void LateUpdate()
     {
         time += Time.deltaTime * (Utils.MOVEMENT_SPEED * 2);
-
-        if (time >= 1)
-        {
-            if (movingTiles == 0)
+                    OnDrop.Invoke();
+            OnSpawnTile.Invoke();
+        
+            if (OnDrop.Count() <= 0)
             {
                 OnCalReset.Invoke();
                 OnCalculate.Invoke();
-                OnDrop.Invoke();
-                OnSpawnTile.Invoke();
-
 
             }
-        
+
+        if (time >= 1)
+        {
+
+
+
             time -= 1;
 
 
