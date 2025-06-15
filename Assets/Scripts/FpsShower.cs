@@ -17,7 +17,7 @@ public class FpsShower : MonoBehaviour
     {
         time += Time.deltaTime;
         if(time >0.1f){
-            text.text = (1f/Time.deltaTime).ToString("f0") + " Fps (" +(Time.deltaTime*1000).ToString("f0")+ " ms)";
+            text.text = $"{1f/Time.deltaTime}, Fps ({Time.deltaTime * 1000})ms";
             time = 0;
         }
         
