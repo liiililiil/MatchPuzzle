@@ -75,16 +75,16 @@ public class ActionStack
 
     public void Push(Action action)
     {
-        if (stack.Count >= 1000)
-        {
-            while (stack.Count > 0)
-            {
-                var _action = stack.Pop();
-                hashSet.Remove(action);
-            }
+        // if (stack.Count >= 1000)
+        // {
+        //     while (stack.Count > 0)
+        //     {
+        //         var _action = stack.Pop();
+        //         hashSet.Remove(_action);
+        //     }
 
-           throw new Exception("무한 루프 감지됨!"); 
-        } 
+        //    throw new Exception("무한 루프 감지됨!"); 
+        // } 
 
         if (hashSet.Add(action))
             stack.Push(action);
