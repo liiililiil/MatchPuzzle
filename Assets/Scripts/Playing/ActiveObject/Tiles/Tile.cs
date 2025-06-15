@@ -19,7 +19,7 @@ public abstract class Tile : MonoBehaviour, ITile
     public Chain yChain { get => _yChain; set => _yChain = value; }
     public Chain totalChain { get => _totalChain; set => _totalChain = value; }
     public bool isCalculated { get => (bitFlag & 1 << 0) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 0 : bitFlag & ~(1 << 0)); }
-    public bool isDrop { get => (bitFlag & 1 << 1) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 1 : bitFlag & ~(1 << 1)); }
+    // public bool isDrop { get => (bitFlag & 1 << 1) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 1 : bitFlag & ~(1 << 1)); }
     // public bool needCallDrop { get => (bitFlag & 1 << 2) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 2 : bitFlag & ~(1 << 2)); }
 
     public bool isCoroutineRunning()
@@ -80,7 +80,6 @@ public abstract class Tile : MonoBehaviour, ITile
     {
 
         EventManager.Instance.OnDisabledTile.Invoke(this, transform.position);
-        //위 타일에게 낙하를 명령
 
         if (boxCollider2D == null) boxCollider2D = GetComponent<BoxCollider2D>();
         boxCollider2D.enabled = false;
@@ -88,6 +87,7 @@ public abstract class Tile : MonoBehaviour, ITile
         if (sprite == null) sprite = transform.GetChild(0).gameObject;
         sprite.SetActive(false);
 
+        //위 타일에게 낙하를 명령
         ITile[] aboveTile = { GetTileFromWorld(Vector2.up, true), GetTileFromWorld(Vector2.up + Vector2.right, true), GetTileFromWorld(Vector2.up + Vector2.left, true) };
         foreach (ITile tile in aboveTile) tile?.Drop();
 
@@ -97,18 +97,18 @@ public abstract class Tile : MonoBehaviour, ITile
 
     public void Enable(Vector2 pos, quaternion rotate)
     {
-        transform.position = pos;
-        transform.rotation = rotate;
-
-        EventManager.Instance.OnSpawnedTile.Invoke(this, transform.position);
-
-        CalReset();
-
         if (boxCollider2D == null) boxCollider2D = GetComponent<BoxCollider2D>();
         boxCollider2D.enabled = true;
 
         if (sprite == null) sprite = transform.GetChild(0).gameObject;
         sprite.SetActive(true);
+
+        CalReset();
+
+        transform.position = pos;
+        transform.rotation = rotate;
+
+        EventManager.Instance.OnSpawnedTile.Invoke(this, transform.position);
 
         Drop();
     }
@@ -134,11 +134,11 @@ public abstract class Tile : MonoBehaviour, ITile
         Disable();
     }
 
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawCube(transform.position, Utils.FloatToVector2(Utils.TILE_SIZE));
-    }
+    // void OnDrawGizmos()
+    // {
+    //     Gizmos.color = Color.blue;
+    //     Gizmos.DrawCube(transform.position, Utils.FloatToVector2(Utils.TILE_SIZE));
+    // }
 
 
 #if UNITY_EDITOR
