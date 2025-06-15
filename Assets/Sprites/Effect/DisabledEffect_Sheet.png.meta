@@ -1,0 +1,411 @@
+fileFormatVersion: 2
+guid: 4c7d4b6f741d02d4a87d94b6ab7cb27a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6909049157690236412
+    second: DisabledEffect_Sheet_0
+  - first:
+      213: -1106454973098927243
+    second: DisabledEffect_Sheet_1
+  - first:
+      213: 4671410463600038957
+    second: DisabledEffect_Sheet_2
+  - first:
+      213: -3493639625362119832
+    second: DisabledEffect_Sheet_3
+  - first:
+      213: 374126539730231133
+    second: DisabledEffect_Sheet_4
+  - first:
+      213: 4289026700163246560
+    second: DisabledEffect_Sheet_5
+  - first:
+      213: 1828715597373331383
+    second: DisabledEffect_Sheet_6
+  - first:
+      213: -7957285249352522898
+    second: DisabledEffect_Sheet_7
+  - first:
+      213: 45640738020975286
+    second: DisabledEffect_Sheet_8
+  - first:
+      213: 8922234571688745495
+    second: DisabledEffect_Sheet_9
+  - first:
+      213: 4543021358949029369
+    second: DisabledEffect_Sheet_10
+  - first:
+      213: 6765328538623409522
+    second: DisabledEffect_Sheet_11
+  - first:
+      213: -7144706970577534308
+    second: DisabledEffect_Sheet_12
+  - first:
+      213: 5763866677023059879
+    second: DisabledEffect_Sheet_13
+  - first:
+      213: -2598108583520310669
+    second: DisabledEffect_Sheet_14
+  - first:
+      213: 5058444373117832785
+    second: DisabledEffect_Sheet_15
+  - first:
+      213: -875970989918074207
+    second: DisabledEffect_Sheet_16
+  - first:
+      213: 7351288944312144136
+    second: DisabledEffect_Sheet_17
+  - first:
+      213: 2346812824195558422
+    second: DisabledEffect_Sheet_18
+  - first:
+      213: 8597914109956442494
+    second: DisabledEffect_Sheet_19
+  - first:
+      213: -7294563991524123677
+    second: DisabledEffect_Sheet_20
+  - first:
+      213: 9123206649530939612
+    second: DisabledEffect_Sheet_21
+  - first:
+      213: -3755662184540250395
+    second: DisabledEffect_Sheet_22
+  - first:
+      213: 1489272075189612380
+    second: DisabledEffect_Sheet_23
+  - first:
+      213: -6185704515688403950
+    second: DisabledEffect_Sheet_24
+  - first:
+      213: -4685170661084621680
+    second: DisabledEffect_Sheet_25
+  - first:
+      213: -5097622313243251902
+    second: DisabledEffect_Sheet_26
+  - first:
+      213: -4778931645151773460
+    second: DisabledEffect_Sheet_27
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: DisabledEffect_Sheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfd96db6a9fd1ef50800000000000000
+      internalID: 6909049157690236412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DisabledEffect_Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57b5970701515a0f0800000000000000
+      internalID: -1106454973098927243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DisabledEffect_Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d245ce2011f24d040800000000000000
+      internalID: 4671410463600038957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DisabledEffect_Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 863ef055549148fc0800000000000000
+      internalID: -3493639625362119832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DisabledEffect_Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5f9aad0b1a213500800000000000000
+      internalID: 374126539730231133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DisabledEffect_Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e9656f3f0fa58b30800000000000000
+      internalID: 4289026700163246560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DisabledEffect_Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b757a89527e06910800000000000000
+      internalID: 1828715597373331383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DisabledEffect_Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6323e7a93b029190800000000000000
+      internalID: -7957285249352522898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: e0304b3ef573854459e042fca1a62208
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      DisabledEffect_Sheet_0: 6909049157690236412
+      DisabledEffect_Sheet_1: -1106454973098927243
+      DisabledEffect_Sheet_2: 4671410463600038957
+      DisabledEffect_Sheet_3: -3493639625362119832
+      DisabledEffect_Sheet_4: 374126539730231133
+      DisabledEffect_Sheet_5: 4289026700163246560
+      DisabledEffect_Sheet_6: 1828715597373331383
+      DisabledEffect_Sheet_7: -7957285249352522898
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
