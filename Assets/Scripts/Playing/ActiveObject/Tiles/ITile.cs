@@ -11,7 +11,7 @@ public interface ITile
     public bool isCanDrop { get; }
 
     public bool isCalculated { get; set; }
-    public bool isDrop { get; set; }
+    // public bool isDrop { get; set; }
     
 
 
