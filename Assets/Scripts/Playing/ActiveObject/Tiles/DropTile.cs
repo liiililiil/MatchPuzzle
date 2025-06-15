@@ -61,7 +61,7 @@ public abstract class DropTile : Tile, ITile
 
             //이동
             isDrop = true;
-            needCallDrop = true;
+            // needCallDrop = true;
 
             EventManager.Instance.movingTiles++;
             coroutine = StartCoroutine(moveMent2D(dir));
