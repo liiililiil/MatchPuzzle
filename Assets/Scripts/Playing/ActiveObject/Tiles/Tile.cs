@@ -6,9 +6,11 @@ using UnityEngine.UIElements;
 
 public abstract class Tile : MonoBehaviour, ITile
 {
-    public Chain _xChain = new Chain();
-    public Chain _yChain = new Chain();
-    public Chain _totalChain = new Chain();
+    protected Chain _xChain = new Chain();
+    protected Chain _yChain = new Chain();
+
+    // [SerializeField]
+    // public Chain _totalChain = new Chain();
     public abstract TileType tileType { get; }
     public abstract bool isCanDrop { get; }
     protected byte bitFlag;
@@ -17,9 +19,9 @@ public abstract class Tile : MonoBehaviour, ITile
     protected Coroutine coroutine;
     public Chain xChain { get => _xChain; set => _xChain = value; }
     public Chain yChain { get => _yChain; set => _yChain = value; }
-    public Chain totalChain { get => _totalChain; set => _totalChain = value; }
+    // public Chain totalChain { get => _totalChain; set => _totalChain = value; }
     public bool isCalculated { get => (bitFlag & 1 << 0) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 0 : bitFlag & ~(1 << 0)); }
-    // public bool isDrop { get => (bitFlag & 1 << 1) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 1 : bitFlag & ~(1 << 1)); }
+    public bool isDrop { get => (bitFlag & 1 << 1) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 1 : bitFlag & ~(1 << 1)); }
     // public bool needCallDrop { get => (bitFlag & 1 << 2) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 2 : bitFlag & ~(1 << 2)); }
 
     public bool isCoroutineRunning()
@@ -34,7 +36,7 @@ public abstract class Tile : MonoBehaviour, ITile
     {
         xChain.Reset();
         yChain.Reset();
-        totalChain.Reset();
+        // totalChain.Reset();
 
     }
 
@@ -91,6 +93,12 @@ public abstract class Tile : MonoBehaviour, ITile
         ITile[] aboveTile = { GetTileFromWorld(Vector2.up, true), GetTileFromWorld(Vector2.up + Vector2.right, true), GetTileFromWorld(Vector2.up + Vector2.left, true) };
         foreach (ITile tile in aboveTile) tile?.Drop();
 
+        // if (isDrop)
+        // {
+        //     isDrop = false;
+        //     EventManager.Instance.movingTiles--;
+        // }
+
         gameObject.transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_Pos_Y);
         SpawnManager.Instance.pooling(gameObject, this);
     }
@@ -115,9 +123,9 @@ public abstract class Tile : MonoBehaviour, ITile
 
     // public abstract void MoveMent(Vector2 target);
 
-    public abstract void Blasted();
+    public abstract void Blasted(bool isCenter = false);
     public abstract void Calculate();
-    public abstract void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection);
+    public abstract void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection, ushort chain);
     public abstract void Drop();
     public abstract void Organize();
 
