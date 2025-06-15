@@ -13,7 +13,7 @@ public abstract class Tile : MonoBehaviour, ITile
     public abstract bool isCanDrop { get; }
     protected byte bitFlag;
     protected BoxCollider2D boxCollider2D;
-    protected new Rigidbody2D rigidbody2D;
+    protected GameObject sprite;
     protected Coroutine coroutine;
     public Chain xChain { get => _xChain; set => _xChain = value; }
     public Chain yChain { get => _yChain; set => _yChain = value; }
@@ -85,6 +85,9 @@ public abstract class Tile : MonoBehaviour, ITile
         if (boxCollider2D == null) boxCollider2D = GetComponent<BoxCollider2D>();
         boxCollider2D.enabled = false;
 
+        if (sprite == null) sprite = transform.GetChild(0).gameObject;
+        sprite.SetActive(false);
+
         ITile[] aboveTile = { GetTileFromWorld(Vector2.up, true), GetTileFromWorld(Vector2.up + Vector2.right, true), GetTileFromWorld(Vector2.up + Vector2.left, true) };
         foreach (ITile tile in aboveTile) tile?.Drop();
 
@@ -103,6 +106,9 @@ public abstract class Tile : MonoBehaviour, ITile
 
         if (boxCollider2D == null) boxCollider2D = GetComponent<BoxCollider2D>();
         boxCollider2D.enabled = true;
+
+        if (sprite == null) sprite = transform.GetChild(0).gameObject;
+        sprite.SetActive(true);
 
         Drop();
     }

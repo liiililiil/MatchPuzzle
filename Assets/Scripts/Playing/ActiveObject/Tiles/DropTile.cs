@@ -90,16 +90,19 @@ public abstract class DropTile : Tile, ITile
 
         Vector2 targetPos = startPos + direction * Utils.TILE_GAP;
 
+        transform.position = targetPos;
+
         float time = 0f;
+
         while (time <= 1f)
         {
-            transform.position = Vector2.Lerp(startPos, targetPos, time);
+            sprite.transform.position = Vector2.Lerp(startPos, targetPos, time);
             time += Time.deltaTime * Utils.MOVEMENT_SPEED;
             yield return null;
         }
 
         // 위치 정밀 보정
-        transform.position = targetPos;
+        sprite.transform.position = targetPos;
 
         EventManager.Instance.movingTiles--;
         coroutineEnd();
