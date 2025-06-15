@@ -6,6 +6,7 @@ public abstract class DropTile : Tile, ITile
 {
     public sealed override bool isCanDrop { get => true; }
 
+
     public override sealed void Drop()
     {
         //이미 이동중인데 함수 호출되면 반환
@@ -44,19 +45,24 @@ public abstract class DropTile : Tile, ITile
                 if (dir == Vector2.right)
                 {
                     sideTile = GetTileFromWorld(dir, 2, true);
-                    if (sideTile != null /*&& sideTile.isDrop*/)
+                    if (sideTile != null && sideTile.isCanDrop)
                         continue;
-                
+
                 }
 
                 //떨어트리기
                 if (DropTest(belowTile, -transform.up + (dir == Vector2.right ? transform.right : -transform.right))) return;
             }
-
-
         }
-        
 
+        if (isDrop)
+        {
+            isDrop = false;
+            EventManager.Instance.movingTiles--;
+            EventManager.Instance.OnCalculate += Calculate;
+
+            Debug.Log("- 됨");
+        }
     }
 
     protected bool DropTest(ITile belowTile, Vector3 dir)
@@ -64,7 +70,13 @@ public abstract class DropTile : Tile, ITile
         if (belowTile == null /*|| belowTile.isDrop*/)
         {
             //이동
-            EventManager.Instance.movingTiles++;
+            if (!isDrop)
+            {
+                isDrop = true;
+                EventManager.Instance.movingTiles++;
+                Debug.Log("+ 됨");
+            }
+
             coroutine = StartCoroutine(moveMent2D(dir));
 
             return true;
@@ -79,10 +91,6 @@ public abstract class DropTile : Tile, ITile
         //일단 위에 타일 구하기
         ITile[] aboveTile = { GetTileFromWorld(Vector2.up, true), GetTileFromWorld(Vector2.up + Vector2.right, true), GetTileFromWorld(Vector2.up + Vector2.left, true) };
 
-
-        yield return null;
-        // isDrop = false;
-
         // 현재 위치를 그리드에 정렬
         Vector2 startPos = new Vector2(
             Mathf.Round(transform.position.x / Utils.TILE_GAP) * Utils.TILE_GAP,
@@ -95,6 +103,7 @@ public abstract class DropTile : Tile, ITile
 
         float time = 0f;
 
+
         while (time <= 1f)
         {
             sprite.transform.position = Vector2.Lerp(startPos, targetPos, time);
@@ -104,8 +113,6 @@ public abstract class DropTile : Tile, ITile
 
         // 위치 정밀 보정
         sprite.transform.position = targetPos;
-
-        EventManager.Instance.movingTiles--;
 
         //위 하강 등록
         foreach (ITile tile in aboveTile) if (tile != null /*&& !tile.isDrop*/) tile.Drop();
