@@ -12,12 +12,10 @@ public class SpawnManager : MonoBehaviour{
     [SerializeField]
     private TileData[] tileData;
 
-    private TileData[] tileDataIndex;
-
+    private TileData[] tileDataIndex = new TileData[Utils.TILETYPE_LENGHT];
 
 
     void Awake(){
-        tileDataIndex = new TileData[Utils.TILETYPE_LENGHT];
         
         //싱글톤
         if (Instance == null)
