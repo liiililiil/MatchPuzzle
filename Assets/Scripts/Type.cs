@@ -36,7 +36,8 @@ public class Chain
 }
 
 [Serializable]
-public enum TileType : ushort{
+public enum TileType : ushort
+{
     Block = 0,
     Red = 1,
     Green = 2,
@@ -47,13 +48,27 @@ public enum TileType : ushort{
     YBomb = 7,
     ColorBomb = 8,
     Box = 9
-
 }
+[Serializable]
+public enum EffectType : ushort
+{
+    Disabled = 0
+}
+
 [Serializable]
 public class TileData
 {
     public GameObject prefab;
     public TileType tileType;
+    public Queue<GameObject> pooling = new Queue<GameObject>();
+
+}
+
+[Serializable]
+public class EffectData
+{
+    public GameObject prefab;
+    public EffectType effectType;
     public Queue<GameObject> pooling = new Queue<GameObject>();
 
 }
@@ -88,6 +103,11 @@ public class ActionStack
 
         if (hashSet.Add(action))
             stack.Push(action);
+    }
+
+    public int Count()
+    {
+        return hashSet.Count;
     }
 
     public static ActionStack operator +(ActionStack actionStack, Action action)
