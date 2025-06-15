@@ -28,10 +28,10 @@ public class Spawner : MonoBehaviour
 
     private void TrySpawn()
     {
-        Collider2D collider = Physics2D.OverlapBox(transform.position, Utils.FloatToVector2(Utils.TILE_SIZE), 0);
+        Collider2D collider = Physics2D.OverlapBox(transform.position, Utils.FloatToVector2(Utils.TILE_SIZE), transform.rotation.z);
 
         if (collider == null || collider.GetComponent<ITile>() == null)
-            SpawnManager.Instance.SpawnTile(GetTileFromTable(), gameObject.transform.position, Quaternion.identity);
+            SpawnManager.Instance.SpawnTile(GetTileFromTable(), gameObject.transform.position, transform.rotation);
     }
 
     private TileType GetTileFromTable()
