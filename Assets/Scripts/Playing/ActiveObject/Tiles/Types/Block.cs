@@ -7,12 +7,12 @@ public class Block : NonDropTile, ITile
     public override void Calculate()
     {
     }
-    public override void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection)
+    public override void NearbyCheck(ref Stack<ITile> totalStack, Vector2 exceptionDirection, ushort chain)
     {
         return;
     }
 
-    public override void Blasted()
+    public override void Blasted(bool isCenter = false)
     {
         // 블록은 폭발하지 않음
         return;
