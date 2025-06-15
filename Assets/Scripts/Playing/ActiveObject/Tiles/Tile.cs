@@ -20,7 +20,7 @@ public abstract class Tile : MonoBehaviour, ITile
     public Chain totalChain { get => _totalChain; set => _totalChain = value; }
     public bool isCalculated { get => (bitFlag & 1 << 0) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 0 : bitFlag & ~(1 << 0)); }
     public bool isDrop { get => (bitFlag & 1 << 1) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 1 : bitFlag & ~(1 << 1)); }
-    public bool needCallDrop { get => (bitFlag & 1 << 2) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 2 : bitFlag & ~(1 << 2)); }
+    // public bool needCallDrop { get => (bitFlag & 1 << 2) != 0; set => bitFlag = (byte)(value ? bitFlag | 1 << 2 : bitFlag & ~(1 << 2)); }
 
     public bool isCoroutineRunning()
     {
@@ -47,21 +47,7 @@ public abstract class Tile : MonoBehaviour, ITile
 
     protected ITile GetTileFromWorld(Vector2 direction, bool isGlobal = false)
     {
-        int layerMask = isGlobal ? ~0 : 1 << gameObject.layer;
-
-        Vector2 worldDirection = transform.TransformDirection(direction);
-
-        // 콜라이더 바깥으로 GetTileFromWorld 시작 지점 계산
-        Vector2 start = (Vector2)transform.position + worldDirection * Utils.RAYCASY_REVISION;
-
-        // GetTileFromWorld 수행
-        #if UNITY_EDITOR
-        DrawOverlapBox(start,Utils.FloatToVector2(Utils.TILE_SIZE), transform.rotation.z, Color.red);
-        #endif
-        Collider2D hit = Physics2D.OverlapBox(start, Utils.FloatToVector2(Utils.TILE_SIZE), transform.rotation.z);
-
-        // Debug.Log(hit.collider.name
-        return hit ? hit.GetComponent<ITile>() : null;
+        return GetTileFromWorld(direction, 1, isGlobal);
     }
 
     protected ITile GetTileFromWorld(Vector2 direction, int revisionMultiple, bool isGlobal = false)
@@ -77,7 +63,7 @@ public abstract class Tile : MonoBehaviour, ITile
         #if UNITY_EDITOR
         DrawOverlapBox(start,Utils.FloatToVector2(Utils.TILE_SIZE), transform.rotation.z, Color.red);
         #endif
-        Collider2D hit = Physics2D.OverlapBox(start, Utils.FloatToVector2(Utils.TILE_SIZE), transform.rotation.z);
+        Collider2D hit = Physics2D.OverlapBox(start, Utils.FloatToVector2(Utils.TILE_SIZE), transform.rotation.z, layerMask);
 
         // Debug.Log(hit.collider.name
         return hit ? hit.GetComponent<ITile>() : null;
@@ -113,6 +99,7 @@ public abstract class Tile : MonoBehaviour, ITile
 
         EventManager.Instance.OnSpawnedTile.Invoke(this, transform.position);
 
+        CalReset();
 
         if (boxCollider2D == null) boxCollider2D = GetComponent<BoxCollider2D>();
         boxCollider2D.enabled = true;
