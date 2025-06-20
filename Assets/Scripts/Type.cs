@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class Chain
 {
-    private ushort _total;
-    private ushort _self;
+    public ushort _total;
+    public ushort _self;
     public ushort self
     {
         get => _self;
@@ -73,36 +74,23 @@ public class EffectData
 
 }
 
-public class ActionStack
+public class OneTimeAction
 {
-    private readonly Stack<Action> stack = new Stack<Action>();
     private readonly HashSet<Action> hashSet = new HashSet<Action>();
 
     public void Invoke()
     {
-        while (stack.Count > 0)
+        foreach (var action in hashSet)
         {
-            var action = stack.Pop();
-            hashSet.Remove(action);
-            action.Invoke();
+            action?.Invoke();
         }
+
+        hashSet.Clear();
     }
 
-    public void Push(Action action)
+    public void Add(Action action)
     {
-        // if (stack.Count >= 1000)
-        // {
-        //     while (stack.Count > 0)
-        //     {
-        //         var _action = stack.Pop();
-        //         hashSet.Remove(_action);
-        //     }
-
-        //    throw new Exception("무한 루프 감지됨!"); 
-        // } 
-
-        if (hashSet.Add(action))
-            stack.Push(action);
+        hashSet.Add(action);
     }
 
     public int Count()
@@ -110,10 +98,10 @@ public class ActionStack
         return hashSet.Count;
     }
 
-    public static ActionStack operator +(ActionStack actionStack, Action action)
+    public static OneTimeAction operator +(OneTimeAction oneTimeAction, Action action)
     {
-        actionStack.Push(action);
-        return actionStack;
+        oneTimeAction.Add(action);
+        return oneTimeAction;
     }
 }
 
