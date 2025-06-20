@@ -6,26 +6,27 @@ using UnityEngine.Events;
 public class EventManager : MonoBehaviour
 {
     public static EventManager Instance { get; private set; }
-    public ActionStack OnCalReset = new ActionStack();
-    public ActionStack OnCalculate = new ActionStack();
-    public ActionStack OnDrop = new ActionStack();
-    public ActionStack OnDispose = new ActionStack();
+    public OneTimeAction InvokeCalReset = new OneTimeAction();
+    public OneTimeAction InvokeCalculate = new OneTimeAction();
+    public OneTimeAction InvokeDrop = new OneTimeAction();
+    public OneTimeAction InvokeBlast = new OneTimeAction();
+    public OneTimeAction InvokeOrganize = new OneTimeAction();
 
     //타일 전체에 대한 이벤트트
     [HideInInspector]
-    public UnityEvent OnSpawnTile;
+    public UnityEvent InvokeSpawnTile;
     [HideInInspector]
-    public UnityEvent<ITile, Vector2> OnDisabledTile;
+    public UnityEvent<Tile, Vector2> OnDisabledTile;
     [HideInInspector]
-    public UnityEvent<ITile, Vector2> OnBlastedTile;
+    public UnityEvent<Tile, Vector2> OnBlastTile;
     [HideInInspector]
-    public UnityEvent<ITile, ITileDestroyer, Vector2> OnBlastedTileByBomb;
+    public UnityEvent<Tile, ITileDestroyer, Vector2> OnBlastTileByBomb;
     [HideInInspector]
-    public UnityEvent<ITile, Vector2> OnBombActived;
+    public UnityEvent<Tile, Vector2> OnBombActived;
     [HideInInspector]
-    public UnityEvent<ITile, Vector2> OnOrganized;
+    public UnityEvent<Tile, Vector2> OnOrganized;
     [HideInInspector]
-    public UnityEvent<ITile, Vector2> OnSpawnedTile;
+    public UnityEvent<Tile, Vector2> OnSpawnedTile;
 
     public int movingTiles;
     private float time;
@@ -50,24 +51,24 @@ public class EventManager : MonoBehaviour
     private void LateUpdate()
     {
         time += Time.deltaTime * (Utils.MOVEMENT_SPEED * 2);
-                    OnDrop.Invoke();
-            OnSpawnTile.Invoke();
-        
-            if (OnDrop.Count() <= 0)
-            {
-                OnCalReset.Invoke();
-                OnCalculate.Invoke();
-
-            }
 
         if (time >= 1)
         {
 
 
+            InvokeBlast.Invoke();
 
+            if (movingTiles <= 0)
+            {
+                InvokeCalReset.Invoke();
+                InvokeCalculate.Invoke();
+            }
+
+
+            InvokeSpawnTile.Invoke();
+            InvokeDrop.Invoke();
+            
             time -= 1;
-
-
         }
     }
     

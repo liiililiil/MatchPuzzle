@@ -40,7 +40,7 @@ public class EffectManager : MonoBehaviour
         //이벤트에 등록
         EventManager.Instance.OnDisabledTile.AddListener(SpawnDisabledEffect);
     }
-    public void SpawnDisabledEffect(ITile tile, Vector2 pos)
+    public void SpawnDisabledEffect(Tile tile, Vector2 pos)
     {
         GameObject effect = GetEffect(EffectType.Disabled);
         effect.transform.position = pos;

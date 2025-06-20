@@ -7,7 +7,7 @@ public class Spawner : MonoBehaviour
     private SpawnRate[] spawnTable;
     private void Start()
     {
-        EventManager.Instance.OnSpawnTile.AddListener(TrySpawn);
+        EventManager.Instance.InvokeSpawnTile.AddListener(TrySpawn);
 
         //확률 구하기
 
@@ -30,7 +30,7 @@ public class Spawner : MonoBehaviour
     {
         Collider2D collider = Physics2D.OverlapBox(transform.position, Utils.FloatToVector2(Utils.TILE_SIZE), transform.rotation.z);
 
-        if (collider == null || collider.GetComponent<ITile>() == null)
+        if (collider == null || collider.GetComponent<Tile>() == null)
             SpawnManager.Instance.SpawnTile(GetTileFromTable(), gameObject.transform.position, transform.rotation);
     }
 
@@ -47,7 +47,7 @@ public class Spawner : MonoBehaviour
     
     ~Spawner()
     {
-        EventManager.Instance.OnSpawnTile.RemoveListener(TrySpawn);
+        EventManager.Instance.InvokeSpawnTile.RemoveListener(TrySpawn);
     }
 }
 

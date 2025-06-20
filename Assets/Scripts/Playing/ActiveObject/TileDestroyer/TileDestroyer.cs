@@ -3,8 +3,8 @@ using UnityEngine;
 
 public abstract class TileDestroyer : MonoBehaviour, ITileDestroyer
 {
-    public ITile startBy { get; set; }
-    public void Fire(ITile startBy, Vector2 pos, quaternion rotate)
+    public Tile startBy { get; set; }
+    public void Fire(Tile startBy, Vector2 pos, quaternion rotate)
     {
         this.startBy = startBy;
         transform.position = pos;
