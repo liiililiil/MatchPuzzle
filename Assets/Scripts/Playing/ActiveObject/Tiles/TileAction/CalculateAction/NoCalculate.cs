@@ -16,7 +16,7 @@ public class NoCalculate : TileAction, ICalculateAction
         tile.length = Vector2Int.zero;
     }
 
-    public void NearbyCheck(ref Vector2Int length, ref Stack<Tile> totalStack, Vector2 exceptionDirection)
+    public void NearbyCheck(ref Vector2Int length, ref Stack<Tile> totalStack, Vector2Int exceptionDirection)
     {
     }
     
