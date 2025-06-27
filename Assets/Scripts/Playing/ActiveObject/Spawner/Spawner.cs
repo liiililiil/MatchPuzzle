@@ -7,9 +7,6 @@ public class Spawner : MonoBehaviour
     private SpawnRate[] spawnTable;
     private void Start()
     {
-        EventManager.Instance.InvokeSpawnTile.AddListener(TrySpawn);
-
-        //확률 구하기
 
         //일단 값을 찾고
         float max = 0;
@@ -18,12 +15,13 @@ public class Spawner : MonoBehaviour
             max += spawnRate.weight;
         }
 
-        float currentPoint = 0;
+        float currentPoint = 0; 
         foreach (SpawnRate spawnRate in spawnTable)
         {
             spawnRate.cumulativeWeight = currentPoint += spawnRate.weight / max;
         }
         
+        EventManager.Instance.InvokeSpawnTile.AddListener(TrySpawn);
     }
 
     private void TrySpawn()
@@ -31,7 +29,7 @@ public class Spawner : MonoBehaviour
         Collider2D collider = Physics2D.OverlapBox(transform.position, Utils.FloatToVector2(Utils.TILE_SIZE), transform.rotation.z);
 
         if (collider == null || collider.GetComponent<Tile>() == null)
-            SpawnManager.Instance.SpawnTile(GetTileFromTable(), gameObject.transform.position, transform.rotation);
+            SpawnManager.Instance.SpawnObject(GetTileFromTable(), transform.position, transform.rotation);
     }
 
     private TileType GetTileFromTable()
