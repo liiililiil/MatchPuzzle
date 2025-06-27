@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Runtime.CompilerServices;
+using System;
 public static class Utils
 {
     public const float TILE_SIZE = 0.9f;
@@ -13,25 +14,29 @@ public static class Utils
     public const int TILETYPE_LENGHT = 9;
     public const int EFFECTTYPE_LENGHT = 1;
     public const float EFFECT_SPEED = 20f;
+    public const float DESTROYER_FORWARD_SPEED = 20f;
+    public const float EXTINCTION_DURATION = 1.5f;
+    public const float MOUSE_SIZE = 0.2f;
 
-    public const int MOVEMENT_DURATION = 100; // 이동 지속 시간 (ms)
+    // public const int MOVEMENT_DURATION = 100; // 이동 지속 시간 (ms)
 
     // public const string StagePath = @"\Stage\"
 
 
 
     //반복용
-    public static readonly Vector2[] xDirections = { Vector2.left, Vector2.right };
-    public static readonly Vector2[] yDirections = { Vector2.up, Vector2.down };
-    public static readonly Vector2[] directions = { Vector2.left, Vector2.right, Vector2.up, Vector2.down };
+    public static readonly Vector2Int[] xDirections = { Vector2Int.left, Vector2Int.right };
+    public static readonly Vector2Int[] yDirections = { Vector2Int.up, Vector2Int.down };
+    public static readonly Vector2Int[] directions = { Vector2Int.left, Vector2Int.right, Vector2Int.up, Vector2Int.down };
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 FloatToVector2(float value)
     {
         return new Vector2(value, value);
     }
-    
 
-    
-
+    internal static int GetEnumLength<T>()
+    {
+        throw new NotImplementedException();
+    }
 }
