@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ColorTileCalculate : TileAction, ICalculateAction
 {
@@ -27,10 +28,12 @@ public class ColorTileCalculate : TileAction, ICalculateAction
 
         Stack<Tile> totalStack = new Stack<Tile>();
 
-        NearbyCheck(ref tile.length, ref totalStack, Vector2.zero);
+        NearbyCheck(ref tile.length, ref totalStack, Vector2Int.zero);
+
+        Debug.Log(tile.length);
 
         int count = totalStack.Count;
-        
+
 
         //보정
 
@@ -49,44 +52,50 @@ public class ColorTileCalculate : TileAction, ICalculateAction
         }
     }
 
-    public void NearbyCheck(ref Vector2Int length, ref Stack<Tile> totalStack, Vector2 exceptionDirection)
+    public void NearbyCheck(ref Vector2Int length, ref Stack<Tile> totalStack, Vector2Int exceptionDirection)
     {
         totalStack.Push(GetComponent<Tile>());
         isCalculated = true;
-        //제외된 방향을 기반으로 체인을 증가
-        if (exceptionDirection == Vector2.zero)
-        {
-            foreach (Vector2 dir in Utils.directions)
-            {
-                // 상대 방향을 절대 방향으로 변환
-                Vector2 worldDir = dir.x * (Vector2)transform.right + dir.y * (Vector2)transform.up;
 
-                ICalculateAction tile = GetTileFromWorld<ICalculateAction>(worldDir);
-                if (tile != null && !tile.isCalculated)
-                {
-                    tile.NearbyCheck(ref length, ref totalStack, -worldDir);
-                }
-            }
-        }
-        else if (exceptionDirection == new Vector2(0, exceptionDirection.y))
+        if (exceptionDirection.x == 0)
         {
             length.y++;
-
-            ICalculateAction tile = GetTileFromWorld<ICalculateAction>(-exceptionDirection);
-            if (tile != null && !tile.isCalculated)
-            {
-                tile.NearbyCheck(ref length, ref totalStack, -exceptionDirection);
-            }
         }
-        else if (exceptionDirection == new Vector2(exceptionDirection.x, 0))
+        else if (exceptionDirection.y == 0)
         {
             length.x++;
+        }
 
-            ICalculateAction tile = GetTileFromWorld<ICalculateAction>(-exceptionDirection);
+        foreach (Vector2Int dir in Utils.directions)
+        {
+            if (dir == exceptionDirection) continue;
+
+            // 상대 방향을 절대 방향으로 변환
+            Vector2 worldDir = dir.x * (Vector2)transform.right + dir.y * (Vector2)transform.up;
+
+            ICalculateAction tile = GetTileFromWorld<ICalculateAction>(worldDir);
             if (tile != null && !tile.isCalculated)
             {
-                tile.NearbyCheck(ref length, ref totalStack, exceptionDirection);
+                // Debug.Log($"제외 : {exceptionDirection} 현재 : {dir}");
+
+                //같은 줄일때
+                if (exceptionDirection == -dir || exceptionDirection == Vector2Int.zero)
+                {
+                    tile.NearbyCheck(ref length, ref totalStack, -dir);
+                    // Debug.Log($"같은줄 제외 : {exceptionDirection} 현재 : {dir}");
+                }
+                else
+                {
+                    Vector2Int temp = new Vector2Int();
+
+                    tile.NearbyCheck(ref temp, ref totalStack, -dir);
+
+                    length = Vector2Int.Max(length, temp);
+                }
+
             }
         }
     }
+    
+
 }
