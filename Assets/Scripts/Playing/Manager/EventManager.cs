@@ -20,13 +20,13 @@ public class EventManager : MonoBehaviour
     [HideInInspector]
     public UnityEvent<Tile, Vector2> OnBlastTile;
     [HideInInspector]
-    public UnityEvent<Tile, ITileDestroyer, Vector2> OnBlastTileByBomb;
+    public UnityEvent<Tile, TileDestroyer, Vector2> OnBlastTileByBomb;
     [HideInInspector]
     public UnityEvent<Tile, Vector2> OnBombActived;
     [HideInInspector]
     public UnityEvent<Tile, Vector2> OnOrganized;
     [HideInInspector]
-    public UnityEvent<Tile, Vector2> OnSpawnedTile;
+    public UnityEvent<IActiveObject, Vector2> OnSpawnedActiveOjbect;
 
     public int movingTiles;
     private float time;
@@ -54,8 +54,6 @@ public class EventManager : MonoBehaviour
 
         if (time >= 1)
         {
-
-
             InvokeBlast.Invoke();
 
             if (movingTiles <= 0)
@@ -64,10 +62,10 @@ public class EventManager : MonoBehaviour
                 InvokeCalculate.Invoke();
             }
 
-
-            InvokeSpawnTile.Invoke();
+        
             InvokeDrop.Invoke();
             
+            InvokeSpawnTile.Invoke();
             time -= 1;
         }
     }
