@@ -17,19 +17,19 @@ public class IsCanChangeBombBlast : BlastAction, IBlastAction
     {
         if (tile.length.x >= 4 || tile.length.y >= 4)
         {
-            SpawnManager.Instance.SpawnTile(TileType.ColorBomb, transform.position, transform.rotation);
+            SpawnManager.Instance.SpawnObject(TileType.ColorBomb, transform.position, transform.rotation);
         }
         else if (tile.length.x >= 2 && tile.length.y >= 2)
         {
-            SpawnManager.Instance.SpawnTile(TileType.BigBomb, transform.position, transform.rotation);
+            SpawnManager.Instance.SpawnObject(TileType.BigBomb, transform.position, transform.rotation);
         }
         else if (tile.length.x >= 3)
         {
-            SpawnManager.Instance.SpawnTile(TileType.XBomb, transform.position, transform.rotation);
+            SpawnManager.Instance.SpawnObject(TileType.XBomb, transform.position, transform.rotation);
         }
         else if (tile.length.y >= 3)
         {
-            SpawnManager.Instance.SpawnTile(TileType.YBomb, transform.position, transform.rotation);
+            SpawnManager.Instance.SpawnObject(TileType.YBomb, transform.position, transform.rotation);
         }
         else
         {
