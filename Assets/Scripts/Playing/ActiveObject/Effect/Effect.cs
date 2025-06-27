@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.Mathematics;
 using UnityEngine;
 
 public abstract class Effect : MonoBehaviour, IEffect
@@ -8,10 +7,12 @@ public abstract class Effect : MonoBehaviour, IEffect
     [SerializeField]
     protected Sprite[] Sheet;
     protected SpriteRenderer spriteRenderer;
+    public bool isActive { get; set; }
 
-    public void Active(Vector2 pos)
+    public void Enable(Vector2 pos, Quaternion quaternion, IActiveObject startby = null)
     {
         transform.position = pos;
+        transform.rotation = quaternion;
 
 
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
@@ -25,7 +26,7 @@ public abstract class Effect : MonoBehaviour, IEffect
         spriteRenderer.sprite = null;
         transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_Pos_Y);
 
-        EffectManager.Instance.Pooling(gameObject, effectType);
+        SpawnManager.Instance.Pooling<EffectType>(effectType,gameObject);
     }
 
     protected IEnumerator AnimationPlay()
