@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [Serializable]
@@ -48,7 +49,8 @@ public enum TileType : ushort
     XBomb = 6,
     YBomb = 7,
     ColorBomb = 8,
-    Box = 9
+    Box = 9,
+    Empty = 10,
 }
 [Serializable]
 public enum EffectType : ushort
@@ -57,22 +59,27 @@ public enum EffectType : ushort
 }
 
 [Serializable]
-public class TileData
+public enum DestroyerType : ushort
 {
-    public GameObject prefab;
-    public TileType tileType;
-    public Queue<GameObject> pooling = new Queue<GameObject>();
-
+    Straight = 0,
+    Big = 1,
+    Color = 2,
 }
+
 
 [Serializable]
-public class EffectData
+public class PoolableData<T> where T : Enum
 {
     public GameObject prefab;
-    public EffectType effectType;
+    public T type;
     public Queue<GameObject> pooling = new Queue<GameObject>();
 
+    public static implicit operator PoolableData<T>(IndexData<TileType> v)
+    {
+        throw new NotImplementedException();
+    }
 }
+
 
 public class OneTimeAction
 {
@@ -80,7 +87,8 @@ public class OneTimeAction
 
     public void Invoke()
     {
-        foreach (var action in hashSet)
+        Action[] tempSet = hashSet.ToArray();
+        foreach (Action action in tempSet)
         {
             action?.Invoke();
         }
@@ -91,11 +99,6 @@ public class OneTimeAction
     public void Add(Action action)
     {
         hashSet.Add(action);
-    }
-
-    public int Count()
-    {
-        return hashSet.Count;
     }
 
     public static OneTimeAction operator +(OneTimeAction oneTimeAction, Action action)
