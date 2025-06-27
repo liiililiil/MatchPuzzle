@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4449114037756651232}
   - component: {fileID: 1498314538825900371}
   - component: {fileID: 3934167654218403830}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: XBomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,7 +159,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4817634251965329857}
   - component: {fileID: 9070193718146661635}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

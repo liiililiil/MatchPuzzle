@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7268262735424039016}
   - component: {fileID: 6470066036806426044}
   - component: {fileID: 4725319400202317639}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: YBomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,7 +159,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4461746271777547893}
   - component: {fileID: 708968425979765007}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

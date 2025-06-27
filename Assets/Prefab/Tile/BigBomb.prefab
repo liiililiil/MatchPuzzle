@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 521312301799047643}
   - component: {fileID: 7390079760822188993}
   - component: {fileID: 4202342885177994974}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: BigBomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,7 +159,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6061211152655708526}
   - component: {fileID: 3106849950429675512}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
