@@ -11,7 +11,7 @@ public class SmallDrop : TileAction, IDropAction
     {
         if (coroutine != null)
         {
-            // Debug.LogWarning("코루틴이 이미 실행 중이라 무시되었습니다.");
+            Debug.LogWarning("코루틴이 이미 실행 중이라 무시되었습니다.");
             return;
         }
 
@@ -19,11 +19,11 @@ public class SmallDrop : TileAction, IDropAction
         if (DropCheck(GetTileFromWorld<IDropAction>(-transform.up, true), -transform.up)) return;
 
         //옆으로 하강 연산
-        foreach (Vector3 dir in Utils.xDirections)
+        foreach (Vector2 dir in Utils.xDirections)
         {
-            Vector3 worldDir = dir == Vector3.right ? transform.right : -transform.right;
+            Vector2 worldDir = dir == Vector2.right ? transform.right : -transform.right;
 
-            IDropAction belowTile = GetTileFromWorld<IDropAction>(-transform.up + dir, true);
+            IDropAction belowTile = GetTileFromWorld<IDropAction>((Vector2)(-transform.up) +worldDir, true);
             if (belowTile == null)
             {
                 //옆으로 떨어질 타일이 있는지 검사
@@ -32,7 +32,7 @@ public class SmallDrop : TileAction, IDropAction
                     continue;
 
                 //오른쪽으로 떨어질 타일이 있는지 검사
-                if (dir == Vector3.right)
+                if (dir == Vector2.right)
                 {
                     sideTile = GetTileFromWorld<IDropAction>(worldDir, 2, true);
                     if (sideTile != null && sideTile.isCanDrop)
@@ -40,7 +40,7 @@ public class SmallDrop : TileAction, IDropAction
                 }
 
                 //전부 없으면 하강
-                if (DropCheck(belowTile, -transform.up + dir)) return;
+                if (DropCheck(belowTile, (Vector2)(-transform.up) +worldDir)) return;
             }
         }
 
@@ -51,23 +51,28 @@ public class SmallDrop : TileAction, IDropAction
         {
             isDrop = false;
             EventManager.Instance.movingTiles--;
-            GetComponent<Tile>().Calculate();
+            tile.Calculate();
         }
     }
 
 
-    protected bool DropCheck(IDropAction belowTile, Vector3 dir)
+    protected bool DropCheck(IDropAction belowTile, Vector2 dir)
     {
         // Debug.Log(belowTile);
-        if (belowTile == null /*|| belowTile.isDrop*/)
+        if (belowTile == null)
         {
             //이동
             if (!isDrop)
             {
                 isDrop = true;
                 EventManager.Instance.movingTiles++;
-                // Debug.Log("+ 됨");
             }
+
+            // if (coroutine != null)
+            // {
+            //     Debug.Log("중복 코루틴 실행 감지됨!");
+            //     return true;
+            // }
 
             coroutine = StartCoroutine(moveMent2D(dir));
 
@@ -116,7 +121,6 @@ public class SmallDrop : TileAction, IDropAction
 
     protected void coroutineEnd()
     {
-
         StopCoroutine(coroutine);
         coroutine = null;
 
