@@ -3,20 +3,60 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using NUnit.Framework;
+using Unity.Mathematics;
 using UnityEngine;
 
 
-public class SpawnManager : MonoBehaviour{
+[Serializable]
+public class IndexData<T> where T : Enum
+{
+    [SerializeField]
+    private PoolableData<T>[] data;
+    [HideInInspector]
+    public PoolableData<T>[] index;
+
+    public void Indexing() 
+    {
+        index = new PoolableData<T>[Enum.GetValues(typeof(T)).Length];
+
+        foreach (var item in data)
+        {
+            ushort type = (ushort)(object)item.type;
+
+            if (index[type] == null) index[type] = item;
+            else
+            {
+                Debug.LogError($"중복된 타입: {item.type}");
+            }
+        }
+
+    }
+}
+public class SpawnManager : MonoBehaviour
+{
     public static SpawnManager Instance { get; private set; }
 
     [SerializeField]
-    private TileData[] tileData;
+    private IndexData<TileType> tileData;
 
-    private TileData[] tileDataIndex = new TileData[Utils.TILETYPE_LENGHT];
+    [SerializeField]
+    private IndexData<DestroyerType> destroyerData;
+    [SerializeField]
+    private IndexData<EffectType> effectData;
 
 
-    void Awake(){
-        
+
+
+    private Dictionary<Type, object> indexMap = new();
+
+
+
+    void Awake()
+    {
+        indexMap[typeof(TileType)] = tileData;
+        indexMap[typeof(DestroyerType)] = destroyerData;
+        indexMap[typeof(EffectType)] = effectData;
+
         //싱글톤
         if (Instance == null)
         {
@@ -31,35 +71,69 @@ public class SpawnManager : MonoBehaviour{
 
     private void Start()
     {
+        tileData.Indexing();
+        destroyerData.Indexing();
+        effectData.Indexing();
 
-        //인덱싱
-        foreach (var data in tileData)
+        EventManager.Instance.OnDisabledTile.AddListener(DisabledTileEffect);
+
+        SpawnObject(DestroyerType.Straight, Vector2.zero, Quaternion.identity);
+
+    }
+
+    private GameObject GetObject<T>(T type) where T : Enum
+    {
+        PoolableData<T>[] data;
+        TryGetData(out data);
+
+
+        int idx = Convert.ToInt32(type);
+
+        if (data == null)
         {
-            ushort type = (ushort)data.tileType;
-
-            // Debug.Log(data.tileType);
-
-            if (tileDataIndex[type] == null) tileDataIndex[type] = data;
+            Debug.LogError($"잘못된 인덱스 접근: {idx} for {typeof(T).Name}");
+            return null;
         }
+
+        if (data[idx].pooling.Count > 0)
+            return data[idx].pooling.Dequeue();
+
+        return Instantiate(data[idx].prefab);
     }
 
-    private GameObject GetTile(TileData tileData)
+    private void TryGetData<T>(out PoolableData<T>[] data) where T : Enum
     {
-        if (tileData.pooling.Count <= 0) return Instantiate(tileData.prefab);
-        return tileData.pooling.Dequeue();
+        data = null;
+        if (typeof(T) == typeof(TileType))
+            data = tileData.index as PoolableData<T>[];
+        else if (typeof(T) == typeof(DestroyerType))
+            data = destroyerData.index as PoolableData<T>[];
+        else if (typeof(T) == typeof(EffectType))
+            data = effectData.index as PoolableData<T>[];
     }
-    public void pooling(GameObject gameObject, Tile tile){
-        tileDataIndex[(ushort)tile.tileType].pooling.Enqueue(gameObject);
-    }
-    public void SpawnTile(TileType tileType, Vector2 position, Quaternion rotate)
-    {
-        GameObject gameObject = GetTile(tileDataIndex[(ushort)tileType]);
-        // Debug.Log("Go");
 
-        Tile itile = gameObject.GetComponent<Tile>();
-        // Debug.Log("tile");
-        Debug.Log(tileType);
-        itile.Enable(position, rotate);
+    private void DisabledTileEffect(Tile tile, Vector2 pos) {
+        SpawnObject(EffectType.Disabled, pos, Quaternion.identity);
     }
+
+    public void Pooling<T>(T type, GameObject gameObject) where T : Enum
+    {
+        PoolableData<T>[] data;
+        TryGetData(out data);
+
+        int idx = Convert.ToInt32(type);
+
+        if (data != null)
+            data[idx].pooling.Enqueue(gameObject);
+    }
+
+    public void SpawnObject<T>(T type, Vector2 position, Quaternion rotate, IActiveObject caller = null) where T : Enum
+    {
+        GameObject gameObject = GetObject(type);
+        // Debug.Log(gameObject);
+        gameObject.GetComponent<IActiveObject>().Enable(position, rotate, caller);
+    }
+
+    
 
 }
