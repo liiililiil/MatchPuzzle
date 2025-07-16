@@ -13,7 +13,7 @@ public abstract class TileAction : MonoBehaviour
 
         if (tile == null)
         {
-            Tile tile = GetComponent<Tile>();
+            tile = GetComponent<Tile>();
 
             if (tile == null)
             {
@@ -38,7 +38,8 @@ public abstract class TileAction : MonoBehaviour
         Debug.LogWarning($"{gameObject.name}에 있는 {GetType()}가 Invoke되었지만 구성되지 않아 무시되었습니다.");
     }
 
-    public T GetTileFromWorld<T>(Vector2 direction, bool isGlobal = false)
+
+        public T GetTileFromWorld<T>(Vector2 direction, bool isGlobal = false)
     {
         return GetTileFromWorld<T>(direction, 1, isGlobal);
     }

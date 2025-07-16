@@ -1,30 +1,30 @@
 using UnityEngine;
 
-public class DestroyerAction : MonoBehaviour
+public class EffectAction : MonoBehaviour
 {
-    protected TileDestroyer tileDestroyer;
-    public void Init(TileDestroyer tileDestroyer)
+    protected Effect effect = null;
+    public void Init(Effect effect)
     {
-        this.tileDestroyer = tileDestroyer;
+        this.effect= effect;
         // Debug.Log("초기화 성공!");
     }
 
     public virtual void Invoke()
     {
-        if (tileDestroyer == null)
+        if (effect == null)
         {
-            tileDestroyer = GetComponent<TileDestroyer>();
+            effect = GetComponent<Effect>();
 
-            if (tileDestroyer == null)
+            if (effect == null)
             {
-                Debug.LogError($"{gameObject.name}에게 Destroyer가 없습니다!");
+                Debug.LogError($"{gameObject.name}에게 Effect가 없습니다!");
                 return;
             }
 
             Debug.LogWarning($"{gameObject.name}에 있는 {GetType()}가 Init되지 않았습니다. 자동으로 Init합니다.");
         }
 
-        if (!tileDestroyer.isActive)
+        if (!effect.isActive)
         {
             Debug.LogWarning($"{gameObject.name}에 있는{GetType()}가 비활성 상태이므로 Invoke를 무시합니다.");
             return;

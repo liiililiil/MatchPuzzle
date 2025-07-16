@@ -1,15 +1,12 @@
 using UnityEngine;
 
-public class DestroyerAction : MonoBehaviour
+public class SpriteAction : DestroyerAction, ISpriteAction
 {
-    protected TileDestroyer tileDestroyer;
-    public void Init(TileDestroyer tileDestroyer)
-    {
-        this.tileDestroyer = tileDestroyer;
-        // Debug.Log("초기화 성공!");
-    }
+    [SerializeField]
+    protected Sprite[] sheet;
+    protected SpriteRenderer spriteRenderer;
 
-    public virtual void Invoke()
+    public override void Invoke()
     {
         if (tileDestroyer == null)
         {
@@ -24,6 +21,18 @@ public class DestroyerAction : MonoBehaviour
             Debug.LogWarning($"{gameObject.name}에 있는 {GetType()}가 Init되지 않았습니다. 자동으로 Init합니다.");
         }
 
+
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = gameObject.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
+
+            if (spriteRenderer == null)
+            {
+                Debug.LogError($"{gameObject.name}에게 SpriteRenderer가 없습니다!");
+                return;
+            }
+        }
+
         if (!tileDestroyer.isActive)
         {
             Debug.LogWarning($"{gameObject.name}에 있는{GetType()}가 비활성 상태이므로 Invoke를 무시합니다.");
@@ -32,9 +41,5 @@ public class DestroyerAction : MonoBehaviour
 
         OnInvoke();
     }
-
-    protected virtual void OnInvoke()
-    {
-        Debug.LogWarning($"{gameObject.name}에 있는 {GetType()}가 Invoke되었지만 구성되지 않아 무시되었습니다.");
-    }
+    
 }

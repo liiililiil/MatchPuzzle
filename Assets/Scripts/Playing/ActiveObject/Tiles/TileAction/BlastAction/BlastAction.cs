@@ -4,7 +4,7 @@ public class BlastAction : TileAction
 {
     public override void Invoke()
     {
-        Tile[] aboveTile = { GetTileFromWorld<Tile>(transform.up, true), GetTileFromWorld<Tile>(transform.up + transform.right, true), GetTileFromWorld<Tile>(transform.up - transform.right, true) };
+
 
         if (tile == null)
         {
@@ -26,7 +26,5 @@ public class BlastAction : TileAction
         }
 
         OnInvoke();
-
-        foreach (Tile t in aboveTile) t?.Drop();
     }
 }
