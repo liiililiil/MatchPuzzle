@@ -1,52 +1,75 @@
 using System.Collections;
 using UnityEngine;
 
-public abstract class Effect : MonoBehaviour, IEffect
+public class Effect : MonoBehaviour, IActiveObject
 {
-    public abstract EffectType effectType{ get; }
-    [SerializeField]
-    protected Sprite[] Sheet;
-    protected SpriteRenderer spriteRenderer;
-    public bool isActive { get; set; }
 
-    public void Enable(Vector2 pos, Quaternion quaternion, IActiveObject startby = null)
+    public IActiveObject startBy { get; private set; }
+    public EffectType type;
+    public bool isActive { get; private set; }
+    private bool isInit;
+
+    private IEffectExtinctionAction extinctionAction;
+    private IEffectMovementAction effectMovementAction;
+    private ISpriteChangeAction spriteChangeAction;
+
+    private void InitAction<T>(out T action) where T : IEffectAction
     {
-        transform.position = pos;
-        transform.rotation = quaternion;
-
-
-        if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
-        StartCoroutine(AnimationPlay());
+        action = GetComponent<T>();
+        
+        if (action == null)
+        {
+            Debug.LogError($"{gameObject.name} 에게 {typeof(T)} 컴포넌트가 없습니다!");
+        }
+        else if (action is IEffectAction)
+        {
+            action.Init(this);
+        }
     }
 
+    public void Enable(Vector2 position, Quaternion rotate, IActiveObject startBy = null)
+    {
+        if (!isInit)
+        {
+            isInit = true;
+            InitAction(out effectMovementAction);
+            InitAction(out extinctionAction);
+            InitAction(out spriteChangeAction);
+        }
+        
+        if (startBy == null) Debug.LogWarning("이 타일 소멸자의 시작지점이 설정되지 못하였습니다!");
+        transform.position = position;
+        transform.rotation = rotate;
+        isActive = true;
+
+        BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
+        if (boxCollider2D != null)
+            boxCollider2D.enabled = true;
+        else
+            Debug.LogError($"{gameObject.name} 에게 BoxCollider2D가 없습니다!");
+
+        extinctionAction.Invoke();
+        effectMovementAction.Invoke();
+        spriteChangeAction.Invoke();
+
+        EventManager.Instance.OnSpawnedActiveOjbect.Invoke(this, transform.position);
+    }
+    
     public void Disable()
     {
-        if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+        // Debug.Log("해제 선언됨");
+        isActive = false;
+        
+        BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
+        if (boxCollider2D != null)
+            boxCollider2D.enabled = false;
+        else
+            Debug.LogError($"{gameObject.name} 에게 BoxCollider2D가 없습니다!");
 
-        spriteRenderer.sprite = null;
         transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_Pos_Y);
+        transform.rotation = Quaternion.identity;
 
-        SpawnManager.Instance.Pooling<EffectType>(effectType,gameObject);
+        SpawnManager.Instance.Pooling(type, gameObject);
     }
 
-    protected IEnumerator AnimationPlay()
-    {
-        int count = Sheet.Length-1;
-
-        while (count >= 0)
-        {
-            spriteRenderer.sprite = Sheet[count];
-
-            count--;
-
-            float time = 0f;
-            while (time <= 1f)
-            {
-                time += Time.deltaTime * Utils.EFFECT_SPEED;
-                yield return null;
-            }
-        }
-
-        Disable();
-    }
 }
