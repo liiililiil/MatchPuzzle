@@ -10,6 +10,7 @@ public class IsCanChangeBombBlast : BlastAction, IBlastAction
 
         CallOrganize();
 
+
         tile.Disable();
     }
 

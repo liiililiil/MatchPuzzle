@@ -1,14 +1,15 @@
 using System.Collections;
 using UnityEngine;
 
-public class SmallDrop : TileAction, IDropAction
+public class SmallDrop : DropAction, IDropAction
 {
     private Coroutine coroutine;
-    private bool isDrop = false;
 
     public bool isCanDrop { get { return true; } }
     protected override void OnInvoke()
     {
+        // Debug.Log(tile.isActive);
+        // Debug.Log($"드랍 연산중 {gameObject.name}",gameObject);
         if (coroutine != null)
         {
             Debug.LogWarning("코루틴이 이미 실행 중이라 무시되었습니다.");
@@ -61,6 +62,7 @@ public class SmallDrop : TileAction, IDropAction
         // Debug.Log(belowTile);
         if (belowTile == null)
         {
+            Debug.Log(belowTile,this);
             //이동
             if (!isDrop)
             {
@@ -74,7 +76,19 @@ public class SmallDrop : TileAction, IDropAction
             //     return true;
             // }
 
-            coroutine = StartCoroutine(moveMent2D(dir));
+            // 현재 위치를 그리드에 정렬
+            Vector2 startPos = new Vector2(
+                Mathf.Round(transform.position.x / Utils.TILE_GAP) * Utils.TILE_GAP,
+                Mathf.Round(transform.position.y / Utils.TILE_GAP) * Utils.TILE_GAP
+            );
+
+            //이동 위치
+            Vector2 targetPos = startPos + dir* Utils.TILE_GAP;
+
+            //히트박스는 미리 이동해놓기 
+            transform.position = targetPos;
+
+            coroutine = StartCoroutine(moveMent2D(startPos, targetPos, new Tile[] { GetTileFromWorld<Tile>(transform.up, true), GetTileFromWorld<Tile>(transform.up + transform.right, true), GetTileFromWorld<Tile>(transform.up - transform.right, true) }));
 
             return true;
 
@@ -84,22 +98,10 @@ public class SmallDrop : TileAction, IDropAction
     }
 
 
-    IEnumerator moveMent2D(Vector2 direction)
+    IEnumerator moveMent2D(Vector2 startPos, Vector2 targetPos, Tile[] aboveTile)
     {
-        //일단 위에 타일 구하기
-        Tile[] aboveTile = { GetTileFromWorld<Tile>(transform.up, true), GetTileFromWorld<Tile>(transform.up + transform.right, true), GetTileFromWorld<Tile>(transform.up - transform.right, true) };
 
-        // 현재 위치를 그리드에 정렬
-        Vector2 startPos = new Vector2(
-            Mathf.Round(transform.position.x / Utils.TILE_GAP) * Utils.TILE_GAP,
-            Mathf.Round(transform.position.y / Utils.TILE_GAP) * Utils.TILE_GAP
-        );
 
-        //이동 위치
-        Vector2 targetPos = startPos + direction * Utils.TILE_GAP;
-
-        //히트박스는 미리 이동해놓기 
-        transform.position = targetPos;
 
         float time = 0f;
         while (time <= 1f)

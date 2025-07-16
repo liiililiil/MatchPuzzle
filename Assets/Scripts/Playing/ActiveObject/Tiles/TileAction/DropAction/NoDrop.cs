@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class NoDrop : TileAction, IDropAction
+public class NoDrop : DropAction, IDropAction
 {
     public bool isCanDrop { get { return false; } }
     protected override void OnInvoke()

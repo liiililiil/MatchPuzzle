@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CollisionDestroy : DestroyerAction, IDestroyAction
@@ -9,11 +10,25 @@ public class CollisionDestroy : DestroyerAction, IDestroyAction
 
         if (boxCollider2D == null) Debug.LogError("Box Collider가 없습니다!");
 
+        StartCoroutine(CallDestroy());
     }
 
-    private void OnCollisionEnter(Collision collision)
+    IEnumerator CallDestroy()
+    {
+        boxCollider2D.enabled = true;
+
+        while (tileDestroyer.isActive)
+        {
+            yield return null;
+        }
+
+        boxCollider2D.enabled = false;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         collision.gameObject.GetComponent<Tile>()?.hit(tileDestroyer);
+        // Debug.Log("충돌!");
     }
 
 }
