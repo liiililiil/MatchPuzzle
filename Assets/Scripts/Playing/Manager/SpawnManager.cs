@@ -75,8 +75,6 @@ public class SpawnManager : MonoBehaviour
         destroyerData.Indexing();
         effectData.Indexing();
 
-        EventManager.Instance.OnDisabledTile.AddListener(DisabledTileEffect);
-
         SpawnObject(DestroyerType.Straight, Vector2.zero, Quaternion.identity);
 
     }
@@ -111,11 +109,6 @@ public class SpawnManager : MonoBehaviour
         else if (typeof(T) == typeof(EffectType))
             data = effectData.index as PoolableData<T>[];
     }
-
-    private void DisabledTileEffect(Tile tile, Vector2 pos) {
-        SpawnObject(EffectType.Disabled, pos, Quaternion.identity);
-    }
-
     public void Pooling<T>(T type, GameObject gameObject) where T : Enum
     {
         PoolableData<T>[] data;
@@ -130,6 +123,7 @@ public class SpawnManager : MonoBehaviour
     public void SpawnObject<T>(T type, Vector2 position, Quaternion rotate, IActiveObject caller = null) where T : Enum
     {
         GameObject gameObject = GetObject(type);
+        
         // Debug.Log(gameObject);
         gameObject.GetComponent<IActiveObject>().Enable(position, rotate, caller);
     }
