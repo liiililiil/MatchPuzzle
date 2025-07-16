@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 521312301799047643}
   - component: {fileID: 7390079760822188993}
   - component: {fileID: 4202342885177994974}
+  - component: {fileID: 7009721214888321561}
   m_Layer: 11
   m_Name: BigBomb
   m_TagString: Untagged
@@ -68,7 +69,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -149,6 +150,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8641ca6b7c40e9e4c8644762b22a1a90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7009721214888321561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2878370431467515584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4f456ce7886ede4abcc1711997d62f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6899871553316404884
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,7 +172,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6061211152655708526}
   - component: {fileID: 3106849950429675512}
-  m_Layer: 11
+  m_Layer: 14
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
