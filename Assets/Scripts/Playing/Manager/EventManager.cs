@@ -11,6 +11,7 @@ public class EventManager : MonoBehaviour
     public OneTimeAction InvokeDrop = new OneTimeAction();
     public OneTimeAction InvokeBlast = new OneTimeAction();
     public OneTimeAction InvokeOrganize = new OneTimeAction();
+    public OneTimeAction InvokeDestroyerMove = new OneTimeAction();
 
     //타일 전체에 대한 이벤트트
     [HideInInspector]
@@ -29,6 +30,7 @@ public class EventManager : MonoBehaviour
     public UnityEvent<IActiveObject, Vector2> OnSpawnedActiveOjbect;
 
     public int movingTiles;
+    public int activeDestroyer;
     private float time;
 
 
@@ -45,8 +47,15 @@ public class EventManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        // OnDisabledTile.AddListener(deBugTest);
     }
-    
+    private void deBugTest(Tile tile, Vector2 vector2)
+    {
+        SpawnManager.Instance.SpawnObject(DestroyerType.Straight, vector2, Quaternion.Euler(0, 0, 1), tile);
+    }
+
+    //생명 주기
 
     private void LateUpdate()
     {
@@ -56,16 +65,16 @@ public class EventManager : MonoBehaviour
         {
             InvokeBlast.Invoke();
 
-            if (movingTiles <= 0)
+            if (movingTiles <= 0 && activeDestroyer <= 0)
             {
                 InvokeCalReset.Invoke();
                 InvokeCalculate.Invoke();
             }
 
-        
+            InvokeDestroyerMove.Invoke();
             InvokeDrop.Invoke();
-            
-            InvokeSpawnTile.Invoke();
+
+            if (activeDestroyer <= 0) InvokeSpawnTile.Invoke();
             time -= 1;
         }
     }
