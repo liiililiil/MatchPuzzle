@@ -55,7 +55,8 @@ public enum TileType : ushort
 [Serializable]
 public enum EffectType : ushort
 {
-    Disabled = 0
+    TileDisabled = 0,
+    StraightFlyEffect = 1
 }
 
 [Serializable]
@@ -63,7 +64,7 @@ public enum DestroyerType : ushort
 {
     Straight = 0,
     Big = 1,
-    Color = 2,
+    Color = 2
 }
 
 
@@ -73,13 +74,7 @@ public class PoolableData<T> where T : Enum
     public GameObject prefab;
     public T type;
     public Queue<GameObject> pooling = new Queue<GameObject>();
-
-    public static implicit operator PoolableData<T>(IndexData<TileType> v)
-    {
-        throw new NotImplementedException();
-    }
 }
-
 
 public class OneTimeAction
 {
@@ -88,12 +83,13 @@ public class OneTimeAction
     public void Invoke()
     {
         Action[] tempSet = hashSet.ToArray();
+        hashSet.Clear();
+
         foreach (Action action in tempSet)
         {
             action?.Invoke();
         }
 
-        hashSet.Clear();
     }
 
     public void Add(Action action)
@@ -105,6 +101,31 @@ public class OneTimeAction
     {
         oneTimeAction.Add(action);
         return oneTimeAction;
+    }
+}
+
+public class OneTimeAction<T>
+{
+    private readonly HashSet<Action<T>> hashSet = new HashSet<Action<T>>();
+    private readonly List<(Action<T> action, T args)> actionList = new List<(Action<T>, T)>();
+
+    public void Addlistener(Action<T> action, T args)
+    {
+        if (hashSet.Add(action))
+        {
+            actionList.Add((action, args));
+        }
+    }
+
+    public void Invoke()
+    {
+        foreach (var (action, args) in actionList)
+        {
+            action?.Invoke(args);
+        }
+
+        actionList.Clear();
+        hashSet.Clear();
     }
 }
 
@@ -139,7 +160,9 @@ public class SpawnRate
 // public struct TileStartInfo
 // {
 //     TileType tile;
-    
+
 //     Vector2 pos;
 
 // }
+
+
