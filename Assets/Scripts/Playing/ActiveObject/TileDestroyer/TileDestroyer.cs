@@ -24,7 +24,7 @@ public class TileDestroyer : MonoBehaviour, IActiveObject
         action = GetComponent<T>();
         if (action == null)
         {
-            Debug.LogError($"{gameObject.name} 에게 {typeof(T)} 컴포넌트가 없습니다!");
+            Debug.LogWarning($"{gameObject.name} 에게 {typeof(T)} 컴포넌트가 없습니다!");
         }
         else if (action is IDestroyerAction)
         {
