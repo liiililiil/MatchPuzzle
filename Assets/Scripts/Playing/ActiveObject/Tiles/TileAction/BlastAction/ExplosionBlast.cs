@@ -35,7 +35,7 @@ public class ExplosionBlast : BlastAction, IBlastAction
             Vector2 worldDir = dir.x * (Vector2)transform.right + dir.y * (Vector2)transform.up;
 
             // GetTileFromWorld를 이용해 타일을 찾고 정리 수행
-            Tile tile = GetTileFromWorld<Tile>(worldDir, true);
+            Tile tile = GetTileFromWorld<Tile>(worldDir);
             tile?.Organize();
         }
 
