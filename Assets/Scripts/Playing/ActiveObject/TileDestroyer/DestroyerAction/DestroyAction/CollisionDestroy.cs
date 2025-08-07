@@ -27,6 +27,7 @@ public class CollisionDestroy : DestroyerAction, IDestroyAction
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // Debug.Log("콜리전!",this);
         collision.gameObject.GetComponent<Tile>()?.hit(tileDestroyer);
         // Debug.Log("충돌!");
     }
