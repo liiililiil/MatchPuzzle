@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 
 
-public class Tile : MonoBehaviour, IActiveObject
+public class Tile : GetActiveObjectFromWorld, IActiveObject
 {
     private enum TileFlag : byte
     {
@@ -19,12 +20,12 @@ public class Tile : MonoBehaviour, IActiveObject
     private IDropAction dropAction;
     private IOrganizeAction organizeAction;
     private IExplodedAction explodedAction;
+    private ITileFocusAction focusAction;
 
     public bool isActive
     {
         get => (flag & TileFlag.isActive) != 0;
         private set => flag = value ? flag | TileFlag.isActive : flag & ~TileFlag.isActive;
-
     }
 
     public bool isCenter
@@ -39,6 +40,7 @@ public class Tile : MonoBehaviour, IActiveObject
         set => flag = value ? flag | TileFlag.isInit : flag & ~TileFlag.isInit;
     }
     public Vector2Int length = Vector2Int.zero;
+    public new Rigidbody2D rigidbody2D;
 
     public GameObject sprite;
     public TileType tileType;
@@ -66,7 +68,7 @@ public class Tile : MonoBehaviour, IActiveObject
         action = GetComponent<T>();
         if (action == null)
         {
-            Debug.LogError($"{gameObject.name} 에게 {typeof(T)} 컴포넌트가 없습니다!");
+            Debug.LogError($"{gameObject.name} 에게 {typeof(T)} 컴포넌트가 없습니다! {action}" , this);
         }
         else if (action is ITileAction)
         {
@@ -86,7 +88,9 @@ public class Tile : MonoBehaviour, IActiveObject
 
     public void Disable()
     {
-        Tile[] aboveTile = { GetTileFromWorld<Tile>(transform.up, true), GetTileFromWorld<Tile>(transform.up + transform.right, true), GetTileFromWorld<Tile>(transform.up - transform.right, true) };
+        rigidbody2D.simulated = false;
+
+        Tile[] aboveTile = { GetTileFromWorld<Tile>(transform.up), GetTileFromWorld<Tile>(transform.up + transform.right), GetTileFromWorld<Tile>(transform.up - transform.right) };
 
         isActive = false;
         BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
@@ -128,6 +132,7 @@ public class Tile : MonoBehaviour, IActiveObject
             InitAction(out dropAction);
             InitAction(out organizeAction);
             InitAction(out explodedAction);
+            InitAction(out focusAction);
 
             if (sprite == null)
             {
@@ -137,8 +142,17 @@ public class Tile : MonoBehaviour, IActiveObject
                 else
                     Debug.LogWarning($"{gameObject.name} 에게 자식 sprite가 자동으로 할당되었습니다.");
             }
-            // Debug.Log("구성됨!",this);
+
+            if (rigidbody2D == null)
+            {
+                rigidbody2D = GetComponent<Rigidbody2D>();
+                if (rigidbody2D == null)
+                    Debug.LogError($"{gameObject.name} 에게 Rigidbody2D가 없습니다!");
+                // else
+                // Debug.LogWarning($"{gameObject.name} 에게 Rigidbody2D가 자동으로 할당되었습니다.");
+            }
         }
+
 
         BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
         if (boxCollider2D != null)
@@ -146,11 +160,7 @@ public class Tile : MonoBehaviour, IActiveObject
         else
             Debug.LogError($"{gameObject.name} 에게 BoxCollider2D가 없습니다!");
 
-        if (sprite != null)
-            sprite.SetActive(true);
-        else
-            Debug.LogError($"{gameObject.name} 에게 sprite가 없습니다!");
-
+        sprite.SetActive(true);
         transform.position = position;
         transform.rotation = rotate;
 
@@ -158,8 +168,28 @@ public class Tile : MonoBehaviour, IActiveObject
 
         isActive = true;
 
+        rigidbody2D.simulated = true;
+
         Drop();
     }
+
+    // public void focus()
+    // {
+    //     StartCoroutine(WhileFocus());
+    // }
+
+    // IEnumerator WhileFocus()
+    // {
+    //     Tile tile = null;
+    //     boo
+
+    //     // 타일 있는지 확인
+    //     tile = GetTileFromWorld<Tile>(Vector2.up);
+
+    //     if(tile != null && tile.is)
+
+        
+    // }
 
 
     public void Calculate()
@@ -198,67 +228,16 @@ public class Tile : MonoBehaviour, IActiveObject
         EventManager.Instance.InvokeCalReset += calculateAction.CalReset;
     }
 
-    public void OnplayerFocus()
+    public void Focus()
     {
-        StartCoroutine(OnPlayerFocusCoroutine());
+        if (isActive == false) return;
+        // Debug.Log(focusAction.GetType(),this);
+        focusAction.Invoke();
     }
 
-    IEnumerator OnPlayerFocusCoroutine()
+    void OnDrawGizmos()
     {
-        Vector2 pos = transform.position;
-
-        while (Input.GetMouseButton(0))
-        {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            float dis = -Vector2.Distance(pos, mousePos) + 1;
-            sprite.transform.position = Vector2.Lerp(sprite.transform.position, mousePos * dis, 0.8f);
-            yield return null;
-        }
-
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(transform.position, Utils.FloatToVector2(Utils.TILE_SIZE));
     }
-    
-            public T GetTileFromWorld<T>(Vector2 direction, bool isGlobal = false)
-    {
-        return GetTileFromWorld<T>(direction, 1, isGlobal);
-    }
-
-    public T GetTileFromWorld<T>(Vector2 direction, int revisionMultiple, bool isGlobal = false)
-    {
-        int layerMask = isGlobal ? ~0 : 1 << gameObject.layer;
-        // 콜라이더 바깥으로 GetTileFromWorld 시작 지점 계산
-        Vector2 start = (Vector2)transform.position + direction * Utils.RAYCASY_REVISION * revisionMultiple;
-
-        // GetTileFromWorld 수행
-#if UNITY_EDITOR
-        DrawOverlapBox(start, Utils.FloatToVector2(Utils.TILE_SIZE), transform.rotation.z, Color.red);
-#endif
-        Collider2D hit = Physics2D.OverlapBox(start, Utils.FloatToVector2(Utils.TILE_SIZE), transform.rotation.z, layerMask);
-
-        // Debug.Log(hit.collider.name
-        return hit ? hit.GetComponent<T>() : default;
-    }
-    
-    
-    
-#if UNITY_EDITOR
-    void DrawOverlapBox(Vector2 center, Vector2 size, float angleDeg, Color color, float duration = 0.05f)
-    {
-        float angleRad = angleDeg * Mathf.Deg2Rad;
-        Vector2 right = new Vector2(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
-        Vector2 up = new Vector2(-right.y, right.x);
-
-        Vector2 extentsX = right * (size.x / 2f);
-        Vector2 extentsY = up * (size.y / 2f);
-
-        Vector2 topRight = center + extentsX + extentsY;
-        Vector2 topLeft = center - extentsX + extentsY;
-        Vector2 bottomLeft = center - extentsX - extentsY;
-        Vector2 bottomRight = center + extentsX - extentsY;
-
-        Debug.DrawLine(topLeft, topRight, color, duration);
-        Debug.DrawLine(topRight, bottomRight, color, duration);
-        Debug.DrawLine(bottomRight, bottomLeft, color, duration);
-        Debug.DrawLine(bottomLeft, topLeft, color, duration);
-    }
-#endif
 }
