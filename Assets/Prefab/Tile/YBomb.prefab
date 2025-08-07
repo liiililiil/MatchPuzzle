@@ -11,12 +11,14 @@ GameObject:
   - component: {fileID: 601768196104116538}
   - component: {fileID: 2331585922008174842}
   - component: {fileID: 3693049126049773510}
-  - component: {fileID: 7731453375655125234}
+  - component: {fileID: 7676262083006192659}
   - component: {fileID: 7268262735424039016}
   - component: {fileID: 6470066036806426044}
-  - component: {fileID: 4511253921633687392}
+  - component: {fileID: -1498474338826388101}
   - component: {fileID: 965883715457273080}
-  m_Layer: 11
+  - component: {fileID: 4511253921633687392}
+  - component: {fileID: 1283046767791194703}
+  m_Layer: 6
   m_Name: YBomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,11 +100,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   length: {x: 0, y: 0}
+  rigidbody2D: {fileID: 0}
   sprite: {fileID: 6973204555043666497}
   tileType: 7
   DropTest: 0
   calTest: 0
---- !u!114 &7731453375655125234
+--- !u!114 &7676262083006192659
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -111,7 +114,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 272967864500639692}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5da57e55634d8874eaf0b9eb24d21788, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f4806ce15f13de46819ccfacac53796, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &7268262735424039016
@@ -138,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44b0d2a3de8e42f4488a8f36ed38e2fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4511253921633687392
+--- !u!114 &-1498474338826388101
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -147,7 +150,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 272967864500639692}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4f456ce7886ede4abcc1711997d62f4, type: 3}
+  m_Script: {fileID: 11500000, guid: 9c956d570e4621e4aa8c5a879e7682af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &965883715457273080
@@ -167,6 +170,45 @@ MonoBehaviour:
     rotate: 0
   - type: 0
     rotate: 180
+--- !u!114 &4511253921633687392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272967864500639692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4f456ce7886ede4abcc1711997d62f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!50 &1283046767791194703
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272967864500639692}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 2
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &6973204555043666497
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,7 +219,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4461746271777547893}
   - component: {fileID: 708968425979765007}
-  m_Layer: 14
+  m_Layer: 9
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

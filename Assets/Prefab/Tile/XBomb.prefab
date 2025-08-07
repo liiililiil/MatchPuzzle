@@ -11,12 +11,14 @@ GameObject:
   - component: {fileID: 1149274051491979124}
   - component: {fileID: 350220918862390466}
   - component: {fileID: 7063296368304752340}
-  - component: {fileID: 2685577435730388012}
+  - component: {fileID: -8794256161339391816}
   - component: {fileID: 4449114037756651232}
   - component: {fileID: 1498314538825900371}
+  - component: {fileID: -598841472506624857}
   - component: {fileID: 2421086843026643572}
   - component: {fileID: 4147317520772857549}
-  m_Layer: 11
+  - component: {fileID: 5816992610148361491}
+  m_Layer: 6
   m_Name: XBomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,11 +100,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   length: {x: 0, y: 0}
+  rigidbody2D: {fileID: 0}
   sprite: {fileID: 6929752580599252974}
   tileType: 6
   DropTest: 0
   calTest: 0
---- !u!114 &2685577435730388012
+--- !u!114 &-8794256161339391816
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -111,7 +114,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3161926778123180377}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5da57e55634d8874eaf0b9eb24d21788, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f4806ce15f13de46819ccfacac53796, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &4449114037756651232
@@ -136,6 +139,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44b0d2a3de8e42f4488a8f36ed38e2fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-598841472506624857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3161926778123180377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c956d570e4621e4aa8c5a879e7682af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2421086843026643572
@@ -167,6 +182,33 @@ MonoBehaviour:
     rotate: 90
   - type: 0
     rotate: 270
+--- !u!50 &5816992610148361491
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3161926778123180377}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 2
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &6929752580599252974
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,7 +219,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4817634251965329857}
   - component: {fileID: 9070193718146661635}
-  m_Layer: 14
+  m_Layer: 9
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

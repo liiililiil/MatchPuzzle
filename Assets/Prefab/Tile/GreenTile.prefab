@@ -14,9 +14,11 @@ GameObject:
   - component: {fileID: 249692865975349864}
   - component: {fileID: 4316244772172955865}
   - component: {fileID: 4791808052857716124}
+  - component: {fileID: 8725385937941343762}
   - component: {fileID: 4472130452649568928}
   - component: {fileID: 6101829056535479787}
-  m_Layer: 8
+  - component: {fileID: 8357071073091938743}
+  m_Layer: 6
   m_Name: GreenTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,6 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   length: {x: 0, y: 0}
+  rigidbody2D: {fileID: 0}
   sprite: {fileID: 8521030815087269736}
   tileType: 2
   DropTest: 0
@@ -138,6 +141,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44b0d2a3de8e42f4488a8f36ed38e2fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8725385937941343762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3977337381086163985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c956d570e4621e4aa8c5a879e7682af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4472130452649568928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,6 +177,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 140fb69220ffd72418bb818d0cf50f5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!50 &8357071073091938743
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3977337381086163985}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 2
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &8521030815087269736
 GameObject:
   m_ObjectHideFlags: 0
@@ -172,7 +214,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8851599240937889804}
   - component: {fileID: 5966064348897099404}
-  m_Layer: 14
+  m_Layer: 9
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

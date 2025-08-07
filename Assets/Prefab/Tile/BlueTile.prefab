@@ -14,9 +14,11 @@ GameObject:
   - component: {fileID: 5161948179754600111}
   - component: {fileID: 962127754573083107}
   - component: {fileID: 1101543910847171873}
+  - component: {fileID: 8993997966051461}
   - component: {fileID: 1899592166236786627}
   - component: {fileID: 946431223125989529}
-  m_Layer: 7
+  - component: {fileID: -8367837646034977448}
+  m_Layer: 6
   m_Name: BlueTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,6 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   length: {x: 0, y: 0}
+  rigidbody2D: {fileID: 0}
   sprite: {fileID: 8820198712686942935}
   tileType: 3
   DropTest: 0
@@ -138,6 +141,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44b0d2a3de8e42f4488a8f36ed38e2fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8993997966051461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3169619839420815779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c956d570e4621e4aa8c5a879e7682af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1899592166236786627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,6 +177,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 140fb69220ffd72418bb818d0cf50f5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!50 &-8367837646034977448
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3169619839420815779}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 2
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &8820198712686942935
 GameObject:
   m_ObjectHideFlags: 0
@@ -172,7 +214,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1232656655132857797}
   - component: {fileID: 3208879636870089443}
-  m_Layer: 14
+  m_Layer: 9
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

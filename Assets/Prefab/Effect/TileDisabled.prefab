@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 581722576227717500}
   - component: {fileID: 656754920448855861}
-  m_Layer: 14
+  m_Layer: 9
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 7972663852829066726}
   - component: {fileID: 867669944476656928}
   - component: {fileID: 8943252651295985491}
-  m_Layer: 13
+  m_Layer: 8
   m_Name: TileDisabled
   m_TagString: Untagged
   m_Icon: {fileID: 0}
