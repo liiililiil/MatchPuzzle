@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,7 +12,7 @@ public class EventManager : MonoBehaviour
     public OneTimeAction InvokeDrop = new OneTimeAction();
     public OneTimeAction InvokeBlast = new OneTimeAction();
     public OneTimeAction InvokeOrganize = new OneTimeAction();
-    public OneTimeAction InvokeDestroyerMove = new OneTimeAction();
+    public OneTimeAction InvokeReMove = new OneTimeAction();
 
     //타일 전체에 대한 이벤트트
     [HideInInspector]
@@ -30,8 +31,13 @@ public class EventManager : MonoBehaviour
     public UnityEvent<IActiveObject, Vector2> OnSpawnedActiveOjbect;
 
     public int movingTiles;
+    public int dropTiles;
+    public int moveTestTiles;
+    public bool readyToFocus;
+    public bool NeedTestCalculation;
     public int activeDestroyer;
     private float time;
+    
 
 
 
@@ -55,27 +61,72 @@ public class EventManager : MonoBehaviour
         SpawnManager.Instance.SpawnObject(DestroyerType.Straight, vector2, Quaternion.Euler(0, 0, 1), tile);
     }
 
+
+    public void MoveTest()
+    {
+        StartCoroutine(MoveTestWait());
+    }
+
+    IEnumerator MoveTestWait()
+    {
+        while(moveTestTiles > 0)
+        {
+            yield return null;
+        }
+
+        // Debug.Log("테스트 시작");
+
+        InvokeCalculate.Invoke();
+
+        if (InvokeBlast.Count <= 0)
+        {
+            // Debug.Log("폭발 필요 없음");
+            InvokeReMove.Invoke();
+        }
+        else
+        {
+            // Debug.Log("폭발 필요");
+            InvokeReMove.Clear();
+            readyToFocus = false;
+        }
+    }
+
+
     //생명 주기
 
     private void LateUpdate()
     {
-        time += Time.deltaTime * (Utils.MOVEMENT_SPEED * 2);
-
-        if (time >= 1)
+        //포커싱 될 준비가 끝나면 포커싱 대기
+        if (readyToFocus == true)
         {
-            InvokeBlast.Invoke();
+            return;
+        }
 
-            if (movingTiles <= 0 && activeDestroyer <= 0)
+        InvokeBlast.Invoke();
+
+        if (activeDestroyer <= 0 && dropTiles <= 0)
+        {
+
+            InvokeSpawnTile.Invoke();
+            
+            if (dropTiles <= 0)
+            {
+                InvokeDrop.Invoke();
+            }
+
+
+            if (movingTiles <= 0)
             {
                 InvokeCalReset.Invoke();
                 InvokeCalculate.Invoke();
+
+                if (InvokeBlast.Count <= 0)
+                {
+                    readyToFocus = true;
+                }
             }
 
-            InvokeDestroyerMove.Invoke();
-            InvokeDrop.Invoke();
 
-            if (activeDestroyer <= 0) InvokeSpawnTile.Invoke();
-            time -= 1;
         }
     }
     
