@@ -97,11 +97,19 @@ public class OneTimeAction
         hashSet.Add(action);
     }
 
+    public void Clear()
+    {
+        hashSet.Clear();
+    }
+
     public static OneTimeAction operator +(OneTimeAction oneTimeAction, Action action)
     {
         oneTimeAction.Add(action);
         return oneTimeAction;
     }
+    
+
+    public int Count { get => hashSet.Count; }
 }
 
 public class OneTimeAction<T>
