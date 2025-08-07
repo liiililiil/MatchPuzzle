@@ -44,18 +44,9 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private IndexData<EffectType> effectData;
 
-
-
-
-    private Dictionary<Type, object> indexMap = new();
-
-
-
     void Awake()
     {
-        indexMap[typeof(TileType)] = tileData;
-        indexMap[typeof(DestroyerType)] = destroyerData;
-        indexMap[typeof(EffectType)] = effectData;
+
 
         //싱글톤
         if (Instance == null)
@@ -75,7 +66,10 @@ public class SpawnManager : MonoBehaviour
         destroyerData.Indexing();
         effectData.Indexing();
 
-        SpawnObject(DestroyerType.Straight, Vector2.zero, Quaternion.identity);
+        // SpawnObject(DestroyerType.Straight, Vector2.zero, Quaternion.identity);
+
+        SpawnObject(DestroyerType.Big, Vector2.zero, Quaternion.identity);
+        // SpawnObject(DestroyerType.Straight, Vector2.zero, Quaternion.identity);
 
     }
 
