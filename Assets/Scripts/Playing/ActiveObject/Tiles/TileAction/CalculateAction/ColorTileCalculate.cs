@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ColorTileCalculate : TileAction, ICalculateAction
 {
-    private bool _isCalculated = false;
-    public bool isCalculated
+    private Vector2Int _isCalculated = Vector2Int.zero;
+    public Vector2Int isCalculated
     {
         get => _isCalculated;
         set => _isCalculated = value;
@@ -15,24 +15,31 @@ public class ColorTileCalculate : TileAction, ICalculateAction
 
     public void CalReset()
     {
-        isCalculated = false;
+        isCalculated = Vector2Int.zero;
         tile.isCenter = false;
-        tile.length = Vector2Int.zero;
+        tile.length = Vector2Int.one;
     }
 
     protected override void OnInvoke()
     {
-        if (isCalculated) return;
+        if (isCalculated != Vector2Int.zero) return;
+
+        // Debug.Log("계산 시작", gameObject);
 
         tile.isCenter = true;
 
         Stack<Tile> totalStack = new Stack<Tile>();
 
+
+        tile.length = Vector2Int.one;
+
         NearbyCheck(ref tile.length, ref totalStack, Vector2Int.zero);
 
-        Debug.Log(tile.length);
+        // Debug.Log(tile.length);
 
-        int count = totalStack.Count;
+        bool needBlasted = tile.length.x >= 3 || tile.length.y >= 3;
+
+        // Debug.Log($"계산 완료 : {gameObject.name} - {tile.length} ({tile.tileType})", gameObject);
 
 
         //보정
@@ -45,7 +52,7 @@ public class ColorTileCalculate : TileAction, ICalculateAction
 
 
             //터지는 조건이 되면 폭발
-            if (count >= 3)
+            if (needBlasted)
             {
                 tile.Blast();
             }
@@ -54,47 +61,74 @@ public class ColorTileCalculate : TileAction, ICalculateAction
 
     public void NearbyCheck(ref Vector2Int length, ref Stack<Tile> totalStack, Vector2Int exceptionDirection)
     {
-        totalStack.Push(GetComponent<Tile>());
-        isCalculated = true;
 
-        if (exceptionDirection.x == 0)
+        totalStack.Push(GetComponent<Tile>());
+        // isCalculated = true;
+        if (exceptionDirection == Vector2Int.zero)
         {
+            
+        }
+        else if (exceptionDirection.x == 0)
+        {
+            if (_isCalculated.y != 0)
+            {
+                // Debug.Log("이미 계산된 방향입니다.", this);
+                return;
+            }
             length.y++;
+            _isCalculated.y++;
         }
         else if (exceptionDirection.y == 0)
         {
+            if (_isCalculated.x != 0)
+            {
+                // Debug.Log("이미 계산된 방향입니다.", this);
+                return;
+            }
+
             length.x++;
+            _isCalculated.x++;
         }
 
-        foreach (Vector2Int dir in Utils.directions)
+        // Debug.Log($"주변 연산 시작 | 제외 : {exceptionDirection} | 현황 : {length} | 계산 여부 : {_isCalculated}",this);
+
+        //들어온 방향 축 먼저 연산
+        Vector2Int reverseDirection = -exceptionDirection;
+
+        Vector2Int[] sortedDirs = Utils.directions
+            .OrderByDescending(dir => dir == reverseDirection ? 1 : 0)
+            .ToArray();
+
+        foreach (Vector2Int dir in sortedDirs)
         {
             if (dir == exceptionDirection) continue;
 
-            // 상대 방향을 절대 방향으로 변환
             Vector2 worldDir = dir.x * (Vector2)transform.right + dir.y * (Vector2)transform.up;
 
             ICalculateAction tile = GetTileFromWorld<ICalculateAction>(worldDir);
-            if (tile != null && !tile.isCalculated)
+            if (tile != null && tile.IsEqualType(this.tile.tileType))
             {
-                // Debug.Log($"제외 : {exceptionDirection} 현재 : {dir}");
-
-                //같은 줄일때
                 if (exceptionDirection == -dir || exceptionDirection == Vector2Int.zero)
                 {
                     tile.NearbyCheck(ref length, ref totalStack, -dir);
-                    // Debug.Log($"같은줄 제외 : {exceptionDirection} 현재 : {dir}");
                 }
                 else
                 {
-                    Vector2Int temp = new Vector2Int();
+                    Vector2Int temp = Vector2Int.one;
 
+                    // Debug.Log("새로운 각도 연산 시작", this);
                     tile.NearbyCheck(ref temp, ref totalStack, -dir);
 
+                    // Debug.Log($"새로운 각도 연산 완료 : {temp} | 기존 : {length}", this);
                     length = Vector2Int.Max(length, temp);
                 }
-
             }
         }
+    }
+    
+    public bool IsEqualType(TileType type)
+    {
+        return tile.tileType == type;
     }
     
 
