@@ -41,5 +41,10 @@ public class SpriteAction : DestroyerAction, ISpriteAction
 
         OnInvoke();
     }
+
+    public int GetLenght(){
+        return sheet.Length;
+    }
+
     
 }
