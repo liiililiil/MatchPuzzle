@@ -1,4 +1,5 @@
 using System.Collections;
+using System.IO;
 using UnityEngine;
 
 public class SmallDrop : DropAction, IDropAction
@@ -17,31 +18,33 @@ public class SmallDrop : DropAction, IDropAction
         }
 
         // 밑으로 하강 연산
-        if (DropCheck(GetTileFromWorld<IDropAction>(-transform.up, true), -transform.up)) return;
+        if (DropCheck(GetTileFromWorld<IDropAction>(-transform.up), -transform.up)) return;
 
         //옆으로 하강 연산
         foreach (Vector2 dir in Utils.xDirections)
         {
             Vector2 worldDir = dir == Vector2.right ? transform.right : -transform.right;
 
-            IDropAction belowTile = GetTileFromWorld<IDropAction>((Vector2)(-transform.up) +worldDir, true);
+            IDropAction belowTile = GetTileFromWorld<IDropAction>((Vector2)(-transform.up) + worldDir);
             if (belowTile == null)
             {
-                //옆으로 떨어질 타일이 있는지 검사
-                IDropAction sideTile = GetTileFromWorld<IDropAction>(worldDir, true);
+
+                IDropAction sideTile = GetTileFromWorld<IDropAction>(worldDir);
                 if (sideTile != null && sideTile.isCanDrop)
                     continue;
 
                 //오른쪽으로 떨어질 타일이 있는지 검사
                 if (dir == Vector2.right)
                 {
-                    sideTile = GetTileFromWorld<IDropAction>(worldDir, 2, true);
+
+
+                    sideTile = GetTileFromWorld<IDropAction>(worldDir, 2);
                     if (sideTile != null && sideTile.isCanDrop)
                         continue;
                 }
 
                 //전부 없으면 하강
-                if (DropCheck(belowTile, (Vector2)(-transform.up) +worldDir)) return;
+                if (DropCheck(belowTile, (Vector2)(-transform.up) + worldDir)) return;
             }
         }
 
@@ -59,10 +62,11 @@ public class SmallDrop : DropAction, IDropAction
 
     protected bool DropCheck(IDropAction belowTile, Vector2 dir)
     {
+        
         // Debug.Log(belowTile);
         if (belowTile == null)
         {
-            Debug.Log(belowTile,this);
+            // Debug.Log(belowTile,this);
             //이동
             if (!isDrop)
             {
@@ -77,18 +81,27 @@ public class SmallDrop : DropAction, IDropAction
             // }
 
             // 현재 위치를 그리드에 정렬
-            Vector2 startPos = new Vector2(
-                Mathf.Round(transform.position.x / Utils.TILE_GAP) * Utils.TILE_GAP,
-                Mathf.Round(transform.position.y / Utils.TILE_GAP) * Utils.TILE_GAP
-            );
+            // Vector2 startPos = new Vector2(
+            //     Mathf.Round(transform.position.x / Utils.TILE_GAP) * Utils.TILE_GAP,
+            //     Mathf.Round(transform.position.y / Utils.TILE_GAP) * Utils.TILE_GAP
+            // );
+
+            Vector2 startPos = transform.position;
 
             //이동 위치
-            Vector2 targetPos = startPos + dir* Utils.TILE_GAP;
+            Vector2 targetPos = startPos + dir * Utils.TILE_GAP;
+
+            //위 하강 예약
+            Tile[] tiles = new Tile[] { GetTileFromWorld<Tile>(transform.up), GetTileFromWorld<Tile>(transform.up + transform.right), GetTileFromWorld<Tile>(transform.up - transform.right) };
 
             //히트박스는 미리 이동해놓기 
-            transform.position = targetPos;
+            tile.transform.position = targetPos;
+            // tile.rigidbody2D.MovePosition(targetPos);
 
-            coroutine = StartCoroutine(moveMent2D(startPos, targetPos, new Tile[] { GetTileFromWorld<Tile>(transform.up, true), GetTileFromWorld<Tile>(transform.up + transform.right, true), GetTileFromWorld<Tile>(transform.up - transform.right, true) }));
+            coroutine = StartCoroutine(moveMent2D(startPos, targetPos));
+
+            // 하강
+            foreach (Tile tile in tiles) if (tile != null) tile.Drop();
 
             return true;
 
@@ -98,10 +111,9 @@ public class SmallDrop : DropAction, IDropAction
     }
 
 
-    IEnumerator moveMent2D(Vector2 startPos, Vector2 targetPos, Tile[] aboveTile)
+    IEnumerator moveMent2D(Vector2 startPos, Vector2 targetPos)
     {
-
-
+        EventManager.Instance.dropTiles++;
 
         float time = 0f;
         while (time <= 1f)
@@ -114,9 +126,8 @@ public class SmallDrop : DropAction, IDropAction
         // 위치 정밀 보정
         tile.sprite.transform.position = targetPos;
 
-        //위 하강 등록
-        foreach (Tile tile in aboveTile) if (tile != null) tile.Drop();
-
+        EventManager.Instance.dropTiles--;
+        
         //하강 완료
         coroutineEnd();
     }
