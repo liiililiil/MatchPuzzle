@@ -16,19 +16,19 @@ public class IsCanChangeBombBlast : BlastAction, IBlastAction
 
     private void BombSpawn()
     {
-        if (tile.length.x >= 4 || tile.length.y >= 4)
+        if (tile.length.x >= 5 || tile.length.y >= 5)
         {
             SpawnManager.Instance.SpawnObject(TileType.ColorBomb, transform.position, transform.rotation);
         }
-        else if (tile.length.x >= 2 && tile.length.y >= 2)
+        else if (tile.length.x >= 3 && tile.length.y >= 3)
         {
             SpawnManager.Instance.SpawnObject(TileType.BigBomb, transform.position, transform.rotation);
         }
-        else if (tile.length.x >= 3)
+        else if (tile.length.x >= 4)
         {
             SpawnManager.Instance.SpawnObject(TileType.XBomb, transform.position, transform.rotation);
         }
-        else if (tile.length.y >= 3)
+        else if (tile.length.y >= 4)
         {
             SpawnManager.Instance.SpawnObject(TileType.YBomb, transform.position, transform.rotation);
         }
@@ -49,7 +49,7 @@ public class IsCanChangeBombBlast : BlastAction, IBlastAction
             Vector2 worldDir = dir.x * (Vector2)transform.right + dir.y * (Vector2)transform.up;
 
             // GetTileFromWorld를 이용해 타일을 찾고 정리 수행
-            Tile tile = GetTileFromWorld<Tile>(dir, true);
+            Tile tile = GetTileFromWorld<Tile>(dir);
             tile?.Organize();
         }
 
