@@ -64,7 +64,8 @@ public enum DestroyerType : ushort
 {
     Straight = 0,
     Big = 1,
-    Color = 2
+    Color = 2,
+    Huge = 3
 }
 
 
