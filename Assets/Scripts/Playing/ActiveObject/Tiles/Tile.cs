@@ -45,6 +45,8 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
     public GameObject sprite;
     public TileType tileType;
 
+    public TileType switchedTileType;
+
     public bool DropTest;
     public bool calTest;
     private void Update()
@@ -152,6 +154,8 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
                 // Debug.LogWarning($"{gameObject.name} 에게 Rigidbody2D가 자동으로 할당되었습니다.");
             }
         }
+
+        switchedTileType = TileType.Empty;
 
 
         BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
