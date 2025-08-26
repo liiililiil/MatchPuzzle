@@ -7,7 +7,7 @@ public class InstartBlastCalculate : TileAction, ICalculateAction
 
     protected override void OnInvoke()
     {
-        tile.Blast();
+        if(tile.switchedTileType != TileType.Empty) tile.Blast();
     }
 
     public void CalReset()
