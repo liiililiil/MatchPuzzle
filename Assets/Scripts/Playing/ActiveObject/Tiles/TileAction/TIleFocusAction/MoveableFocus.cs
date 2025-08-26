@@ -4,6 +4,7 @@ using UnityEngine;
 public class MoveableFocus : TileFocusAction, ITileFocusAction
 {
     private Coroutine focusCoroutine;
+    private TileType switchingTo;
     public bool isCanFocus { get => true; }
 
     Vector2 moveAt;
@@ -79,7 +80,7 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
                     posRecord = focusAt;
                     OnFocus(focusAt);
                     tileRecord.GetComponent<ITileFocusAction>().OnFocus(-focusAt);
-                    Debug.Log($"{focusAt}, {tileRecord.name}", this);
+                    // Debug.Log($"{focusAt}, {tileRecord.name}", this);
 
                 }
             }
@@ -100,17 +101,25 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
         }
 
         //포커싱 실행
-
+        //움직였으면 이동
         if (posRecord != Vector2Int.zero)
         {
             Move(posRecord);
             EventManager.Instance.InvokeReMove.Add(() => Move(-posRecord));
 
+            //혹시 모를 Null 감지
             if (tileRecord != null)
             {
+                //움직이기 전에 어떤 타일이랑 교체됬는지 기록
+                tile.switchedTileType = tileRecord.tileType;
+                
                 tileRecord.GetComponent<ITileFocusAction>().Move(-posRecord);
                 EventManager.Instance.InvokeReMove.Add(() => tileRecord.GetComponent<ITileFocusAction>().Move(posRecord));
+
+                tileRecord.Calculate();
             }
+
+            tile.Calculate();
         }
 
         
@@ -131,22 +140,22 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
         else if (dir.x == 0 && dir.y == -1)
         {
             isCanMove[0, 1] = value;
-        }
-        else if (dir.x == 0 && dir.y == 1)
-        {
-            isCanMove[1, 1] = value;
-        }
-        else
-        {
-            throw new System.ArgumentException("Invalid direction: " + dir);
-        }
-    }
-
-    private bool GetIsCanMove(Vector2Int dir, bool[,] isCanMove)
-    {
-        if (dir.x == -1 && dir.y == 0)
-        {
-            return isCanMove[0, 0];
+        } 
+        else if (dir.x == 0 && dir.y == 1) 
+        { 
+            isCanMove[1, 1] = value; 
+        } 
+        else 
+        { 
+            throw new System.ArgumentException("Invalid direction: " + dir); 
+        } 
+    } 
+ 
+    private bool GetIsCanMove(Vector2Int dir, bool[,] isCanMove) 
+    { 
+        if (dir.x == -1 && dir.y == 0) 
+        { 
+            return isCanMove[0, 0]; 
         }
         else if (dir.x == 1 && dir.y == 0)
         {
@@ -212,23 +221,24 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
             StopCoroutine(focusCoroutine);
             focusCoroutine = null;
         }
-
-        focusCoroutine = StartCoroutine(MoveTo(moveTo));
-    }
-
-    private IEnumerator MoveTo(Vector2Int moveAt)
-    {
         EventManager.Instance.moveTestTiles++;
-        this.moveAt = moveAt;
+
         Vector2 start = transform.position;
+        this.moveAt = moveTo;
+
         Vector2 end = (Vector2)transform.position + (moveAt * Utils.FloatToVector2(Utils.TILE_GAP));
 
-        transform.position = end;
+        tile.rigidbody2D.MovePosition(end);
 
+        focusCoroutine = StartCoroutine(MoveTo(start, end));
+    }
+
+    private IEnumerator MoveTo(Vector2 start, Vector2 end)
+    {
         float time = 0f;
         while (time < 1)
         {
-            time += Time.deltaTime * Utils.MOVEMENT_SPEED;
+            time += Time.deltaTime * Utils.FOCUS_MOVE_SPEED;
             tile.sprite.transform.position = Vector2.Lerp(start, end, time);
             yield return null;
         }
