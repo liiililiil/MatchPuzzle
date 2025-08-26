@@ -21,7 +21,7 @@ public class StraightDestroyer : DestroyerAction, IMovementAction
     {
         while (tileDestroyer.isActive)
         {
-            rigidbody2D.linearVelocity = transform.up * Utils.DESTROYER_FORWARD_SPEED;
+            rigidbody2D.MovePosition(transform.position + transform.up * Utils.TILE_GAP);
             yield return null;
         }
 
