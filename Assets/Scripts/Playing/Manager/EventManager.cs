@@ -76,6 +76,7 @@ public class EventManager : MonoBehaviour
 
         // Debug.Log("테스트 시작");
 
+        InvokeCalReset.Invoke();
         InvokeCalculate.Invoke();
 
         if (InvokeBlast.Count <= 0)
