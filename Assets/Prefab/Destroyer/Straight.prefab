@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -1258910909649802374}
   - component: {fileID: 8649591504733711830}
   - component: {fileID: 2285837515490996593}
-  - component: {fileID: 3533840105409687088}
+  - component: {fileID: -302292394901008705}
   - component: {fileID: 1689407169905348856}
   - component: {fileID: 2854275200643653185}
   m_Layer: 7
@@ -103,7 +103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sheet:
   - {fileID: -1521942990118855562, guid: 6938cd6f82921bb4c969760da1de30ce, type: 3}
---- !u!114 &3533840105409687088
+--- !u!114 &-302292394901008705
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -112,10 +112,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3181004816733728521}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76e2a5c5207f6fc4ebbe0bcf51d90797, type: 3}
+  m_Script: {fileID: 11500000, guid: ca124819121cc1245b9f9ebaeefdc637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectType: 1
 --- !u!50 &1689407169905348856
 Rigidbody2D:
   serializedVersion: 5
@@ -139,7 +138,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 2
   m_CollisionDetection: 0
   m_Constraints: 4
