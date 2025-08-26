@@ -39,7 +39,7 @@ public class ColorTileCalculate : TileAction, ICalculateAction
 
         bool needBlasted = tile.length.x >= 3 || tile.length.y >= 3;
 
-        // Debug.Log($"계산 완료 : {gameObject.name} - {tile.length} ({tile.tileType})", gameObject);
+        // Debug.Log($"계산 완료 : {gameObject.name} - {tile.length} ({tile.tileType}) Pos = {transform.position}", this);
 
 
         //보정
@@ -90,7 +90,7 @@ public class ColorTileCalculate : TileAction, ICalculateAction
             _isCalculated.x++;
         }
 
-        // Debug.Log($"주변 연산 시작 | 제외 : {exceptionDirection} | 현황 : {length} | 계산 여부 : {_isCalculated}",this);
+        Debug.Log($"주변 연산 시작 | 제외 : {exceptionDirection} | 현황 : {length} | 계산 여부 : {_isCalculated} | 위치 : {transform.position} | 히트박스 위치 : { transform.TransformPoint(GetComponent<BoxCollider2D>().offset)}",this);
 
         //들어온 방향 축 먼저 연산
         Vector2Int reverseDirection = -exceptionDirection;
