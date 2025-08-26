@@ -4,7 +4,15 @@ using UnityEngine;
 public class ExplosionType
 {
     public DestroyerType type;
+    public Vector2 pos;
     public float rotate;
+}
+
+[System.Serializable]
+public class CombineExplosionType
+{
+    public TileType comineBy;
+    public ExplosionType[] explosions;
 }
 
 
@@ -13,12 +21,33 @@ public class ExplosionBlast : BlastAction, IBlastAction
     [SerializeField]
     ExplosionType[] targetDestroyers;
 
+    [SerializeField]
+    CombineExplosionType[] combineExplosionDestroyers;
+
     protected override void OnInvoke()
     {
-        foreach (ExplosionType target in targetDestroyers) 
+        foreach (CombineExplosionType combine in combineExplosionDestroyers)
+        {
+            // Debug.Log(combine.rotate);
+            if (tile.switchedTileType == combine.comineBy)
+            {
+                foreach (ExplosionType target in combine.explosions)
+                {
+                    // Debug.Log(target.rotate);
+                    SpawnManager.Instance.SpawnObject(target.type, (Vector2)transform.position + target.pos, Quaternion.Euler(0, 0, target.rotate + transform.rotation.z), tile);
+                }
+
+                CallOrganize();
+                tile.Disable();
+                return;
+            }
+        }
+
+
+        foreach (ExplosionType target in targetDestroyers)
         {
             // Debug.Log(target.rotate);
-            SpawnManager.Instance.SpawnObject(target.type, transform.position, Quaternion.Euler(0, 0, target.rotate + transform.rotation.z), tile);
+            SpawnManager.Instance.SpawnObject(target.type, (Vector2)transform.position + target.pos, Quaternion.Euler(0, 0, target.rotate + transform.rotation.z), tile);
         }
 
         CallOrganize();
