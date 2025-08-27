@@ -55,7 +55,7 @@ public class Effect : MonoBehaviour, IActiveObject
         EventManager.Instance.OnSpawnedActiveOjbect.Invoke(this, transform.position);
     }
     
-    public void Disable()
+    public void Disable(bool hideEffect = false)
     {
         // Debug.Log("해제 선언됨");
         isActive = false;
