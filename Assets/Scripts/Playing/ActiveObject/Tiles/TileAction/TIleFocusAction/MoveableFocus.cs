@@ -112,11 +112,17 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
             {
                 //움직이기 전에 어떤 타일이랑 교체됬는지 기록
                 tile.switchedTileType = tileRecord.tileType;
-                
+
+
                 tileRecord.GetComponent<ITileFocusAction>().Move(-posRecord);
                 EventManager.Instance.InvokeReMove.Add(() => tileRecord.GetComponent<ITileFocusAction>().Move(posRecord));
 
                 tileRecord.Calculate();
+            }
+            else
+            {
+                Debug.LogError("MoveableFocus: 타일이 없는데 움직임!", this);
+
             }
 
             tile.Calculate();
@@ -216,6 +222,7 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
     }
     public override void Move(Vector2Int moveTo)
     {
+        tile.switched = true;
         if (focusCoroutine != null)
         {
             StopCoroutine(focusCoroutine);
