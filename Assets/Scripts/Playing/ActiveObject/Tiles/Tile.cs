@@ -11,7 +11,8 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
     {
         isActive = 1 << 0,
         isCenter = 1 << 1,
-        isInit = 1 << 2
+        isInit = 1 << 2,
+        SWitched = 1 << 3
     }
 
     private TileFlag flag;
@@ -38,6 +39,20 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
     {
         get => (flag & TileFlag.isInit) != 0;
         set => flag = value ? flag | TileFlag.isInit : flag & ~TileFlag.isInit;
+    }
+    private bool _switched
+    {
+        get => (flag & TileFlag.SWitched) != 0;
+        set => flag = value ? flag | TileFlag.SWitched : flag & ~TileFlag.SWitched;
+    }
+
+    public bool switched
+    {
+        get => _switched;
+        set
+        {
+            _switched = value;
+        }
     }
     public Vector2Int length = Vector2Int.zero;
     public new Rigidbody2D rigidbody2D;
@@ -88,13 +103,15 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
         explodedAction.Invoke();
     }
 
-    public void Disable()
+    public void Disable(bool hideEffect = false)
     {
         rigidbody2D.simulated = false;
 
         Tile[] aboveTile = { GetTileFromWorld<Tile>(transform.up), GetTileFromWorld<Tile>(transform.up + transform.right), GetTileFromWorld<Tile>(transform.up - transform.right) };
 
         isActive = false;
+        _switched = false;
+
         BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
         if (boxCollider2D != null)
             boxCollider2D.enabled = false;
@@ -102,7 +119,7 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
             Debug.LogError($"{gameObject.name} 에게 BoxCollider2D가 없습니다!");
 
         EventManager.Instance.OnDisabledTile.Invoke(this, transform.position);
-        SpawnManager.Instance.SpawnObject(EffectType.TileDisabled, transform.position, transform.rotation, this);
+        if(!hideEffect) SpawnManager.Instance.SpawnObject(EffectType.TileDisabled, transform.position, transform.rotation, this);
 
         if (dropAction.isDrop == true)
         {
