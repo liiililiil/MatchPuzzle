@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
@@ -26,28 +27,36 @@ public class ExplosionBlast : BlastAction, IBlastAction
 
     protected override void OnInvoke()
     {
+        //움직였지만 메인 포커싱 타일이 아닌겨우 폭발대신 바로 비활성화
+        if(tile.switched && tile.switchedTileType == TileType.Empty)
+        {
+            tile.Disable(true);
+            return;
+        }
+
         foreach (CombineExplosionType combine in combineExplosionDestroyers)
         {
             // Debug.Log(combine.rotate);
             if (tile.switchedTileType == combine.comineBy)
             {
-                foreach (ExplosionType target in combine.explosions)
-                {
-                    // Debug.Log(target.rotate);
-                    SpawnManager.Instance.SpawnObject(target.type, (Vector2)transform.position + target.pos, Quaternion.Euler(0, 0, target.rotate + transform.rotation.z), tile);
-                }
-
-                CallOrganize();
-                tile.Disable();
+                SpawnDestroyers(combine.explosions);
                 return;
             }
         }
 
+        SpawnDestroyers(targetDestroyers);
 
-        foreach (ExplosionType target in targetDestroyers)
+
+
+    }
+
+    private void SpawnDestroyers(ExplosionType[] targetList)
+    {
+        Debug.Log(targetList);
+        foreach (ExplosionType target in targetList)
         {
             // Debug.Log(target.rotate);
-            SpawnManager.Instance.SpawnObject(target.type, (Vector2)transform.position + target.pos, Quaternion.Euler(0, 0, target.rotate + transform.rotation.z), tile);
+            SpawnManager.Instance.SpawnObject(target.type, transform.position + (target.pos.x * transform.right + target.pos.y * transform.up), Quaternion.Euler(0, 0, target.rotate + transform.rotation.z), tile);
         }
 
         CallOrganize();
