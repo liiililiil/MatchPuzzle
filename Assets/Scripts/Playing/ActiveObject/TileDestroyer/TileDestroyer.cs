@@ -67,7 +67,7 @@ public class TileDestroyer : MonoBehaviour, IActiveObject
 
     }
     
-    public void Disable()
+    public void Disable(bool hideEffect = false)
     {
         EventManager.Instance.activeDestroyer--;
 
