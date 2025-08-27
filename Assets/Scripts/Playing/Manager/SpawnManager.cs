@@ -117,8 +117,10 @@ public class SpawnManager : MonoBehaviour
     public void SpawnObject<T>(T type, Vector2 position, Quaternion rotate, IActiveObject caller = null) where T : Enum
     {
         GameObject gameObject = GetObject(type);
-        
+
         // Debug.Log(gameObject);
+        
+        Debug.Log($"{caller}가 {position}에 {type} 생성을 요청 하였습니다.");
         gameObject.GetComponent<IActiveObject>().Enable(position, rotate, caller);
     }
 
