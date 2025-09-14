@@ -1,11 +1,11 @@
 using UnityEngine;
 
+// 폭발 기본 액션
 public class BlastAction : TileAction
 {
+    // 액션 발동전 체크
     public override void Invoke()
     {
-
-
         if (tile == null)
         {
             Tile tile = GetComponent<Tile>();

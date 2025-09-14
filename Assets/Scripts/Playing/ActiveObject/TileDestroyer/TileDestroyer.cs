@@ -1,24 +1,28 @@
 using UnityEngine;
 
+// 타일 파괴자 클래스
 public class TileDestroyer : MonoBehaviour, IActiveObject
 {
+    // 시작된 타일
     public TileType startBy { get; private set; }
+
+    // 타일 파괴자 타입
     public DestroyerType type;
+
+    // 활성화 여부
     public bool isActive { get; private set; }
+
+    // 초기화 여부
     private bool isInit;
 
+    // 액션들
     private IMovementAction movementAction;
     private IDestroyAction destroyAction;
     private IExtinctionAction extinctionAction;
     private ISpriteAction spriteAction;
     private IEffectSpawnAction effectAction;
-    public void Fire(Tile startBy, Vector2 pos, Quaternion rotate)
-    {
-        // this.startBy = startBy;
-        transform.position = pos;
-        transform.rotation = rotate;
-    }
 
+    // 제네릭으로 액션 초기화 함수 정의
     private void InitAction<T>(out T action) where T : IDestroyerAction
     {
         action = GetComponent<T>();
@@ -32,9 +36,12 @@ public class TileDestroyer : MonoBehaviour, IActiveObject
         }
     }
 
+    //활성화
     public void Enable(Vector2 position, Quaternion rotate, IActiveObject startBy = null)
     {
         EventManager.Instance.activeDestroyer++;
+
+        //초기화 되지 않았으면 초기화
         if (!isInit)
         {
             isInit = true;
@@ -44,10 +51,14 @@ public class TileDestroyer : MonoBehaviour, IActiveObject
             InitAction(out spriteAction);
             InitAction(out effectAction);
         }
-        
+
         if (startBy == null) Debug.LogWarning("이 타일 소멸자의 시작지점이 설정되지 못하였습니다!");
+
+        // 위치 및 방향 설정
         transform.position = position;
         transform.rotation = rotate;
+
+
         isActive = true;
 
         BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
@@ -56,9 +67,10 @@ public class TileDestroyer : MonoBehaviour, IActiveObject
         else
             Debug.LogError($"{gameObject.name} 에게 BoxCollider2D가 없습니다!");
 
-            
+        //스폰 알림
         EventManager.Instance.OnSpawnedActiveOjbect.Invoke(this, transform.position);
 
+        //액션 실행
         movementAction?.Invoke();
         destroyAction?.Invoke();
         extinctionAction?.Invoke();
@@ -66,7 +78,8 @@ public class TileDestroyer : MonoBehaviour, IActiveObject
         effectAction?.Invoke();
 
     }
-    
+
+    //비활성화
     public void Disable(bool hideEffect = false)
     {
         EventManager.Instance.activeDestroyer--;
@@ -80,9 +93,11 @@ public class TileDestroyer : MonoBehaviour, IActiveObject
             Debug.LogError($"{gameObject.name} 에게 BoxCollider2D가 없습니다!");
 
 
+        // 이펙트를 대기 위치로 이동 후 회전 초기화
         transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_Pos_Y);
         transform.rotation = Quaternion.identity;
 
+        // 개체 풀링 시키기
         SpawnManager.Instance.Pooling(type, gameObject);
     }
 

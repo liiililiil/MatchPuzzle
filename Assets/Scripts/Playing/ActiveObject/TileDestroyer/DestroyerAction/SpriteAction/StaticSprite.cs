@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
+// ㅈ정적 스프라이트 액션
 public class StaticSprite : SpriteAction, ISpriteAction
 {
     protected override void OnInvoke()
@@ -13,11 +14,11 @@ public class StaticSprite : SpriteAction, ISpriteAction
         StartCoroutine(OnStaticSprite());
     }
 
+    // 정적 스프라이트 코루틴
+    // 첫번째 시트를 계속 유지하다가 타일 파괴자가 비활성화 되면 스프라이트를 제거
     private IEnumerator OnStaticSprite()
     {
         spriteRenderer.sprite = sheet[0];
-
-        //변경완료!
 
         while (tileDestroyer.isActive)
         {

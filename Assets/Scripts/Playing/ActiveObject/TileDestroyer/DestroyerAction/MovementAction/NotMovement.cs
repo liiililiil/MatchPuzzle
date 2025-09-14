@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// 이동하지 않는 액션
 public class NotMovement : DestroyerAction, IMovementAction
 {
     private new Rigidbody2D rigidbody;

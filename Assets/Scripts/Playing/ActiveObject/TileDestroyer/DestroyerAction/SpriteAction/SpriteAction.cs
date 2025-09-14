@@ -1,7 +1,9 @@
 using UnityEngine;
 
+// 기본 스트라이트 액션
 public class SpriteAction : DestroyerAction, ISpriteAction
 {
+    // 스프라이트 시트
     [SerializeField]
     protected Sprite[] sheet;
     protected SpriteRenderer spriteRenderer;
@@ -42,9 +44,11 @@ public class SpriteAction : DestroyerAction, ISpriteAction
         OnInvoke();
     }
 
-    public int GetLenght(){
+    //외부에서 길이를 가져가기 위한 메서드
+    public int GetLenght()
+    {
         return sheet.Length;
     }
 
-    
+
 }

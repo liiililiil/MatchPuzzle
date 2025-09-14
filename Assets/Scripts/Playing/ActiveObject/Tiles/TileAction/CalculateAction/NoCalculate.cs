@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// 계산하지 않는 액션
 public class NoCalculate : TileAction, ICalculateAction
 {
     public Vector2Int isCalculated { get; set; } = Vector2Int.zero;
@@ -23,5 +24,5 @@ public class NoCalculate : TileAction, ICalculateAction
     {
         return tile.tileType == type;
     }
-    
+
 }

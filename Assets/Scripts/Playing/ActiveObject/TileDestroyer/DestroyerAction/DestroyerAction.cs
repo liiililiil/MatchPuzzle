@@ -1,14 +1,15 @@
 using UnityEngine;
 
+// 타일 파괴자 액션의 기본 클래스
 public class DestroyerAction : MonoBehaviour
 {
     protected TileDestroyer tileDestroyer;
     public void Init(TileDestroyer tileDestroyer)
     {
         this.tileDestroyer = tileDestroyer;
-        // Debug.Log("초기화 성공!");
     }
 
+    // 액션 발동전 체크
     public virtual void Invoke()
     {
         if (tileDestroyer == null)

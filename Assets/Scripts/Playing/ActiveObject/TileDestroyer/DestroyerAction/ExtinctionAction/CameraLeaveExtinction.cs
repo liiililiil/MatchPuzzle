@@ -14,6 +14,7 @@ public class CameraLeaveExtinction : DestroyerAction, IExtinctionAction
     {
         Vector3 viewPos;
 
+        // 타일이 활성화 중일때만 체크
         while (tileDestroyer.isActive)
         {
             yield return null;

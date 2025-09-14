@@ -1,16 +1,18 @@
 using UnityEngine;
 
+// 이펙트의 액션을 위한 기본 클래스
 public class EffectAction : MonoBehaviour
 {
     protected Effect effect = null;
     public void Init(Effect effect)
     {
-        this.effect= effect;
-        // Debug.Log("초기화 성공!");
+        this.effect = effect;
     }
 
     public virtual void Invoke()
     {
+        // 필요한 개체들을 가져온 후 메인 로직 실행
+        
         if (effect == null)
         {
             effect = GetComponent<Effect>();
