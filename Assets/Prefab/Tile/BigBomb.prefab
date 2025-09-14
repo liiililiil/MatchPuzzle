@@ -155,31 +155,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetDestroyers:
-  - type: 1
-    pos: {x: 0, y: 0}
-    rotate: 0
+  - {fileID: 11400000, guid: dc6810486647fb7498fd440c77c3d111, type: 2}
   combineExplosionDestroyers:
   - comineBy: 5
     explosions:
-    - type: 3
-      pos: {x: 0, y: 0}
-      rotate: 0
+    - {fileID: 11400000, guid: 4aa0510ff6b56f74faca9c8fdb80fb93, type: 2}
   - comineBy: 6
     explosions:
-    - type: 1
-      pos: {x: 1, y: 0}
-      rotate: 0
-    - type: 1
-      pos: {x: -1, y: 0}
-      rotate: 0
+    - {fileID: 11400000, guid: b6466a28bbe2a5542bf7ae450e1a566b, type: 2}
+    - {fileID: 11400000, guid: 6b9c02b096a7a6741ae0b81cac843ef1, type: 2}
   - comineBy: 7
     explosions:
-    - type: 1
-      pos: {x: 0, y: 1}
-      rotate: 0
-    - type: 1
-      pos: {x: 0, y: -1}
-      rotate: 0
+    - {fileID: 11400000, guid: 597ace9c675f08a4fb8b5fb8f99f346b, type: 2}
+    - {fileID: 11400000, guid: 8ca8d05d6c99f7b4fa616217dd290704, type: 2}
 --- !u!114 &7009721214888321561
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -167,13 +167,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetDestroyers:
-  - type: 0
-    pos: {x: 0, y: 0}
-    rotate: 0
-  - type: 0
-    pos: {x: 0, y: 0}
-    rotate: 180
-  combineExplosionDestroyers: []
+  - {fileID: 11400000, guid: 8ca8d05d6c99f7b4fa616217dd290704, type: 2}
+  combineExplosionDestroyers:
+  - comineBy: 6
+    explosions:
+    - {fileID: 11400000, guid: 6b9c02b096a7a6741ae0b81cac843ef1, type: 2}
+    - {fileID: 11400000, guid: 8ca8d05d6c99f7b4fa616217dd290704, type: 2}
+  - comineBy: 5
+    explosions:
+    - {fileID: 11400000, guid: 8ca8d05d6c99f7b4fa616217dd290704, type: 2}
+    - {fileID: 11400000, guid: 597ace9c675f08a4fb8b5fb8f99f346b, type: 2}
 --- !u!114 &4511253921633687392
 MonoBehaviour:
   m_ObjectHideFlags: 0
