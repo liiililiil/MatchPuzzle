@@ -36,6 +36,14 @@ public class Chain
         };
     }
 }
+//일반적으로 폭발할 때 생성하는 파괴자들
+[Serializable]
+public class ExplosionType
+{
+    public DestroyerType type;
+    public Vector2 pos;
+    public float rotate;
+}
 
 [Serializable]
 public enum TileType : ushort
@@ -138,40 +146,5 @@ public class OneTimeAction<T>
     }
 }
 
-// // 클리어 조건 구조
-// [System.Serializable]
-// public struct StageGoal
-// {
-//     TileBurstGoal[] tileBurstGoals;
-//     int movementLimit;
-//     float time;
-//     float extraTime;
-// }
-
-// [System.Serializable]
-// public struct TileBurstGoal
-// {
-//     TileType type;
-//     int goalCount;
-// }
-
-[Serializable]
-public class SpawnRate
-{
-    public TileType tile;
-    public float weight;
-
-    [HideInInspector]
-    public float cumulativeWeight;
-}
-
-// [System.Serializable]
-// public struct TileStartInfo
-// {
-//     TileType tile;
-
-//     Vector2 pos;
-
-// }
 
 
