@@ -1,26 +1,19 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
-[System.Serializable]
-public class ExplosionType
-{
-    public DestroyerType type;
-    public Vector2 pos;
-    public float rotate;
-}
 
+//다른 타일 타입과 조합될 때 생성하는 파괴자들
 [System.Serializable]
 public class CombineExplosionType
 {
     public TileType comineBy;
-    public ExplosionType[] explosions;
+    public DestroyerSpawnPreset[] explosions;
 }
 
 
 public class ExplosionBlast : BlastAction, IBlastAction
 {
     [SerializeField]
-    ExplosionType[] targetDestroyers;
+    DestroyerSpawnPreset[] targetDestroyers;
 
     [SerializeField]
     CombineExplosionType[] combineExplosionDestroyers;
@@ -50,19 +43,19 @@ public class ExplosionBlast : BlastAction, IBlastAction
 
     }
 
-    private void SpawnDestroyers(ExplosionType[] targetList)
+    private void SpawnDestroyers(DestroyerSpawnPreset[] targetList)
     {
-        Debug.Log(targetList);
-        foreach (ExplosionType target in targetList)
+        foreach (DestroyerSpawnPreset target in targetList)
         {
-            // Debug.Log(target.rotate);
-            SpawnManager.Instance.SpawnObject(target.type, transform.position + (target.pos.x * transform.right + target.pos.y * transform.up), Quaternion.Euler(0, 0, target.rotate + transform.rotation.z), tile);
+            foreach (ExplosionType destroyer in target.Destroyers)
+            {
+                SpawnManager.Instance.SpawnObject(destroyer.type, transform.position + (destroyer.pos.x * transform.right + destroyer.pos.y * transform.up), Quaternion.Euler(0, 0, destroyer.rotate + transform.rotation.z), tile);
+            }
         }
 
         CallOrganize();
         tile.Disable();
     }
-
 
     private void CallOrganize()
     {
