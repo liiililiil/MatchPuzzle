@@ -1528,8 +1528,16 @@ PrefabInstance:
       value: XBomb
       objectReference: {fileID: 0}
     - target: {fileID: 4147317520772857549, guid: 91cde95061b22a7469cc51c49a35dae6, type: 3}
-      propertyPath: combineExplosionDestroyers.Array.size
+      propertyPath: targetDestroyers.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4147317520772857549, guid: 91cde95061b22a7469cc51c49a35dae6, type: 3}
+      propertyPath: 'targetDestroyers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 6b9c02b096a7a6741ae0b81cac843ef1, type: 2}
+    - target: {fileID: 4147317520772857549, guid: 91cde95061b22a7469cc51c49a35dae6, type: 3}
+      propertyPath: combineExplosionDestroyers.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4147317520772857549, guid: 91cde95061b22a7469cc51c49a35dae6, type: 3}
       propertyPath: combineExplosionDestroyers.Array.data[0].comineBy
@@ -1541,7 +1549,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4147317520772857549, guid: 91cde95061b22a7469cc51c49a35dae6, type: 3}
       propertyPath: combineExplosionDestroyers.Array.data[0].explosions.Array.size
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4147317520772857549, guid: 91cde95061b22a7469cc51c49a35dae6, type: 3}
       propertyPath: combineExplosionDestroyers.Array.data[1].explosions.Array.size
@@ -7249,7 +7257,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1334582480
 Transform:
   m_ObjectHideFlags: 0
