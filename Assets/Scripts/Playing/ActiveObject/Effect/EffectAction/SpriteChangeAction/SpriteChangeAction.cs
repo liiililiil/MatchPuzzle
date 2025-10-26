@@ -38,7 +38,7 @@ public class SpriteChangeAction : EffectAction
                 return;
             }
 
-            Debug.LogWarning($"{gameObject.name}에 있는 {GetType()}가 Init되지 않았습니다. 자동으로 Init합니다.");
+            // Debug.LogWarning($"{gameObject.name}에 있는 {GetType()}가 Init되지 않았습니다. 자동으로 Init합니다.");
         }
 
         if (spriteRenderer == null)
@@ -51,7 +51,7 @@ public class SpriteChangeAction : EffectAction
                 return;
             }
 
-            Debug.LogWarning($"{gameObject.name}에 있는 {GetType()}가 Init되지 않았습니다. 자동으로 Init합니다.");
+            // Debug.LogWarning($"{gameObject.name}에 있는 {GetType()}가 Init되지 않았습니다. 자동으로 Init합니다.");
         }
 
 
