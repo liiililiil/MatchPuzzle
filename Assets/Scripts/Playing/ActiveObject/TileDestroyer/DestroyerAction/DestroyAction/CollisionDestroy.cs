@@ -2,10 +2,8 @@ using System.Collections;
 using UnityEngine;
 
 // 충돌로 타일을 파괴하는 액션
-public class CollisionDestroy : DestroyerAction, IDestroyAction
+public class CollisionDestroy : DestroyerDestroyAction, IDestroyAction
 {
-    private BoxCollider2D boxCollider2D;
-
 
     protected override void OnInvoke()
     {
