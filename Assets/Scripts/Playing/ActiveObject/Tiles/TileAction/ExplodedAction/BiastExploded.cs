@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BiastExploded : TileAction, IExplodedAction
+public class BiastExploded : TileExplodeAction, IExplodedAction
 {
     protected override void OnInvoke()
     {
