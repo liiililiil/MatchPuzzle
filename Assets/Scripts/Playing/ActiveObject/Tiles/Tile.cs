@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 
 public class Tile : GetActiveObjectFromWorld, IActiveObject
 {
+    
     private enum TileFlag : byte
     {
         isActive = 1 << 0,
@@ -23,6 +24,7 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
     private IExplodedAction explodedAction;
     private ITileFocusAction focusAction;
 
+    
     public bool isActive
     {
         get => (flag & TileFlag.isActive) != 0;
@@ -46,6 +48,7 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
         set => flag = value ? flag | TileFlag.SWitched : flag & ~TileFlag.SWitched;
     }
 
+    //외부 접근용
     public bool switched
     {
         get => _switched;
