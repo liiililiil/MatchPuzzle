@@ -3,8 +3,8 @@ using UnityEngine;
 // 타일 파괴자 클래스
 public class TileDestroyer : MonoBehaviour, IActiveObject
 {
-    // 시작된 타일
-    public TileType startBy { get; private set; }
+    // 시작된 위치
+    public IActiveObject startBy { get; private set; } = null;
 
     // 타일 파괴자 타입
     public DestroyerType type;
@@ -13,7 +13,7 @@ public class TileDestroyer : MonoBehaviour, IActiveObject
     public bool isActive { get; private set; }
 
     // 초기화 여부
-    private bool isInit;
+    private bool isInit = false;
 
     // 액션들
     private IMovementAction movementAction;
@@ -39,6 +39,7 @@ public class TileDestroyer : MonoBehaviour, IActiveObject
     //활성화
     public void Enable(Vector2 position, Quaternion rotate, IActiveObject startBy = null)
     {
+        // if(type == DestroyerType.ShooterParent) Debug.Log("제ㅔㅔㅔㅔㅔ발 ",this);
         EventManager.Instance.activeDestroyer++;
 
         //초기화 되지 않았으면 초기화
@@ -51,8 +52,12 @@ public class TileDestroyer : MonoBehaviour, IActiveObject
             InitAction(out spriteAction);
             InitAction(out effectAction);
         }
-
-        if (startBy == null) Debug.LogWarning("이 타일 소멸자의 시작지점이 설정되지 못하였습니다!");
+        
+        // if (type == DestroyerType.ShooterParent) Debug.Log("초기화 ");
+        
+        if (startBy == null) Debug.LogWarning("이 타일 소멸자의 시작지점이 설정되지 못하였습니다!",this);
+            else if (!(startBy is Tile)) Debug.LogWarning("이 타일 소멸자의 시작지점이 타일이 아닙니다!",this);
+            else this.startBy = startBy;
 
         // 위치 및 방향 설정
         transform.position = position;
@@ -70,6 +75,7 @@ public class TileDestroyer : MonoBehaviour, IActiveObject
         //스폰 알림
         EventManager.Instance.OnSpawnedActiveOjbect.Invoke(this, transform.position);
 
+        // if (type == DestroyerType.ShooterParent) Debug.Log($"인보크 {destroyAction.GetType()} ",this);
         //액션 실행
         movementAction?.Invoke();
         destroyAction?.Invoke();
