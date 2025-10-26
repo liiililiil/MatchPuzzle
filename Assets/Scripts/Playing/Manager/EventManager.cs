@@ -12,6 +12,9 @@ public class EventManager : MonoBehaviour
     public OneTimeAction InvokeDrop = new OneTimeAction();
     public OneTimeAction InvokeBlast = new OneTimeAction();
     public OneTimeAction InvokeOrganize = new OneTimeAction();
+
+    //포커싱 후 폭발할때 피 포커싱 타일은 바로 해제하기 위한 액션
+    public OneTimeAction InvokeFocusBlast = new OneTimeAction();
     public OneTimeAction InvokeReMove = new OneTimeAction();
 
     //타일 전체에 대한 이벤트트
@@ -36,7 +39,6 @@ public class EventManager : MonoBehaviour
     public bool readyToFocus;
     public bool NeedTestCalculation;
     public int activeDestroyer;
-    private float time;
     
 
 
@@ -58,7 +60,7 @@ public class EventManager : MonoBehaviour
     }
     private void deBugTest(Tile tile, Vector2 vector2)
     {
-        SpawnManager.Instance.SpawnObject(DestroyerType.Straight, vector2, Quaternion.Euler(0, 0, 1), tile);
+        // SpawnManager.Instance.SpawnObject(DestroyerType.Straight, vector2, Quaternion.Euler(0, 0, 1), tile);
     }
 
 
@@ -79,15 +81,18 @@ public class EventManager : MonoBehaviour
         InvokeCalReset.Invoke();
         InvokeCalculate.Invoke();
 
+        // 폭발이 필요 없는 경우 되돌리기
         if (InvokeBlast.Count <= 0)
         {
             // Debug.Log("폭발 필요 없음");
+            InvokeFocusBlast.Clear();
             InvokeReMove.Invoke();
         }
         else
         {
             // Debug.Log("폭발 필요");
             InvokeReMove.Clear();
+            InvokeFocusBlast.Invoke();
             readyToFocus = false;
         }
     }
