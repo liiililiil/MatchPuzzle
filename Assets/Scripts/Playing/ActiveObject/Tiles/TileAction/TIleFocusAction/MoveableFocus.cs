@@ -37,8 +37,6 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
             SetIsCanMove(ref isCanMove, dir, result);
 
         }
-        // Debug.Log("MoveableFocus: " + isCanMove[0, 0] + ", " + isCanMove[0, 1] + ", " + isCanMove[1, 0] + ", " + isCanMove[1, 1]);
-
 
         Tile tileRecord = null;
         Vector2Int posRecord = Vector2Int.zero;
@@ -104,18 +102,20 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
         //움직였으면 이동
         if (posRecord != Vector2Int.zero)
         {
+            //본인 이동
             Move(posRecord);
             EventManager.Instance.InvokeReMove.Add(() => Move(-posRecord));
-
             //혹시 모를 Null 감지
             if (tileRecord != null)
             {
                 //움직이기 전에 어떤 타일이랑 교체됬는지 기록
                 tile.switchedTileType = tileRecord.tileType;
 
-
+                //상대 이동
                 tileRecord.GetComponent<ITileFocusAction>().Move(-posRecord);
                 EventManager.Instance.InvokeReMove.Add(() => tileRecord.GetComponent<ITileFocusAction>().Move(posRecord));
+                EventManager.Instance.InvokeFocusBlast.Add(() => tileRecord.GetComponent<Tile>().Disable(true));
+
 
                 tileRecord.Calculate();
             }
@@ -220,7 +220,7 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
 
         tile.sprite.transform.position = end;
     }
-    public override void Move(Vector2Int moveTo)
+    public override void Move(Vector2Int moveTo, bool isOperand = false)
     {
         tile.switched = true;
         if (focusCoroutine != null)
