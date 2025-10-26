@@ -3,29 +3,9 @@ using System.Linq;
 using UnityEngine;
 
 // 색깔 타일 연산 액션
-public class ColorTileCalculate : TileAction, ICalculateAction
+public class ColorTileCalculate : TileCalCulateAction, ICalculateAction
 {
-    // 연산이 완료되었는지 여부
-    private Vector2Int _isCalculated = Vector2Int.zero;
-
-    //밖 접근용
-    public Vector2Int isCalculated
-    {
-        get => _isCalculated;
-        set => _isCalculated = value;
-    }
-
-    // 연산 초기화
-    // 이거 클래스로 합쳐야하는데 귀찮음 나중에 할거임
-    // 이렇게 해놓고 까먹겠지 ㅋㅋㅋ
-    public void CalReset()
-    {
-        isCalculated = Vector2Int.zero;
-        tile.isCenter = false;
-        tile.length = Vector2Int.one;
-    }
-
-
+    
     protected override void OnInvoke()
     {
         // 이미 연산이 완료된 경우 무시
@@ -66,12 +46,17 @@ public class ColorTileCalculate : TileAction, ICalculateAction
     // 주변 타일을 재귀적 너비 탐색으로 검사하고 length 에 최대 길이들을 반환
     public void NearbyCheck(ref Vector2Int length, ref Stack<Tile> totalStack, Vector2Int exceptionDirection)
     {
+        //카메라 밖에 있으면 무시
+        Vector3 viewPos = Camera.main.WorldToViewportPoint(gameObject.transform.position);
+
+        if (viewPos.z < 0 || viewPos.x < 0 || viewPos.x > 1 || viewPos.y < 0 || viewPos.y > 1)
+            return;
 
         //본인 타일 넣기
         totalStack.Push(GetComponent<Tile>());
 
         //들어온 방향이 없으면 무시 없음
-        if (exceptionDirection == Vector2Int.zero) {}
+        if (exceptionDirection == Vector2Int.zero) { }
 
         // 들어온 방향의 축이 이미 연산된 경우 무시
         else if (exceptionDirection.x == 0)
@@ -128,12 +113,5 @@ public class ColorTileCalculate : TileAction, ICalculateAction
             }
         }
     }
-
-    // 외부 접근용 타입 비교
-    public bool IsEqualType(TileType type)
-    {
-        return tile.tileType == type;
-    }
-
 
 }
