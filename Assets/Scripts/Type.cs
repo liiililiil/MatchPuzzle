@@ -60,11 +60,13 @@ public enum TileType : ushort
     Box = 9,
     Empty = 10,
 }
+
 [Serializable]
 public enum EffectType : ushort
 {
     TileDisabled = 0,
-    StraightFlyEffect = 1
+    StraightFlyEffect = 1,
+    ShooterChildEffect = 2,
 }
 
 [Serializable]
@@ -72,8 +74,28 @@ public enum DestroyerType : ushort
 {
     Straight = 0,
     Big = 1,
-    Color = 2,
-    Huge = 3
+    Huge = 2,
+    ShooterParent = 3,
+}
+
+[Serializable]
+public enum DisabledType : ushort
+{
+    Blasted = 0,
+    BlastedByDestroyer = 1,
+    Disabled = 2,
+    OnOrganized = 3,
+    Extinction = 4,
+    
+}
+
+/// <summary>
+/// 상수처럼 사용됨 (실제 상수는 아님)
+/// </summary>
+public static class TILE_CONSTANT
+{
+    public static TileType[] COLOR_TILES = { TileType.Red, TileType.Green, TileType.Blue, TileType.Purple };
+    public static TileType[] BOMB_TILES = { TileType.BigBomb, TileType.XBomb, TileType.YBomb, TileType.ColorBomb};
 }
 
 
@@ -146,5 +168,16 @@ public class OneTimeAction<T>
     }
 }
 
+// 사용하지 않음
+// 정확하게 연산하기 위해 이벤트 전과 후로 분리된 유니티 이벤트
+// public class SplitUnityEvent<T>
+// {
+//     public UnityEvent<T> before = new UnityEvent<T>();
+//     public UnityEvent<T> after = new UnityEvent<T>();
+// }
 
-
+// public class SplitUnityEvent
+// {
+//     public UnityEvent before = new UnityEvent();
+//     public UnityEvent after = new UnityEvent();
+// }
