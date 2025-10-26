@@ -1,9 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using NUnit.Framework;
-using Unity.Mathematics;
 using UnityEngine;
 
 
@@ -68,7 +63,7 @@ public class SpawnManager : MonoBehaviour
 
         // SpawnObject(DestroyerType.Straight, Vector2.zero, Quaternion.identity);
 
-        SpawnObject(DestroyerType.Big, Vector2.zero, Quaternion.identity);
+        // SpawnObject(DestroyerType.Big, Vector2.zero, Quaternion.identity);
         // SpawnObject(DestroyerType.Straight, Vector2.zero, Quaternion.identity);
 
     }
@@ -114,14 +109,13 @@ public class SpawnManager : MonoBehaviour
             data[idx].pooling.Enqueue(gameObject);
     }
 
-    public void SpawnObject<T>(T type, Vector2 position, Quaternion rotate, IActiveObject caller = null) where T : Enum
+    public GameObject SpawnObject<T>(T type, Vector2 position, Quaternion rotate, IActiveObject caller = null) where T : Enum
     {
         GameObject gameObject = GetObject(type);
 
-        // Debug.Log(gameObject);
-        
-        Debug.Log($"{caller}가 {position}에 {type} 생성을 요청 하였습니다.");
         gameObject.GetComponent<IActiveObject>().Enable(position, rotate, caller);
+
+        return gameObject;
     }
 
     
