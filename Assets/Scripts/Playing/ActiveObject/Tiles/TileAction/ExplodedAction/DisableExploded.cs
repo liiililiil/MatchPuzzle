@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DisableExploded : TileAction, IExplodedAction
+public class DisableExploded : TileExplodeAction, IExplodedAction
 {
     protected override void OnInvoke()
     {
