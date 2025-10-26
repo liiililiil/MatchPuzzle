@@ -9,8 +9,7 @@ public static class Utils
     public const float RAYCASY_REVISION = 1f;
     public const float WAIT_POS_X = 100f;
     public const float WAIT_Pos_Y = 100f;
-    public const float ACCELERATION_SPEED = 50f;
-    public const float MOVEMENT_SPEED = 20f;
+    public const float MOVEMENT_SPEED = 30f;  //원래는 20F
     public const int TILETYPE_LENGHT = 9;
     public const int EFFECTTYPE_LENGHT = 1;
     public const float EFFECT_SPEED = 20f;
@@ -21,6 +20,8 @@ public static class Utils
     public const float FOCUS_ANIMATION_MOVING_LENGHT = 0.1f;
     public const float FOCUS_ANIMATION_SPEED = 10f;
     public const float FOCUS_MOVE_SPEED = 10f;
+    public const float SHOOTER_SCALE_SPEED = 2f;
+    public const float SHOOTER_CHILD_MOVE_SPEED = 1f;
 
     // public const int MOVEMENT_DURATION = 100; // 이동 지속 시간 (ms)
 
