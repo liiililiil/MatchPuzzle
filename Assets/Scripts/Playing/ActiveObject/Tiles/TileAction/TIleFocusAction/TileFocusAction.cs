@@ -12,7 +12,7 @@ public class TileFocusAction : TileAction
         Debug.LogWarning("포커싱 설정되지 않음!", this);
     }
     
-    public virtual void Move(Vector2Int moveTo)
+    public virtual void Move(Vector2Int moveTo, bool isOperand = false)
     {
         Debug.LogWarning("이동 설정되지 않음!", this);
     }
