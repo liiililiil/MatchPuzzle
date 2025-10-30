@@ -172,11 +172,14 @@ MonoBehaviour:
   - comineBy: 6
     explosions:
     - {fileID: 11400000, guid: 6b9c02b096a7a6741ae0b81cac843ef1, type: 2}
-    - {fileID: 11400000, guid: 8ca8d05d6c99f7b4fa616217dd290704, type: 2}
+    - {fileID: 11400000, guid: 6b9c02b096a7a6741ae0b81cac843ef1, type: 2}
   - comineBy: 5
     explosions:
     - {fileID: 11400000, guid: 8ca8d05d6c99f7b4fa616217dd290704, type: 2}
     - {fileID: 11400000, guid: 597ace9c675f08a4fb8b5fb8f99f346b, type: 2}
+  - comineBy: 8
+    explosions:
+    - {fileID: 11400000, guid: 18460d24657aafc4bb3c084ea6bc9eac, type: 2}
 --- !u!114 &4511253921633687392
 MonoBehaviour:
   m_ObjectHideFlags: 0

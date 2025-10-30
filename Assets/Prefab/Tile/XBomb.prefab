@@ -189,6 +189,9 @@ MonoBehaviour:
     explosions:
     - {fileID: 11400000, guid: 6b9c02b096a7a6741ae0b81cac843ef1, type: 2}
     - {fileID: 11400000, guid: 8ca8d05d6c99f7b4fa616217dd290704, type: 2}
+  - comineBy: 8
+    explosions:
+    - {fileID: 11400000, guid: 18460d24657aafc4bb3c084ea6bc9eac, type: 2}
 --- !u!50 &5816992610148361491
 Rigidbody2D:
   serializedVersion: 5
