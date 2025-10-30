@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -49,7 +50,7 @@ public class SpawnManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else
+        else if(Instance != this)
         {
             Destroy(gameObject);
         }
@@ -83,9 +84,26 @@ public class SpawnManager : MonoBehaviour
         }
 
         if (data[idx].pooling.Count > 0)
-            return data[idx].pooling.Dequeue();
+        {
+            return VerificationDeQueue(ref data[idx].pooling);
+        }
 
         return Instantiate(data[idx].prefab);
+    }
+
+    // 재귀호출로 null인 오브젝트를 걸러냄
+    private GameObject VerificationDeQueue(ref Queue<GameObject> queue)
+    {
+        GameObject dequqeued = queue.Dequeue();
+
+        if (dequqeued == null)
+        {
+            return VerificationDeQueue(ref queue);
+        }
+        else
+        {
+            return dequqeued;
+        }
     }
 
     private void TryGetData<T>(out PoolableData<T>[] data) where T : Enum
