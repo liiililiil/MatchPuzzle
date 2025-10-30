@@ -36,11 +36,10 @@ public class ShooterChildMovement : EffectAction, IEffectMovementAction
             }
             
             //회전
-            if(time > 0.3f)
+            if(time < 0.5f)
             {
-                float targetAngle = Mathf.Atan2(targetPosition.y - firstTargetPosition.y, targetPosition.x - firstTargetPosition.x) * Mathf.Rad2Deg;
-
-                transform.rotation = Quaternion.Euler(0, 0, Mathf.LerpUnclamped(angle , targetAngle, EaseMoveMent.Ease(EaseType.InOutExpo, (time - 0.3f) *2f)));
+            float targetAngle = Mathf.Atan2(targetPosition.y - firstTargetPosition.y, targetPosition.x - firstTargetPosition.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, 0, Mathf.LerpUnclamped(angle , targetAngle, EaseMoveMent.Ease(EaseType.InOutCirc, time *2f)));
             }
             
             transform.position = targetPos;
