@@ -10,6 +10,7 @@ public class SmallDrop : DropAction, IDropAction
     public bool isCanDrop { get { return true; } }
     protected override void OnInvoke()
     {
+
         if (coroutine != null)
         {
             Debug.LogWarning("코루틴이 이미 실행 중이라 무시되었습니다.");
@@ -79,7 +80,7 @@ public class SmallDrop : DropAction, IDropAction
             Tile[] tiles = new Tile[] { GetTileFromWorld<Tile>(transform.up), GetTileFromWorld<Tile>(transform.up + transform.right), GetTileFromWorld<Tile>(transform.up - transform.right) };
 
             //히트박스는 미리 이동해놓기 
-            tile.transform.position = targetPos;
+            tile.rigidbody2D.MovePosition(targetPos);
 
             coroutine = StartCoroutine(moveMent2D(startPos, targetPos));
 
@@ -106,8 +107,9 @@ public class SmallDrop : DropAction, IDropAction
             yield return null;
         }
 
-        // 위치 정밀 보정
+        // 위치 보정
         tile.sprite.transform.position = targetPos;
+        tile.sprite.transform.localPosition = Vector3.zero;
 
         EventManager.Instance.dropTiles--;
 
