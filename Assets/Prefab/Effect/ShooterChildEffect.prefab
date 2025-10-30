@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 581722576227717500}
   - component: {fileID: 656754920448855861}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 2808498737875446131}
   - component: {fileID: 5466539897652123182}
   - component: {fileID: 8943252651295985491}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: ShooterChildEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
