@@ -15,6 +15,8 @@ public class ShooterParentDestroy : DestroyerDestroyAction, IDestroyAction
         //만약 컬러 폭탄이랑 교체되었다면 모든 타일을 목표로 선정합니다.
         if (startByTemp.tileType != TileType.ColorBomb)
         {
+            switchTile = startByTemp.tileType;
+            targetTile = (TileType)Random.Range((byte)TileType.Red, (byte)TileType.Purple + 1);
         }
         else
         {
@@ -32,8 +34,7 @@ public class ShooterParentDestroy : DestroyerDestroyAction, IDestroyAction
                 targetTile = startByTemp.switchedTileType;
             }
 
-            //교체된 타일이 폭탄 타일이면 목표 타일을 그 타일로 설정
-            if (startByTemp.switchedTileType != TileType.ColorBomb && TILE_CONSTANT.BOMB_TILES.Contains(startByTemp.switchedTileType))
+            if(startByTemp.switchedTileType != TileType.ColorBomb && !TILE_CONSTANT.COLOR_TILES.Contains(startByTemp.tileType))
             {
                 switchTile = startByTemp.switchedTileType;
             }
@@ -41,6 +42,8 @@ public class ShooterParentDestroy : DestroyerDestroyAction, IDestroyAction
             {
                 switchTile = TileType.Empty;
             }
+
+
         }
 
         Debug.Log($"파괴자가 {targetTile} 타일을 파괴합니다. 교체 타일 : {switchTile}", this);
@@ -58,8 +61,20 @@ public class ShooterParentDestroy : DestroyerDestroyAction, IDestroyAction
             return;
         }
 
+        // if(targetTile == TileType.ColorBomb)
+        // {
+        //     return;
+        // }
+
+
+        //카메라 밖에 있으면 무시
+        Vector3 viewPos = Camera.main.WorldToViewportPoint(collision.transform.position);
+
+        if (viewPos.z < 0 || viewPos.x < 0 || viewPos.x > 1 || viewPos.y < 0 || viewPos.y > 1)
+            return;
+
         StartCoroutine(disableColliderTimer(tile));
-        SpawnManager.Instance.SpawnObject(EffectType.ShooterChildEffect, transform.position, Quaternion.identity).GetComponent<ShooterChildMovement>().targetPosition = collision.transform.position;
+        SpawnManager.Instance.SpawnObject(EffectType.ShooterChildEffect, transform.position, Quaternion.identity, tileDestroyer.startBy).GetComponent<ShooterChildMovement>().targetPosition = collision.transform.position;
     }
 
     IEnumerator disableColliderTimer(Tile tile)
@@ -78,8 +93,6 @@ public class ShooterParentDestroy : DestroyerDestroyAction, IDestroyAction
         {
             yield break;
         }
-
-        Debug.LogWarning("대 * 폭 * 발!");
 
         // 타일 스폰 후 즉시 폭발시키기 위해 저장
         Tile temp = null;
