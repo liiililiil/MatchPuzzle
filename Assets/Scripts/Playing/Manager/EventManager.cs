@@ -106,8 +106,8 @@ public class EventManager : MonoBehaviour
     /// 
     /// 임시
 
-    private int ColorTile = 0;
-    private int cycleCount = 0;
+    // private int ColorTile = 0;
+    // private int cycleCount = 0;
     
 
     //생명 주기
