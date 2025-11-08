@@ -111,16 +111,27 @@ public class OneTimeAction
 {
     private readonly HashSet<Action> hashSet = new HashSet<Action>();
 
+    // 재사용 가능한 리스트 버퍼
+    private readonly List<Action> buffer = new List<Action>();
+
     public void Invoke()
     {
-        Action[] tempSet = hashSet.ToArray();
+        // 버퍼 초기화
+        buffer.Clear();
+
+        // 해시셋 요소를 버퍼로 복사
+        buffer.AddRange(hashSet);
+
+        // 해시셋 초기화
         hashSet.Clear();
 
-        foreach (Action action in tempSet)
+        // 액션 호출
+        for (int i = 0; i < buffer.Count; i++)
         {
-            action?.Invoke();
+            buffer[i]?.Invoke();
         }
 
+        // 버퍼는 재사용 가능 -> GC 발생 없음
     }
 
     public void Add(Action action)
@@ -138,9 +149,8 @@ public class OneTimeAction
         oneTimeAction.Add(action);
         return oneTimeAction;
     }
-    
 
-    public int Count { get => hashSet.Count; }
+    public int Count => hashSet.Count;
 }
 
 public class OneTimeAction<T>
