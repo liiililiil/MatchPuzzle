@@ -4,16 +4,16 @@ using UnityEngine;
 // 1X1 타일 드랍 액션
 public class SmallDrop : DropAction, IDropAction
 {
-    private Coroutine coroutine;
 
     // 드랍 가능
+    private TileMovement movement = null;
     public bool isCanDrop { get { return true; } }
     protected override void OnInvoke()
     {
 
-        if (coroutine != null)
+        if (movement != null && movement.enabled == true)
         {
-            Debug.LogWarning("코루틴이 이미 실행 중이라 무시되었습니다.");
+            Debug.LogWarning("이미 움직이는 중이라 무시되었습니다.");
             return;
         }
 
@@ -82,7 +82,7 @@ public class SmallDrop : DropAction, IDropAction
             //히트박스는 미리 이동해놓기 
             tile.rigidbody2D.MovePosition(targetPos);
 
-            coroutine = StartCoroutine(moveMent2D(startPos, targetPos));
+            ActiveateMovement(startPos, targetPos);
 
             // 하강
             foreach (Tile tile in tiles) if (tile != null) tile.Drop();
@@ -94,35 +94,10 @@ public class SmallDrop : DropAction, IDropAction
         return false;
     }
 
-    //2D 보간 이동 코루틴
-    IEnumerator moveMent2D(Vector2 startPos, Vector2 targetPos)
+    private void ActiveateMovement(Vector2 startPos, Vector2 targetPos)
     {
-        EventManager.Instance.dropTiles++;
-
-        float time = 0f;
-        while (time <= 1f)
-        {
-            tile.sprite.transform.position = Vector2.Lerp(startPos, targetPos, time);
-            time += Time.deltaTime * Utils.MOVEMENT_SPEED;
-            yield return null;
-        }
-
-        // 위치 보정
-        tile.sprite.transform.position = targetPos;
-        tile.sprite.transform.localPosition = Vector3.zero;
-
-        EventManager.Instance.dropTiles--;
-
-        //하강 완료
-        coroutineEnd();
+        if (movement == null) movement = tile.gameObject.AddComponent<TileMovement>();
+        movement.SetPosition(startPos, targetPos);
     }
 
-    //코루틴 종료 처리
-    protected void coroutineEnd()
-    {
-        StopCoroutine(coroutine);
-        coroutine = null;
-
-        tile.Drop();
-    }
 }
