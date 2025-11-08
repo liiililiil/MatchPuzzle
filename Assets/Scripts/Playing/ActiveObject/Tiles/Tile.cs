@@ -109,6 +109,7 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
     public void Disable(bool hideEffect = false)
     {
         rigidbody2D.simulated = false;
+        rigidbody2D.Sleep();
 
         Tile[] aboveTile = { GetTileFromWorld<Tile>(transform.up), GetTileFromWorld<Tile>(transform.up + transform.right), GetTileFromWorld<Tile>(transform.up - transform.right) };
 
