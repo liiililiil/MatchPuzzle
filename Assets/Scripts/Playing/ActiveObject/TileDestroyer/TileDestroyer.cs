@@ -100,7 +100,7 @@ public class TileDestroyer : MonoBehaviour, IActiveObject
 
 
         // 이펙트를 대기 위치로 이동 후 회전 초기화
-        transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_Pos_Y);
+        transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_POS_Y);
         transform.rotation = Quaternion.identity;
 
         // 개체 풀링 시키기

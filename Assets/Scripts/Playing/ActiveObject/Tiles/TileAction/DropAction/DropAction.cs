@@ -11,14 +11,14 @@ public class DropAction : TileAction
 
         if (!tile.isActive)
         {
-            Debug.LogWarning($"{gameObject.name}에 있는{GetType()}가 비활성 상태이므로 Invoke를 무시합니다.");
+            // Debug.LogWarning($"{gameObject.name}에 있는{GetType()}가 비활성 상태이므로 Invoke를 무시합니다.",this);
             return;
         }
 
         /// <summary>
         /// 이 코드는 임시 코드입니다. 차후 원인 발견 후 수정될 예정입니다.
         /// </summary>
-        if ((Vector2)transform.position == new Vector2(Utils.WAIT_POS_X, Utils.WAIT_Pos_Y))
+        if ((Vector2)transform.position == new Vector2(Utils.WAIT_POS_X, Utils.WAIT_POS_Y))
         {
             Debug.LogWarning($"{gameObject.name}이(가) 대기 위치에 있으므로 Invoke를 무시합니다.");
             return;

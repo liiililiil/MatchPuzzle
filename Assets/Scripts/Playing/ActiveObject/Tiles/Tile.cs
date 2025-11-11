@@ -132,7 +132,7 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
         }
 
 
-        transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_Pos_Y);
+        transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_POS_Y);
         foreach (Tile t in aboveTile) t?.Drop();
 
         if (sprite != null)
