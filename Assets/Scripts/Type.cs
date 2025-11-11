@@ -136,7 +136,12 @@ public class OneTimeAction
 
     public void Add(Action action)
     {
-        hashSet.Add(action);
+        if (!hashSet.Contains(action))
+        {
+            hashSet.Add(action);
+            if (buffer.Capacity < hashSet.Count)
+                buffer.Capacity = hashSet.Count;
+        }
     }
 
     public void Clear()
@@ -151,6 +156,98 @@ public class OneTimeAction
     }
 
     public int Count => hashSet.Count;
+}
+
+public class SimpleEvent
+{
+    private readonly List<Action> actionList = new List<Action>();
+
+    public void AddListener(Action action)
+    {
+        actionList.Add(action);
+    }
+    public void RemoveListener(Action action)
+    {
+        actionList.Remove(action);
+    }
+
+    public void Invoke()
+    {
+        foreach (var action in actionList)
+        {
+            action?.Invoke();
+        }
+    }
+
+}
+
+public class SimpleEvent<T>
+{
+    private readonly List<Action<T>> actionList = new List<Action<T>>();
+
+    public void AddListener(Action<T> action)
+    {
+        actionList.Add(action);
+    }
+
+    public void RemoveListener(Action<T> action)
+    {
+        actionList.Remove(action);
+    }
+
+    public void Invoke(T args)
+    {
+        foreach (var action in actionList)
+        {
+            action?.Invoke(args);
+        }
+    }
+}
+
+public class SimpleEvent<T1, T2>
+{
+    private readonly List<Action<T1, T2>> actionList = new List<Action<T1, T2>>();
+
+    public void AddListener(Action<T1, T2> action)
+    {
+        actionList.Add(action);
+    }
+
+    public void RemoveListener(Action<T1, T2> action)
+    {
+        actionList.Remove(action);
+    }
+
+    public void Invoke(T1 arg1, T2 arg2)
+    {
+        foreach (var action in actionList)
+        {
+            action?.Invoke(arg1, arg2);
+        }
+    }
+}
+
+public class SimpleEvent<T1, T2, T3>
+{
+    private readonly List<Action<T1, T2, T3>> actionList = new List<Action<T1, T2, T3>>();
+
+    public void AddListener(Action<T1, T2, T3> action)
+    {
+        actionList.Add(action);
+    }
+
+    public void RemoveListener(Action<T1, T2, T3> action)
+    {
+        actionList.Remove(action);
+    }
+
+    public void Invoke(T1 arg1, T2 arg2, T3 arg3)
+    {
+        foreach (var action in actionList)
+        {
+            action?.Invoke(arg1, arg2, arg3);
+        }
+    }
 }
 
 public class OneTimeAction<T>
@@ -178,16 +275,3 @@ public class OneTimeAction<T>
     }
 }
 
-// 사용하지 않음
-// 정확하게 연산하기 위해 이벤트 전과 후로 분리된 유니티 이벤트
-// public class SplitUnityEvent<T>
-// {
-//     public UnityEvent<T> before = new UnityEvent<T>();
-//     public UnityEvent<T> after = new UnityEvent<T>();
-// }
-
-// public class SplitUnityEvent
-// {
-//     public UnityEvent before = new UnityEvent();
-//     public UnityEvent after = new UnityEvent();
-// }
