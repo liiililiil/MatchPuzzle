@@ -28,6 +28,10 @@ public class StageManager : MonoBehaviour
 
     public void Success()
     {
-        
+
+    }
+    
+    public void PlayerMove()
+    {
     }
 }
