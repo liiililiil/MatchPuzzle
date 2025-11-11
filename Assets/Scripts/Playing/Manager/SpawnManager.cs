@@ -42,8 +42,6 @@ public class SpawnManager : MonoBehaviour
 
     void Awake()
     {
-
-
         //싱글톤
         if (Instance == null)
         {
