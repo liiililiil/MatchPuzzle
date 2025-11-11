@@ -17,11 +17,17 @@ public class FpsShower : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        stringBuilder.Clear();
-        stringBuilder.Append(1f / Time.deltaTime);
-        stringBuilder.Append(", Fps (");
-        stringBuilder.Append(Time.deltaTime * 1000);
-        stringBuilder.Append(")ms");
-        text.text = stringBuilder.ToString();
+        time += Time.deltaTime;
+        if (time >= 0.1f)
+        {
+            stringBuilder.Clear();
+            stringBuilder.Append(1f / Time.deltaTime);
+            stringBuilder.Append(", Fps (");
+            stringBuilder.Append(Time.deltaTime * 1000);
+            stringBuilder.Append(")ms");
+            text.text = stringBuilder.ToString();
+            
+            time = 0f;
+        }
     }
 }
