@@ -213,7 +213,7 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
         float time = 0f;
         while (time < 1)
         {
-            time += Time.deltaTime * Utils.FOCUS_ANIMATION_SPEED;
+            time += Time.deltaTime * GameSpeedManager.FOCUS_ANIMATION_SPEED;
             tile.sprite.transform.position = Vector2.Lerp(start, end, time);
             yield return null;
         }
@@ -245,7 +245,7 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
         float time = 0f;
         while (time < 1)
         {
-            time += Time.deltaTime * Utils.FOCUS_MOVE_SPEED;
+            time += Time.deltaTime * GameSpeedManager.FOCUS_MOVE_SPEED;
             tile.sprite.transform.position = Vector2.Lerp(start, end, time);
             yield return null;
         }

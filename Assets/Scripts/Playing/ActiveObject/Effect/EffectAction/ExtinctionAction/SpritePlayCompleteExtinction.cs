@@ -33,7 +33,7 @@ public class SpritePlayCompleteExtinction : EffectAction, IEffectExtinctionActio
 
             while (time <= 1f)
             {
-                time += Time.deltaTime * Utils.EFFECT_DURATION;
+                time += Time.deltaTime * GameSpeedManager.EFFECT_DURATION;
                 yield return null;
             }
         }

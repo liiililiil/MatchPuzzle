@@ -13,7 +13,7 @@ public class ShooterChildExtinction : EffectAction, IEffectExtinctionAction
         float time = 0f;
         while (time <= 1)
         {
-            time += Time.deltaTime * Utils.SHOOTER_CHILD_MOVE_SPEED;
+            time += Time.deltaTime * GameSpeedManager.SHOOTER_CHILD_MOVE_SPEED;
             yield return null;
             // Debug.Log(time);
         }

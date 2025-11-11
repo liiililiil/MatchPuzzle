@@ -31,7 +31,7 @@ public class TileMovement : MonoBehaviour
         }
 
         tile.sprite.transform.position = Vector2.Lerp(startPos, targetPos, time);
-        time += Time.deltaTime * Utils.MOVEMENT_SPEED;
+        time += Time.deltaTime * GameSpeedManager.MOVEMENT_SPEED;
 
         if(time >= 1f)
         {

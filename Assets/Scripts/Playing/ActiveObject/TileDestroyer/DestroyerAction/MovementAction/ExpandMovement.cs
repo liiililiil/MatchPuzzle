@@ -17,7 +17,7 @@ public class ExpandMovement : DestroyerAction, IMovementAction
         float time = 0f;
         while (time < 1f)
         {
-            time += Time.deltaTime * Utils.SHOOTER_SCALE_SPEED;
+            time += Time.deltaTime * GameSpeedManager.SHOOTER_SCALE_SPEED;
             tileDestroyer.gameObject.transform.localScale = Vector2.Lerp(initialScale, targetScale, time);
             yield return null;
         }

@@ -23,7 +23,7 @@ public class ShooterChildMovement : EffectAction, IEffectMovementAction
 
         while (time < 1f)
         {
-            time += Time.deltaTime * Utils.SHOOTER_CHILD_MOVE_SPEED;
+            time += Time.deltaTime * GameSpeedManager.SHOOTER_CHILD_MOVE_SPEED;
 
             //움직임
             if (time < 0.5f)

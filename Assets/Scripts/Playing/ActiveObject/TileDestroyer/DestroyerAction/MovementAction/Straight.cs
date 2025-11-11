@@ -22,11 +22,11 @@ public class StraightDestroyer : DestroyerAction, IMovementAction
     // 직선 이동 코루틴
     IEnumerator Forward()
     {
-        rigidbody2D.linearVelocity = transform.up * Utils.DESTROYER_FORWARD_SPEED;
             
         // 타일 파괴자가 활성화 되어있는 동안 계속 이동
         while (tileDestroyer.isActive)
         {
+            rigidbody2D.linearVelocity = transform.up * GameSpeedManager.DESTROYER_FORWARD_SPEED;   
             yield return null;
         }
 
