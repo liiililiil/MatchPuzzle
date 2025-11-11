@@ -12,25 +12,26 @@ public class EventManager : MonoBehaviour
     public OneTimeAction InvokeBlast = new OneTimeAction();
     public OneTimeAction InvokeOrganize = new OneTimeAction();
 
+
     //포커싱 후 폭발할때 피 포커싱 타일은 바로 해제하기 위한 액션
     public OneTimeAction InvokeFocusBlast = new OneTimeAction();
     public OneTimeAction InvokeReMove = new OneTimeAction();
 
-    //타일 전체에 대한 이벤트트
+    //타일 전체에 대한 이벤트
     [HideInInspector]
-    public UnityEvent InvokeSpawnTile;
+    public SimpleEvent InvokeSpawnTile = new SimpleEvent();
     [HideInInspector]
-    public UnityEvent<Tile, Vector2> OnDisabledTile;
+    public SimpleEvent<Tile, Vector2> OnDisabledTile = new SimpleEvent<Tile, Vector2>();
     [HideInInspector]
-    public UnityEvent<Tile, Vector2> OnBlastTile;
+    public SimpleEvent<Tile, Vector2> OnBlastTile = new SimpleEvent<Tile, Vector2>();
     [HideInInspector]
-    public UnityEvent<Tile, TileDestroyer, Vector2> OnBlastTileByBomb;
+    public SimpleEvent<Tile, TileDestroyer, Vector2> OnBlastTileByBomb = new SimpleEvent<Tile, TileDestroyer, Vector2>();
     [HideInInspector]
-    public UnityEvent<Tile, Vector2> OnBombActived;
+    public SimpleEvent<Tile, Vector2> OnBombActived = new SimpleEvent<Tile, Vector2>();
     [HideInInspector]
-    public UnityEvent<Tile, Vector2> OnOrganized;
+    public SimpleEvent<Tile, Vector2> OnOrganized = new SimpleEvent<Tile, Vector2>();
     [HideInInspector]
-    public UnityEvent<IActiveObject, Vector2> OnSpawnedActiveOjbect;
+    public SimpleEvent<IActiveObject, Vector2> OnSpawnedActiveOjbect = new SimpleEvent<IActiveObject, Vector2>();
 
     public int movingTiles;
     public int dropTiles;
@@ -57,10 +58,6 @@ public class EventManager : MonoBehaviour
 
         // OnDisabledTile.AddListener(deBugTest);
     }
-    private void deBugTest(Tile tile, Vector2 vector2)
-    {
-        // SpawnManager.Instance.SpawnObject(DestroyerType.Straight, vector2, Quaternion.Euler(0, 0, 1), tile);
-    }
 
     public void MoveTest()
     {
@@ -74,13 +71,14 @@ public class EventManager : MonoBehaviour
             return;
         }
 
-
+        GameSpeedManager.Instance.StartSpeedIncrease();
+        
         InvokeBlast.Invoke();
 
         if (activeDestroyer <= 0 && dropTiles <= 0)
-        {
-
-            InvokeSpawnTile.Invoke();
+        {   
+            
+            InvokeSpawnTile.Invoke();   
 
             if (dropTiles <= 0)
             {
@@ -95,6 +93,7 @@ public class EventManager : MonoBehaviour
 
                 if (InvokeBlast.Count <= 0)
                 {
+                    GameSpeedManager.Instance.StopSpeedIncrease();
                     readyToFocus = true;
                 }
             }
