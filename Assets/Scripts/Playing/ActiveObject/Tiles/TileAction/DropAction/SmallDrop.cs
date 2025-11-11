@@ -13,7 +13,7 @@ public class SmallDrop : DropAction, IDropAction
 
         if (movement != null && movement.enabled == true)
         {
-            Debug.LogWarning("이미 움직이는 중이라 무시되었습니다.");
+            // Debug.LogWarning("이미 움직이는 중이라 무시되었습니다.");
             return;
         }
 
