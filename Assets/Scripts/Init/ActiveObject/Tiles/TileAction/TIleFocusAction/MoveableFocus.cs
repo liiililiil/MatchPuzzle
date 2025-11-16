@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class MoveableFocus : TileFocusAction, ITileFocusAction
@@ -114,7 +116,13 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
                 //상대 이동
                 tileRecord.GetComponent<ITileFocusAction>().Move(-posRecord);
                 EventManager.Instance.InvokeReMove.Add(() => tileRecord.GetComponent<ITileFocusAction>().Move(posRecord));
-                EventManager.Instance.InvokeFocusBlast.Add(() => tileRecord.GetComponent<Tile>().Disable(true));
+                
+                // 폭탄 타일이랑 합쳐지면 그냥 소멸하고 일반타일이랑 합쳐지면 폭발
+                if(TILE_CONSTANT.COLOR_TILES.Contains(tile.tileType))
+                    EventManager.Instance.InvokeFocusBlast.Add(() => tileRecord.GetComponent<Tile>().Blast());
+                else 
+                    EventManager.Instance.InvokeFocusBlast.Add(() => tileRecord.GetComponent<Tile>().Disable(true));
+                
 
 
                 tileRecord.Calculate();

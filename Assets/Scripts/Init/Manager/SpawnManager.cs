@@ -28,10 +28,8 @@ public class IndexData<T> where T : Enum
 
     }
 }
-public class SpawnManager : MonoBehaviour
+public class SpawnManager : Managers<SpawnManager>
 {
-    public static SpawnManager Instance { get; private set; }
-
     [SerializeField]
     private IndexData<TileType> tileData;
 
@@ -39,32 +37,11 @@ public class SpawnManager : MonoBehaviour
     private IndexData<DestroyerType> destroyerData;
     [SerializeField]
     private IndexData<EffectType> effectData;
-
-    void Awake()
-    {
-        //싱글톤
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if(Instance != this)
-        {
-            Destroy(gameObject);
-        }
-    }
-
     private void Start()
     {
         tileData.Indexing();
         destroyerData.Indexing();
         effectData.Indexing();
-
-        // SpawnObject(DestroyerType.Straight, Vector2.zero, Quaternion.identity);
-
-        // SpawnObject(DestroyerType.Big, Vector2.zero, Quaternion.identity);
-        // SpawnObject(DestroyerType.Straight, Vector2.zero, Quaternion.identity);
-
     }
 
     private GameObject GetObject<T>(T type) where T : Enum

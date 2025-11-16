@@ -3,9 +3,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class EventManager : MonoBehaviour
+public class EventManager : Managers<EventManager>
 {
-    public static EventManager Instance { get; private set; }
     public OneTimeAction InvokeCalReset = new OneTimeAction();
     public OneTimeAction InvokeCalculate = new OneTimeAction();
     public OneTimeAction InvokeDrop = new OneTimeAction();
@@ -39,25 +38,6 @@ public class EventManager : MonoBehaviour
     public bool readyToFocus;
     public bool NeedTestCalculation;
     public int activeDestroyer;
-    
-
-
-
-    void Awake()
-    {
-        //싱글톤
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if(Instance != this)
-        {
-            Destroy(gameObject);
-        }
-
-        // OnDisabledTile.AddListener(deBugTest);
-    }
 
     public void MoveTest()
     {

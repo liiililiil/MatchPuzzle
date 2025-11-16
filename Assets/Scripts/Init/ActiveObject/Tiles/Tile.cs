@@ -16,6 +16,7 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
         SWitched = 1 << 3
     }
 
+    //비트플레그
     private TileFlag flag;
     private ICalculateAction calculateAction;
     private IBlastAction blastAction;

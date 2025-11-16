@@ -1,9 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-public class GameSpeedManager : MonoBehaviour
+public class GameSpeedManager : Managers<GameSpeedManager>
 {
-    public static GameSpeedManager Instance { get; private set; }
 
     // 전체 속도에 대한 배율
     public const float BASE_GAME_SPEED = 1f;
@@ -14,26 +13,13 @@ public class GameSpeedManager : MonoBehaviour
 
     //코루틴
     private Coroutine increaseCoroutine;
-    void Awake()
-    {
-        //싱글톤
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
-    }
 
     private void Update() {
         
         GAME_SPEED = BASE_GAME_SPEED + (GAME_SPEED_VALUE * GAME_SPEED_INCREASE_RATE);
         SetValues(GAME_SPEED);
 
-        Debug.Log($"Game Speed = {GAME_SPEED} | GameSpeedValue = {GAME_SPEED_VALUE}" );
+        // Debug.Log($"Game Speed = {GAME_SPEED} | GameSpeedValue = {GAME_SPEED_VALUE}" );
     }
     
 

@@ -1,27 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputManager : MonoBehaviour
+public class InputManager : Managers<InputManager>
 {
     private bool NeedMoveTest;
-    public static InputManager Instance { get; private set; }
 
     public void MoveTest()
     {
         NeedMoveTest = true;
-    }
-    private void Awake()
-    {
-        // 싱글톤
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if(Instance != this)
-        {
-            Destroy(gameObject);
-        }
     }
     private void Update()
     {
