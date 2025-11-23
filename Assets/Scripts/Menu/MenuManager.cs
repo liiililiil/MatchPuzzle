@@ -1,20 +1,50 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 
+[Serializable]
 public enum MenuState{
     Main,
     Setting,
     Warning,
-    Select
+    Select,
+    MiniGame,
+    inGame
 }
 
 
-public class MenuManager : MonoBehaviour
+public class MenuManager : Managers<MenuManager>
 {
-    SimpleEvent<MenuState> OnChangeMenuState = new SimpleEvent<MenuState>();
+    public SimpleEvent<MenuState> OnChangeMenuState = new SimpleEvent<MenuState>();
+    private void Start()
+    {
+        StartCoroutine(delayedInvoke());
+    }
+
+    IEnumerator delayedInvoke()
+    {
+        yield return new WaitForSeconds(1);
+        // Debug.Log("MenuManager Start Invoke Main");
+        OnChangeMenuState.Invoke(MenuState.Main);
+    }
+
+    ~MenuManager()
+    {
+        try
+        {
+            Instance = null;
+        }
+        catch (Exception)
+        {
+            // 무시
+        }
+        
+    }
 
     public void ChangeMenu(MenuState menuState)
     {
         OnChangeMenuState.Invoke(menuState);
     }
+
 }
