@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
+[Serializable]
 public enum EaseType
 {
     InCirc, OutCirc, InOutCirc, OutInCirc,
