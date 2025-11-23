@@ -5,6 +5,7 @@ public abstract class Managers<T> : MonoBehaviour where T : Managers<T>
     public static T Instance;
     protected void Awake()
     {
+        if(Instance == this) return;
         // 싱글톤
         if (Instance == null)
         {
