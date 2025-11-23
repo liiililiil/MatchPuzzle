@@ -4,6 +4,12 @@ using UnityEngine.InputSystem;
 public class InputManager : Managers<InputManager>
 {
     private bool NeedMoveTest;
+    private SimpleEvent OnMove;
+
+    public void Move()
+    {
+        OnMove.Invoke();
+    }
 
     public void MoveTest()
     {
