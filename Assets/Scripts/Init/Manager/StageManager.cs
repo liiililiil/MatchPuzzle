@@ -2,6 +2,15 @@ using UnityEngine;
 
 public class StageManager : Managers<StageManager>
 {
+    private void StageStart()
+    {
+
+    }
+
+    private void StageClose()
+    {
+
+    }
 
     public void Fail()
     {
@@ -11,9 +20,5 @@ public class StageManager : Managers<StageManager>
     public void Success()
     {
 
-    }
-    
-    public void PlayerMove()
-    {
     }
 }
