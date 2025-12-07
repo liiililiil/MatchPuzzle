@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class StageManager : Managers<StageManager>
 {
+    private IInStageManager inStageManager;
     private void StageStart()
     {
 
