@@ -13,85 +13,101 @@ public class SmallDrop : DropAction, IDropAction
 
         if (movement != null && movement.enabled == true)
         {
-            // Debug.LogWarning("이미 움직이는 중이라 무시되었습니다.");
             return;
         }
 
-        // 밑으로 하강 연산
-        if (Drop(GetTileFromWorld<IDropAction>(-transform.up), -transform.up)) return;
-
-        //옆으로 하강 연산
-        foreach (Vector2 dir in Utils.xDirections)
+        //밑으로 하강 연산
+        if (!DropCheck(Vector2.zero))
         {
-            //상대 좌표를 절대 좌표로 변환
-            Vector2 worldDir = dir == Vector2.right ? transform.right : -transform.right;
-
-            //밑에 타일이 있는지 검사
-            IDropAction belowTile = GetTileFromWorld<IDropAction>((Vector2)(-transform.up) + worldDir);
-            if (belowTile == null)
+            //옆으로 하강 연산
+            foreach (Vector2 dir in Utils.xDirections)
             {
-                
-                //옆에 떨어질 타일이 있는지 검사
-                IDropAction sideTile = GetTileFromWorld<IDropAction>(worldDir);
+                //상대 좌표를 절대 좌표로 변환
+                Vector2 worldDir = dir == Vector2.right ? transform.right : -transform.right;
 
-                if (sideTile != null && sideTile.isCanDrop)
-                    continue;
-
-                //두칸 옆에 떨어질 타일이 있는지 검사
-                if (dir == Vector2.right)
-                {
-                    sideTile = GetTileFromWorld<IDropAction>(worldDir, 2);
-                    if (sideTile != null && sideTile.isCanDrop)
-                        continue;
-                }
-
-                //전부 없으면 하강
-                if (Drop(belowTile, (Vector2)(-transform.up) + worldDir)) return;
+                if (DropCheck(worldDir)) return;
             }
+    
         }
-
-        //이전에 떨어진적 있다면 감소
-        if (isDrop)
+        else
         {
-            isDrop = false;
-            EventManager.Instance.movingTiles--;
-            tile.Calculate();
+            return;
         }
+    
+
+        tile.Calculate();
     }
 
-    //하강
-    protected bool Drop(IDropAction belowTile, Vector2 dir)
+    private bool DropCheck(Vector2 dir)
     {
+        //밑에 타일이 있는지 검사
+        IDropAction belowTile = Utils.TryGetAction<IDropAction>(gameObject.transform.position, (Vector2)(-transform.up) + dir, Utils.TILE_GAP);
+
+        //밑에 타일이 없으면
         if (belowTile == null)
         {
-            //이동
-            if (!isDrop)
+            //바로 위면 그냥 하강
+            if(dir == Vector2.zero)
             {
-                isDrop = true;
-                EventManager.Instance.movingTiles++;
+                Drop(belowTile, -transform.up);
+                return true;
+            }
+            //떨어질 위치
+            Vector2 dropPoint = gameObject.transform.position +(((Vector3)dir - transform.up) * Utils.TILE_GAP);
+
+            
+
+            //떨어질 곳 위 탐색
+            IDropAction dropAbove = Utils.TryGetAction<IDropAction>(dropPoint, transform.up, Utils.TILE_GAP);
+
+            //떨어질 곳위에 뭔가 있고 뭔가가 떨어질 수 있으면 패스
+            if(dropAbove != null &&dropAbove.isCanDrop == true) return false;
+
+            // 옆 타일
+            dropAbove = Utils.TryGetAction<IDropAction>(dropPoint, transform.up + (Vector3)dir, Utils.TILE_GAP); 
+
+            // 왼쪽 타일이 우선적으로 떨어지게
+            if(dir == (Vector2)transform.right)
+            {
+                if(dropAbove != null && dropAbove.isCanDrop == true) return false;
+            }
+            else
+            {
+                // if(dropAbove != null && dropAbove.isCanDrop == true) return false;
             }
 
-            Vector2 startPos = transform.position;
-
-            //이동 위치
-            Vector2 targetPos = startPos + dir * Utils.TILE_GAP;
-
-            //위 하강 예약
-            Tile[] tiles = new Tile[] { GetTileFromWorld<Tile>(transform.up), GetTileFromWorld<Tile>(transform.up + transform.right), GetTileFromWorld<Tile>(transform.up - transform.right) };
-
-            //히트박스는 미리 이동해놓기 
-            tile.rigidbody2D.MovePosition(targetPos);
-
-            ActiveateMovement(startPos, targetPos);
-
-            // 하강
-            foreach (Tile tile in tiles) if (tile != null) tile.Drop();
-
+            Drop(belowTile, (Vector2)(-transform.up) + dir);
             return true;
-
         }
 
         return false;
+    }
+
+    //하강
+    protected void Drop(IDropAction belowTile, Vector2 dir)
+    {
+
+        Vector2 startPos = transform.position;
+
+        //이동 위치
+        Vector2 targetPos = startPos + dir * Utils.TILE_GAP;
+
+        //위 하강 예약
+        Tile[] tiles = new Tile[] {
+            Utils.TryGetTile(transform.position, transform.up, Utils.TILE_GAP, true), 
+            Utils.TryGetTile(transform.position, transform.up + transform.right, Utils.TILE_GAP, true), 
+            Utils.TryGetTile(transform.position, transform.up - transform.right, Utils.TILE_GAP, true),
+            tile
+        };
+
+        //히트박스는 미리 이동해놓기 
+        tile.rigidbody2D.MovePosition(targetPos);
+
+        ActiveateMovement(startPos, targetPos);
+
+        Debug.Log($"{tiles[0]}, {tiles[1]}, {tiles[2]}가 {tile}의 하강을 위해 예약되었습니다.", this);
+        // 하강
+        foreach (Tile tile in tiles) tile?.Drop();
     }
 
     private void ActiveateMovement(Vector2 startPos, Vector2 targetPos)
