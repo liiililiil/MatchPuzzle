@@ -91,11 +91,8 @@ public class ColorTileCalculate : TileCalCulateAction, ICalculateAction
             // 들어온 방향은 무시
             if (dir == exceptionDirection) continue;
 
-            // 상대 방향을 절대 방향으로 변환
-            Vector2 worldDir = dir.x * (Vector2)transform.right + dir.y * (Vector2)transform.up;
-
             // GetTileFromWorld를 이용해 타일을 찾고 검사 수행
-            ICalculateAction tile = GetTileFromWorld<ICalculateAction>(worldDir);
+            ICalculateAction tile = Utils.TryGetAction<ICalculateAction>(transform.position, transform.TransformDirection((Vector2)dir), Utils.TILE_GAP);
 
             // 타일이 존재하고 타입이 같으면 검사 재귀 호출
             if (tile != null && tile.IsEqualType(this.tile.tileType))
