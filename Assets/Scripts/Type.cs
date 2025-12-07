@@ -130,8 +130,6 @@ public class OneTimeAction
         {
             buffer[i]?.Invoke();
         }
-
-        // 버퍼는 재사용 가능 -> GC 발생 없음
     }
 
     public void Add(Action action)
