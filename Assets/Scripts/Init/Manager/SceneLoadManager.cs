@@ -10,7 +10,7 @@ public class SceneLoadManager : Managers<SceneLoadManager>
 
     private static Coroutine coroutine = null;
     protected override void OnAwake() {
-        SceneLoad("Menu");
+        SceneLoad("DebugStage");
     }
     public void SceneLoad(string scene)
     {
