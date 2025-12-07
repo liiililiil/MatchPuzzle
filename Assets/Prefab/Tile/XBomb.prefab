@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edacff636fd76ad438ee61842b2639df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ingoreDropWhenSpawn: 0
   length: {x: 0, y: 0}
   rigidbody2D: {fileID: 0}
   sprite: {fileID: 6929752580599252974}
@@ -181,18 +182,18 @@ MonoBehaviour:
   targetDestroyers:
   - {fileID: 11400000, guid: 6b9c02b096a7a6741ae0b81cac843ef1, type: 2}
   combineExplosionDestroyers:
-  - comineBy: 5
-    explosions:
-    - {fileID: 11400000, guid: 6b9c02b096a7a6741ae0b81cac843ef1, type: 2}
-    - {fileID: 11400000, guid: b6466a28bbe2a5542bf7ae450e1a566b, type: 2}
-  - comineBy: 7
-    explosions:
-    - {fileID: 11400000, guid: 6b9c02b096a7a6741ae0b81cac843ef1, type: 2}
-    - {fileID: 11400000, guid: 8ca8d05d6c99f7b4fa616217dd290704, type: 2}
   - comineBy: 6
     explosions:
     - {fileID: 11400000, guid: 6b9c02b096a7a6741ae0b81cac843ef1, type: 2}
     - {fileID: 11400000, guid: 8ca8d05d6c99f7b4fa616217dd290704, type: 2}
+  - comineBy: 7
+    explosions:
+    - {fileID: 11400000, guid: 6b9c02b096a7a6741ae0b81cac843ef1, type: 2}
+    - {fileID: 11400000, guid: 8ca8d05d6c99f7b4fa616217dd290704, type: 2}
+  - comineBy: 5
+    explosions:
+    - {fileID: 11400000, guid: 6b9c02b096a7a6741ae0b81cac843ef1, type: 2}
+    - {fileID: 11400000, guid: b6466a28bbe2a5542bf7ae450e1a566b, type: 2}
   - comineBy: 8
     explosions:
     - {fileID: 11400000, guid: 18460d24657aafc4bb3c084ea6bc9eac, type: 2}
