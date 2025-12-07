@@ -221,12 +221,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88e325bd907c2424fa1844b25546e96a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movingTiles: 0
   dropTiles: 0
   moveTestTiles: 0
   readyToFocus: 0
   NeedTestCalculation: 0
   activeDestroyer: 0
+  phase: 0
 --- !u!114 &570775904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,7 +348,7 @@ Transform:
   m_GameObject: {fileID: 1097530990}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 6, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
