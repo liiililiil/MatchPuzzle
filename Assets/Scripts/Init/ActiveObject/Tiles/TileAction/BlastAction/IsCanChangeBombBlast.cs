@@ -9,7 +9,7 @@ public class IsCanChangeBombBlast : BlastAction, IBlastAction
 
         if (tile.isCenter) BombSpawn();
 
-        CallOrganize();
+        Utils.CallOrganize(gameObject);
 
 
         tile.Disable();
@@ -51,20 +51,6 @@ public class IsCanChangeBombBlast : BlastAction, IBlastAction
 
     }
 
-    //4방향으로 타일을 검사하여 정리 요청
-    private void CallOrganize()
-    {
-        //4 방향으로 Ray 쏘기
-        foreach (Vector2 dir in Utils.directions)
-        {
-            // 상대 방향을 절대 방향으로 변환
-            Vector2 worldDir = dir.x * (Vector2)transform.right + dir.y * (Vector2)transform.up;
 
-            // GetTileFromWorld를 이용해 타일을 찾고 정리 수행
-            Tile tile = GetTileFromWorld<Tile>(dir);
-            tile?.Organize();
-        }
-
-    }
 
 }
