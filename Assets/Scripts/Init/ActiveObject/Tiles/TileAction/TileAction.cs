@@ -1,7 +1,6 @@
 using UnityEngine;
 
-public abstract class TileAction : GetActiveObjectFromWorld
-{
+public abstract class TileAction : MonoBehaviour{
     protected Tile tile;
     public void Init(Tile tile)
     {
