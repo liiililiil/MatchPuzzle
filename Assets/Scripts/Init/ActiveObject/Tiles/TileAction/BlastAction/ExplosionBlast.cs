@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using UnityEngine;
 
 
@@ -24,6 +26,8 @@ public class ExplosionBlast : BlastAction, IBlastAction
         //움직였지만 메인 포커싱 타일이 아닌겨우 폭발대신 바로 비활성화
         if (tile.switched && tile.switchedTileType == TileType.Empty)
         {
+            // 컬러 타일 이면 무시
+            if(TILE_CONSTANT.COLOR_TILES.Contains(tile.tileType) == true) return;
             tile.Disable(true);
             return;
         }
@@ -50,27 +54,14 @@ public class ExplosionBlast : BlastAction, IBlastAction
         //파괴자 스폰
         foreach (DestroyerSpawnPreset target in targetList)
             foreach (ExplosionType destroyer in target.Destroyers)
-                SpawnManager.Instance.SpawnObject(destroyer.type, transform.position + (destroyer.pos.x * transform.right + destroyer.pos.y * transform.up), Quaternion.Euler(0, 0, destroyer.rotate + transform.rotation.z), tile);
+                SpawnManager.Instance.SpawnObject(
+                    destroyer.type, 
+                    transform.position + (destroyer.pos.x * Utils.TILE_GAP * transform.right + destroyer.pos.y * Utils.TILE_GAP  * transform.up), 
+                    Quaternion.Euler(0, 0, destroyer.rotate + transform.rotation.z), tile);
 
         //스폰후 본인은 정리 체크 후 비활성화
-        CallOrganize();
+        Utils.CallOrganize(gameObject);
         tile.Disable();
-    }
-
-    //4방향으로 타일을 검사하여 정리 요청
-    private void CallOrganize()
-    {
-        //4 방향으로 Ray 쏘기
-        foreach (Vector2 dir in Utils.directions)
-        {
-            // 상대 방향을 절대 방향으로 변환
-            Vector2 worldDir = dir.x * (Vector2)transform.right + dir.y * (Vector2)transform.up;
-
-            // GetTileFromWorld를 이용해 타일을 찾고 정리 수행
-            Tile tile = GetTileFromWorld<Tile>(worldDir);
-            tile?.Organize();
-        }
-
     }
 
 }
