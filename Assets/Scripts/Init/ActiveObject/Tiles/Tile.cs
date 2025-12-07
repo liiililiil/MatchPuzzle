@@ -1,11 +1,6 @@
-using System;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-
-
-public class Tile : GetActiveObjectFromWorld, IActiveObject
+public class Tile : MonoBehaviour, IActiveObject
 {
     
     private enum TileFlag : byte
@@ -58,6 +53,10 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
             _switched = value;
         }
     }
+
+
+    [SerializeField]
+    private bool ingoreDropWhenSpawn;
     public Vector2Int length = Vector2Int.zero;
     public new Rigidbody2D rigidbody2D;
 
@@ -109,39 +108,43 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
 
     public void Disable(bool hideEffect = false)
     {
+        // 리지드 바디 해제
         rigidbody2D.simulated = false;
         rigidbody2D.Sleep();
 
-        Tile[] aboveTile = { GetTileFromWorld<Tile>(transform.up), GetTileFromWorld<Tile>(transform.up + transform.right), GetTileFromWorld<Tile>(transform.up - transform.right) };
+        // 하강을 위해 위 타일 검사
+        Tile[] aboveTile = {
+            Utils.TryGetTile(transform.position, transform.up, Utils.TILE_GAP), 
+            Utils.TryGetTile(transform.position, transform.up + transform.right, Utils.TILE_GAP), 
+            Utils.TryGetTile(transform.position, transform.up - transform.right, Utils.TILE_GAP) 
+        };
 
+        // 비활성화 표기
         isActive = false;
         _switched = false;
 
-        BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
-        if (boxCollider2D != null)
-            boxCollider2D.enabled = false;
-        else
-            Debug.LogError($"{gameObject.name} 에게 BoxCollider2D가 없습니다!");
+        // 콜라이더 비활성화
+        GetComponent<BoxCollider2D>().enabled = false;
 
+        // 비활성화 알림
         EventManager.Instance.OnDisabledTile.Invoke(this, transform.position);
+
+        // 사라지는 이펙트 생성
         if(!hideEffect) SpawnManager.Instance.SpawnObject(EffectType.TileDisabled, transform.position, transform.rotation, this);
 
-        if (dropAction.isDrop == true)
-        {
-            dropAction.isDrop = false;
-            EventManager.Instance.movingTiles--;
-        }
-
-
         transform.position = new Vector2(Utils.WAIT_POS_X, Utils.WAIT_POS_Y);
+
+        // Debug.Log($"{aboveTile[0]} , {aboveTile[1]} , {aboveTile[2]}", this);
+        // 하강 시도
         foreach (Tile t in aboveTile) t?.Drop();
 
-        if (sprite != null)
-            sprite.SetActive(false);
-        else
-            Debug.LogError($"{gameObject.name} 에게 sprite가 없습니다!");
+        // 스프라이트 비활성화
+        sprite.SetActive(false);
 
+        // 방향 초기화
         transform.rotation = Quaternion.identity;
+
+        //풀링
         SpawnManager.Instance.Pooling(tileType, gameObject);
     }
 
@@ -161,32 +164,22 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
             if (sprite == null)
             {
                 sprite = transform.GetChild(0).gameObject;
-                if (sprite == null)
-                    Debug.LogError($"{gameObject.name} 에게 자식 sprite가 없습니다!");
-                else
-                    Debug.LogWarning($"{gameObject.name} 에게 자식 sprite가 자동으로 할당되었습니다.");
             }
 
             if (rigidbody2D == null)
             {
                 rigidbody2D = GetComponent<Rigidbody2D>();
-                if (rigidbody2D == null)
-                    Debug.LogError($"{gameObject.name} 에게 Rigidbody2D가 없습니다!");
-                // else
-                // Debug.LogWarning($"{gameObject.name} 에게 Rigidbody2D가 자동으로 할당되었습니다.");
             }
         }
 
         switchedTileType = TileType.Empty;
-
-
-        BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
-        if (boxCollider2D != null)
-            boxCollider2D.enabled = true;
-        else
-            Debug.LogError($"{gameObject.name} 에게 BoxCollider2D가 없습니다!");
+        
+        GetComponent<BoxCollider2D>().enabled = true;
 
         sprite.SetActive(true);
+
+        rigidbody2D.simulated = true;
+
         transform.position = position;
         transform.rotation = rotate;
 
@@ -194,9 +187,9 @@ public class Tile : GetActiveObjectFromWorld, IActiveObject
 
         isActive = true;
 
-        rigidbody2D.simulated = true;
+        
 
-        Drop();
+        if(!ingoreDropWhenSpawn) Drop();
     }
 
     // public void focus()
