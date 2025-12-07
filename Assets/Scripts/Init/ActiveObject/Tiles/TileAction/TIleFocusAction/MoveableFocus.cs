@@ -21,77 +21,74 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
     {
 
         bool[,] isCanMove = new bool[2, 2];
+        Tile[,] tilesRecord = new Tile[2, 2];
+
         //움직일 수 있는 타일 조사
         foreach (Vector2Int dir in Utils.directions)
         {
-            Tile tile = GetTileFromWorld<Tile>(dir);
+            Tile tile = Utils.TryGetTile(transform.position, transform.TransformDirection((Vector2)dir), Utils.TILE_GAP);
             bool result;
+
+            // Debug.Log(tile);
 
             if (tile != null && tile.GetComponent<ITileFocusAction>().isCanFocus)
             {
                 result = true;
+                SetVector2Array(ref tilesRecord, dir, tile);
             }
             else
             {
                 result = false;
             }
 
-            SetIsCanMove(ref isCanMove, dir, result);
+            SetVector2Array(ref isCanMove, dir, result);
 
         }
 
-        Tile tileRecord = null;
         Vector2Int posRecord = Vector2Int.zero;
 
         //포커싱 기록 시작
         while (Input.GetMouseButton(0))
         {
-            Vector2 dis = (Vector2)Input.mousePosition - (Vector2)Camera.main.WorldToScreenPoint(transform.position);
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 dis = (Vector2)(mouseWorldPos - transform.position);
 
             Vector2Int focusAt;
-            // Debug.Log(dis);
-            if (Mathf.Abs(dis.x) <= 30f && Mathf.Abs(dis.y) <= 30f) focusAt = Vector2Int.zero;
-            else if (Mathf.Abs(dis.x) > Mathf.Abs(dis.y))
-            {
-                if (dis.x < 0)
-                    focusAt = new Vector2Int(-1, 0);
-                else
-                    focusAt = new Vector2Int(1, 0);
 
+            // 일정 범위 내에서는 0,0 처리
+            if (Mathf.Abs(dis.x) <= 0.3f && Mathf.Abs(dis.y) <= 0.3f)
+            {
+                focusAt = Vector2Int.zero;
             }
             else
             {
-                if (dis.y < 0)
-                    focusAt = new Vector2Int(0, -1);
-
+                // X와 Y 중 큰 절대값 방향을 우선
+                if (Mathf.Abs(dis.x) > Mathf.Abs(dis.y))
+                {
+                    // X축 우세: 왼쪽(-1) 또는 오른쪽(1)
+                    focusAt = new Vector2Int(dis.x < 0 ? -1 : 1, 0);
+                }
                 else
-                    focusAt = new Vector2Int(0, 1);
-
+                {
+                    // Y축 우세: 아래(-1) 또는 위(1)
+                    focusAt = new Vector2Int(0, dis.y < 0 ? -1 : 1);
+                }
             }
 
-            if (focusAt != posRecord && focusAt != Vector2Int.zero)
+            if (focusAt != Vector2Int.zero && GetVector2Array(ref isCanMove, focusAt) && focusAt != posRecord)
             {
-                if (GetIsCanMove(focusAt, isCanMove))
-                {
-                    if (tileRecord != null)
-                        tileRecord.GetComponent<ITileFocusAction>().UnFocus();
+                if(posRecord != Vector2Int.zero)
+                    GetVector2Array(ref tilesRecord, posRecord).GetComponent<ITileFocusAction>().UnFocus();
+                posRecord = focusAt;
+                OnFocus(focusAt);
+                GetVector2Array(ref tilesRecord, focusAt).GetComponent<ITileFocusAction>().OnFocus(-focusAt);
 
-                    tileRecord = GetTileFromWorld<Tile>(focusAt);
-                    posRecord = focusAt;
-                    OnFocus(focusAt);
-                    tileRecord.GetComponent<ITileFocusAction>().OnFocus(-focusAt);
-                    // Debug.Log($"{focusAt}, {tileRecord.name}", this);
-
-                }
             }
             else if (focusAt == Vector2Int.zero)
             {
-                if (tileRecord != null)
-                {
-                    tileRecord.GetComponent<ITileFocusAction>().UnFocus();
-                    tileRecord = null;
-                    posRecord = Vector2Int.zero;
-                }
+                if(posRecord != Vector2Int.zero)
+                    GetVector2Array(ref tilesRecord, posRecord).GetComponent<ITileFocusAction>().UnFocus();
+                posRecord = Vector2Int.zero;
 
                 tile.GetComponent<ITileFocusAction>().UnFocus();
             }
@@ -107,86 +104,58 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
             //본인 이동
             Move(posRecord);
             EventManager.Instance.InvokeReMove.Add(() => Move(-posRecord));
-            //혹시 모를 Null 감지
-            if (tileRecord != null)
-            {
-                //움직이기 전에 어떤 타일이랑 교체됬는지 기록
-                tile.switchedTileType = tileRecord.tileType;
+            //움직이기 전에 어떤 타일이랑 교체됬는지 기록
+            tile.switchedTileType = GetVector2Array(ref tilesRecord, posRecord).tileType;
+            Tile tileRecord = GetVector2Array(ref tilesRecord, posRecord);
+            
 
-                //상대 이동
-                tileRecord.GetComponent<ITileFocusAction>().Move(-posRecord);
-                EventManager.Instance.InvokeReMove.Add(() => tileRecord.GetComponent<ITileFocusAction>().Move(posRecord));
-                
-                // 폭탄 타일이랑 합쳐지면 그냥 소멸하고 일반타일이랑 합쳐지면 폭발
-                if(TILE_CONSTANT.COLOR_TILES.Contains(tile.tileType))
-                    EventManager.Instance.InvokeFocusBlast.Add(() => tileRecord.GetComponent<Tile>().Blast());
-                else 
-                    EventManager.Instance.InvokeFocusBlast.Add(() => tileRecord.GetComponent<Tile>().Disable(true));
-                
+            //상대 이동
+            tileRecord.GetComponent<ITileFocusAction>().Move(-posRecord);
+            EventManager.Instance.InvokeReMove.Add(() => tileRecord.GetComponent<ITileFocusAction>().Move(posRecord));
+            
+            // 폭탄 타일이랑 합쳐지면 그냥 소멸하고 일반타일이랑 합쳐지면 대기
+            if(!TILE_CONSTANT.COLOR_TILES.Contains(tile.tileType))
+                EventManager.Instance.InvokeFocusBlast.Add(() => tileRecord.GetComponent<Tile>().Disable(true));
+            
 
 
-                tileRecord.Calculate();
-            }
-            else
-            {
-                Debug.LogError("MoveableFocus: 타일이 없는데 움직임!", this);
-
-            }
+            tileRecord.Calculate();
 
             tile.Calculate();
-        }
-
-        
-
-        EventManager.Instance.MoveTest();
-    }
-
-    private void SetIsCanMove(ref bool[,] isCanMove, Vector2Int dir, bool value)
-    {
-        if (dir.x == -1 && dir.y == 0)
-        {
-            isCanMove[0, 0] = value;
-        }
-        else if (dir.x == 1 && dir.y == 0)
-        {
-            isCanMove[1, 0] = value;
-        }
-        else if (dir.x == 0 && dir.y == -1)
-        {
-            isCanMove[0, 1] = value;
+            EventManager.Instance.MoveTest();
         } 
-        else if (dir.x == 0 && dir.y == 1) 
-        { 
-            isCanMove[1, 1] = value; 
-        } 
-        else 
-        { 
-            throw new System.ArgumentException("Invalid direction: " + dir); 
-        } 
-    } 
- 
-    private bool GetIsCanMove(Vector2Int dir, bool[,] isCanMove) 
-    { 
-        if (dir.x == -1 && dir.y == 0) 
-        { 
-            return isCanMove[0, 0]; 
-        }
-        else if (dir.x == 1 && dir.y == 0)
-        {
-            return isCanMove[1, 0];
-        }
-        else if (dir.x == 0 && dir.y == -1)
-        {
-            return isCanMove[0, 1];
-        }
-        else if (dir.x == 0 && dir.y == 1)
-        {
-            return isCanMove[1, 1];
-        }
         else
         {
-            throw new System.ArgumentException("Invalid direction: " + dir);
+            
         }
+
+    }
+
+    private void SetVector2Array<T>(ref T[,] array, Vector2Int dir, T value)
+    {
+        int x, y;
+
+        if (dir.x == 1) { x = 1; y = 0; }
+        else if (dir.x == -1) { x = 0; y = 0; }
+        else if (dir.y == 1) { x = 0; y = 1; }
+        else if (dir.y == -1) { x = 1; y = 1; }
+        else { throw new ArgumentException("Invalid direction: " + dir); }
+
+        array[x, y] = value;
+    }
+ 
+    private T GetVector2Array<T>(ref T[,] array, Vector2Int dir) 
+    { 
+        int x, y;
+
+        if (dir.x == 1) { x = 1; y = 0; }
+        else if (dir.x == -1) { x = 0; y = 0; }
+        else if (dir.y == 1) { x = 0; y = 1; }
+        else if (dir.y == -1) { x = 1; y = 1; }
+        else { throw new ArgumentException("Invalid direction: " + dir); }
+
+        return array[x, y];
+
     }
     public override void OnFocus(Vector2Int at)
     {
