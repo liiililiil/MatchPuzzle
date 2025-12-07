@@ -35,6 +35,11 @@ public class GameSpeedManager : Managers<GameSpeedManager>
 
     public void StopSpeedIncrease()
     {
+        if(increaseCoroutine == null)
+        {
+            return;
+        }
+        
         CoroutineEnd();
         GAME_SPEED_VALUE = 0;
     }
