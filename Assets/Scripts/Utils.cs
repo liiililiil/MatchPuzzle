@@ -5,19 +5,20 @@ public static class Utils
 {
 
 
-    public const float TILE_SIZE = 0.9f;
-    public const float TILE_GAP = 1.5f;
+    public const float TILE_SIZE = 0.8f;
+    public const float TILE_GAP = 1f;
     public const float RAYCASY_LENGHT = 0.2f;
     public const float WAIT_POS_X = 100f;
     public const float WAIT_POS_Y = 100f;
     public const int TILETYPE_LENGHT = 9;
     public const int EFFECTTYPE_LENGHT = 1;
     public const float EXTINCTION_DURATION = 1.5f;
-    public const float MOUSE_SIZE = 0.2f;
+    public const float MOUSE_SIZE = 0.5f;
     public const float FOCUS_ANIMATION_MOVING_LENGHT = 0.1f;
 
     public const float GAME_SPEED_MAX = 3f;
 
+    public static bool IS_MOBLIE = true;
 
 
 
@@ -55,6 +56,65 @@ public static class Utils
             // GetTileFromWorld를 이용해 타일을 찾고 정리 수행
             Tile tile = Utils.TryGetTile(target.transform.position, worldDir, 1);
             tile?.Organize();
+        }
+    }
+
+    public static bool IsDown(out Vector2 pos)
+    {
+
+        if (Utils.IS_MOBLIE)
+        {
+            if(Input.touchCount == 0)
+            {
+                pos = Vector2.zero;
+                return false;
+            }
+
+            Touch touch = Input.GetTouch(Input.touchCount - 1);
+
+            pos = Camera.main.ScreenToWorldPoint(touch.position);
+            return true;
+        }
+        else
+        {
+            if(!UnityEngine.InputSystem.Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                pos = Vector2.zero;
+                return false;
+            }
+
+            pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            return Input.GetMouseButtonDown(0);
+        }
+    }
+
+    public static bool IsDown()
+    {
+
+        if (Utils.IS_MOBLIE)
+        {
+            if(Input.touchCount == 0)
+            {
+                return false;
+            }
+
+            Touch touch = Input.GetTouch(Input.touchCount - 1);
+
+            if(touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        else
+        {
+            if(!UnityEngine.InputSystem.Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                return false;
+            }
+
+            return Input.GetMouseButtonDown(0);
         }
     }
     
