@@ -213,12 +213,10 @@ public class Tile : MonoBehaviour, IActiveObject
 
     public void Calculate()
     {
-        if (isActive == false) return;
         EventManager.Instance.InvokeCalculate += calculateAction.Invoke;
     }
     public void Drop()
     {
-        if (isActive == false) return;
         try
         {
             EventManager.Instance.InvokeDrop += dropAction.Invoke;
@@ -230,27 +228,22 @@ public class Tile : MonoBehaviour, IActiveObject
     }
     public void Blast()
     {
-        if (isActive == false) return;
         EventManager.Instance.InvokeBlast += blastAction.Invoke;
 
     }
 
     public void Organize()
     {
-        if (isActive == false) return;
         EventManager.Instance.InvokeOrganize += organizeAction.Invoke;
     }
 
     public void CalReset()
     {
-        if (isActive == false) return;
         EventManager.Instance.InvokeCalReset += calculateAction.CalReset;
     }
 
     public void Focus()
     {
-        if (isActive == false) return;
-        // Debug.Log(focusAction.GetType(),this);
         focusAction.Invoke();
     }
 
