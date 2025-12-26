@@ -4,29 +4,29 @@ using UnityEngine.InputSystem;
 public class InputManager : Managers<InputManager>
 {
     private bool NeedMoveTest;
-    private SimpleEvent OnMove;
 
-    public void Move()
-    {
-        OnMove.Invoke();
-    }
 
     public void MoveTest()
     {
         NeedMoveTest = true;
     }
+
     private void Update()
     {
-        if (EventManager.Instance.readyToFocus && !NeedMoveTest && Input.GetMouseButtonDown(0))
+        if (EventManager.Instance.phase == Phase.Focus && !NeedMoveTest && Utils.IsDown(out Vector2 pos))
         {
-            Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            if (Camera.main == null) return;
+            
             Collider2D hit = Physics2D.OverlapBox(pos, Utils.FloatToVector2(Utils.MOUSE_SIZE), transform.rotation.z, 64);
 #if UNITY_EDITOR
             DrawOverlapBox(pos, Utils.FloatToVector2(Utils.MOUSE_SIZE), 0, Color.red);
 #endif
             // Debug.Log("Mouse Clicked at: " + pos + " Hit: " + hit);
 
-            hit?.GetComponent<Tile>()?.Focus();
+            if(hit == null || hit.GetComponent<Tile>() == null) return;
+
+            
+            hit.GetComponent<Tile>().Focus();
 
         }
     }
