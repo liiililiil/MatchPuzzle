@@ -224,6 +224,65 @@ public class SimpleEvent<T1, T2>
         }
     }
 }
+public class StagePrograss
+{
+    public int score;
+    public int leftMovement;
+    public TileRecode tileRecode = new TileRecode();
+}
+
+
+[Serializable]
+public enum Phase
+{
+    Drop,
+    Focus,
+    FocusWait,
+    Calculate,
+    Blast,
+    DestroyerWait
+}
+
+
+public class TileRecode
+{
+    private List<int> tileRecord = new List<int>();
+
+    public TileRecode()
+    {
+        tileRecord.Clear();
+
+        for (int i = 0; i < System.Enum.GetValues(typeof(TileType)).Length; i++)
+        {
+            tileRecord.Add(0);
+        }
+    }
+
+    public void Record(TileType type)
+    {
+        int index = (int)type;
+        tileRecord[index] += 1;
+    }
+
+    public List<int> GetRecord()
+    {
+        return tileRecord;
+    }
+
+    public int GetRecord(TileType type)
+    {
+        int index = (int)type;
+        return tileRecord[index];
+    }
+
+    public void Clear()
+    {
+        for (int i = 0; i < tileRecord.Count; i++)
+        {
+            tileRecord[i] = 0;
+        }
+    }
+}
 
 public class SimpleEvent<T1, T2, T3>
 {
