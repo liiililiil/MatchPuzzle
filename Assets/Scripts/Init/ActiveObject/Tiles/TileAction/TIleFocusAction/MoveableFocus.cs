@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MoveableFocus : TileFocusAction, ITileFocusAction
 {
-    private Coroutine focusCoroutine;
+    private Coroutine focusCoroutine, moveCoroutine;
     private TileType switchingTo;
     public bool isCanFocus { get => true; }
 
@@ -48,10 +48,10 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
         Vector2Int posRecord = Vector2Int.zero;
 
         //포커싱 기록 시작
-        while (Input.GetMouseButton(0))
+        while (Utils.IsDown(out Vector2 mouseWorldPos))
         {
-            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 dis = (Vector2)(mouseWorldPos - transform.position);
+            
+            Vector2 dis = (Vector2)((Vector3)mouseWorldPos - transform.position);
 
             Vector2Int focusAt;
 
@@ -97,6 +97,8 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
             yield return null;
         }
 
+        // Debug.Log($"포커스 해제 {posRecord}" );
+
         //포커싱 실행
         //움직였으면 이동
         if (posRecord != Vector2Int.zero)
@@ -104,24 +106,27 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
             //본인 이동
             Move(posRecord);
             EventManager.Instance.InvokeReMove.Add(() => Move(-posRecord));
+
             //움직이기 전에 어떤 타일이랑 교체됬는지 기록
             tile.switchedTileType = GetVector2Array(ref tilesRecord, posRecord).tileType;
             Tile tileRecord = GetVector2Array(ref tilesRecord, posRecord);
-            
 
+            //기록된 타일도 동일하게 기록
+            tileRecord.switchedTileType = tile.tileType;
+            
             //상대 이동
             tileRecord.GetComponent<ITileFocusAction>().Move(-posRecord);
             EventManager.Instance.InvokeReMove.Add(() => tileRecord.GetComponent<ITileFocusAction>().Move(posRecord));
-            
+
             // 폭탄 타일이랑 합쳐지면 그냥 소멸하고 일반타일이랑 합쳐지면 대기
-            if(!TILE_CONSTANT.COLOR_TILES.Contains(tile.tileType))
+            if (!TILE_CONSTANT.COLOR_TILES.Contains(tile.tileType))
+            {
                 EventManager.Instance.InvokeFocusBlast.Add(() => tileRecord.GetComponent<Tile>().Disable(true));
-            
-
-
-            tileRecord.Calculate();
+            }
 
             tile.Calculate();
+            tileRecord.Calculate();
+
             EventManager.Instance.MoveTest();
         } 
         else
@@ -200,10 +205,12 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
     public override void Move(Vector2Int moveTo, bool isOperand = false)
     {
         tile.switched = true;
-        if (focusCoroutine != null)
+        if (moveCoroutine != null)
         {
-            StopCoroutine(focusCoroutine);
-            focusCoroutine = null;
+            return;
+            // StopCoroutine(focusCoroutine);
+            // EventManager.Instance.moveTestTiles--;
+            // focusCoroutine = null;
         }
         EventManager.Instance.moveTestTiles++;
 
@@ -214,7 +221,7 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
 
         tile.rigidbody2D.MovePosition(end);
 
-        focusCoroutine = StartCoroutine(MoveTo(start, end));
+        moveCoroutine = StartCoroutine(MoveTo(start, end));
     }
 
     private IEnumerator MoveTo(Vector2 start, Vector2 end)
@@ -231,6 +238,16 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
 
         tile.Calculate();
         EventManager.Instance.moveTestTiles--;
+        CourtineStop(ref moveCoroutine);
+    }
+
+    private void CourtineStop(ref Coroutine coroutine)
+    {
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+            coroutine = null;
+        }
     }
  
 
