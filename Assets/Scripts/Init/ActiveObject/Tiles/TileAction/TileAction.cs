@@ -25,7 +25,6 @@ public abstract class TileAction : MonoBehaviour{
 
         if (!tile.isActive)
         {
-            // Debug.LogWarning($"{gameObject.name}에 있는{GetType()}가 비활성 상태이므로 Invoke를 무시합니다.");
             return;
         }
 
