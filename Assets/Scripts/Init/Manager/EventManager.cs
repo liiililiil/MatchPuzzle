@@ -1,19 +1,11 @@
 
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
 
-enum Phase
-{
-    Drop,
-    Focus,
-    Calculate,
-    Blast,
-    DestroyerWait
-}
 
-public class EventManager : Managers<EventManager>
+
+public class EventManager : Managers<EventManager> 
 {
     public OneTimeAction InvokeCalReset = new OneTimeAction();
     public OneTimeAction InvokeCalculate = new OneTimeAction();
@@ -25,6 +17,10 @@ public class EventManager : Managers<EventManager>
     //포커싱 후 폭발할때 피 포커싱 타일은 바로 해제하기 위한 액션
     public OneTimeAction InvokeFocusBlast = new OneTimeAction();
     public OneTimeAction InvokeReMove = new OneTimeAction();
+
+    //스테이지 시작
+    [HideInInspector]
+    public SimpleEvent OnStageStart = new SimpleEvent();
 
     //타일 전체에 대한 이벤트
     [HideInInspector]
@@ -42,21 +38,29 @@ public class EventManager : Managers<EventManager>
     [HideInInspector]
     public SimpleEvent<IActiveObject, Vector2> OnSpawnedActiveOjbect = new SimpleEvent<IActiveObject, Vector2>();
 
+    [HideInInspector]
+    public SimpleEvent OnMovedTile = new SimpleEvent();
+
     public int dropTiles;
     public int moveTestTiles;
-    public bool readyToFocus;
-    public bool NeedTestCalculation;
     public int activeDestroyer;
 
+    public bool isCanFocus;
+    private Coroutine moveTestCoroutine;
+
     [SerializeField]
-    private Phase phase = 0;
+    public Phase phase { get; private set; } = Phase.Drop;
     
     public void MoveTest()
     {
-        StartCoroutine(MoveTestWait());
+        if(moveTestCoroutine != null) return;
+
+        moveTestCoroutine = StartCoroutine(MoveTestWait());
     }
 
+
     private void FixedUpdate() {
+        // Debug.Log(phase);
         switch (phase)
         {
             case Phase.Drop:
@@ -64,6 +68,9 @@ public class EventManager : Managers<EventManager>
                 break;
             case Phase.Focus:
                 FocusPhase();
+                break;
+            case Phase.FocusWait:
+                FocusWaitPhase();
                 break;
             case Phase.Calculate:
                 CalculatePhase();
@@ -93,6 +100,7 @@ public class EventManager : Managers<EventManager>
     private void BlastPhase()
     {
         InvokeBlast.Invoke();
+
         if(activeDestroyer > 0)
         {
             phase = Phase.DestroyerWait;
@@ -123,6 +131,7 @@ public class EventManager : Managers<EventManager>
 
         if (InvokeBlast.Count <= 0)
         {
+            isCanFocus = true;
             phase = Phase.Focus;
         }
         else
@@ -134,35 +143,64 @@ public class EventManager : Managers<EventManager>
     private void FocusPhase()
     {
         GameSpeedManager.Instance.StopSpeedIncrease();
-        readyToFocus = true;
+
+        if(Utils.IsDown())
+        {
+            phase = Phase.FocusWait;
+            return;
+        }
+    }
+
+    private void FocusWaitPhase()
+    {
+        if(!Utils.IsDown() && moveTestCoroutine == null)
+        {
+            phase = Phase.Blast;
+        }
     }
         
 
     IEnumerator MoveTestWait()
     {
+        
         while (moveTestTiles > 0)
         {
             yield return null;
         }
 
+        
         InvokeCalReset.Invoke();
         InvokeCalculate.Invoke();
+
 
         // 폭발이 필요 없는 경우 되돌리기
         if (InvokeBlast.Count <= 0)
         {
-            // Debug.Log("폭발 필요 없음");
+            // 되돌리기
             InvokeFocusBlast.Clear();
             InvokeReMove.Invoke();
         }
         else
         {
-            // Debug.Log("폭발 필요");
+            // 폭발
+            Instance.OnMovedTile.Invoke();
             InvokeReMove.Clear();
             InvokeFocusBlast.Invoke();
-            readyToFocus = false;
+        }
 
-            phase = Phase.Blast;
+        while (moveTestTiles > 0)
+        {
+            yield return null;
+        }
+        
+        CourtineStop(ref moveTestCoroutine);
+    }
+    private void CourtineStop(ref Coroutine coroutine)
+    {
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+            coroutine = null;
         }
     }
 
