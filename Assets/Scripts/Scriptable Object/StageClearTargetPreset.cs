@@ -6,8 +6,8 @@ using UnityEngine;
 public class StageClearTargetPreset : ScriptableObject
 {
     [SerializeField]
-    private StageClearTarget[] stageClearTargets;
-    public StageClearTarget[] StageClearTargets => stageClearTargets;
+    private StageClearTarget[] _stageClearTargets;
+    public StageClearTarget[] stageClearTargets => _stageClearTargets;
 }
 
 [Serializable]
