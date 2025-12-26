@@ -28,11 +28,11 @@ public class ShooterChildMovement : EffectAction, IEffectMovementAction
             //움직임
             if (time < 0.5f)
             {
-                targetPos = Vector2.Lerp(startPosition, firstTargetPosition, EaseMoveMent.Ease(EaseType.OutExpo, time * 2f));
+                targetPos = Vector2.Lerp(startPosition, firstTargetPosition, EaseMoveMent.Ease(EaseType.OutCirc, time * 2f));
             }
             else if (time >= 0.5f)
             {
-                targetPos = Vector2.Lerp(firstTargetPosition, targetPosition, EaseMoveMent.Ease(EaseType.InExpo, (time - 0.5f) * 2f));
+                targetPos = Vector2.Lerp(firstTargetPosition, targetPosition, EaseMoveMent.Ease(EaseType.InCubic, (time - 0.5f) * 2f));
             }
             
             //회전
