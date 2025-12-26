@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Test
   m_EditorClassIdentifier: 
   stageClearTargets:
-  - type: 0
-    targetCount: 0
+  - type: 1
+    targetCount: 1
