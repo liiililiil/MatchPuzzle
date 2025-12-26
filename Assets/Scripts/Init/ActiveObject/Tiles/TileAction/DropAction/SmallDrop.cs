@@ -105,7 +105,7 @@ public class SmallDrop : DropAction, IDropAction
 
         ActiveateMovement(startPos, targetPos);
 
-        Debug.Log($"{tiles[0]}, {tiles[1]}, {tiles[2]}가 {tile}의 하강을 위해 예약되었습니다.", this);
+        // Debug.Log($"{tiles[0]}, {tiles[1]}, {tiles[2]}가 {tile}의 하강을 위해 예약되었습니다.", this);
         // 하강
         foreach (Tile tile in tiles) tile?.Drop();
     }
