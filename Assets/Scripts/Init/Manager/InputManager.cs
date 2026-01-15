@@ -1,9 +1,12 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class InputManager : Managers<InputManager>
 {
     private bool NeedMoveTest;
+
+    private Touch touch;
+    public bool isTouch {get; private set;}
+    public Vector2 touchPos {get; private set;}
 
 
     public void MoveTest()
@@ -13,13 +16,15 @@ public class InputManager : Managers<InputManager>
 
     private void Update()
     {
-        if (EventManager.Instance.phase == Phase.Focus && !NeedMoveTest && Utils.IsDown(out Vector2 pos))
+        TouchDetect();
+
+        if (EventManager.Instance.phase == Phase.Focus && !NeedMoveTest &&isTouch)
         {
             if (Camera.main == null) return;
             
-            Collider2D hit = Physics2D.OverlapBox(pos, Utils.FloatToVector2(Utils.MOUSE_SIZE), transform.rotation.z, 64);
+            Collider2D hit = Physics2D.OverlapBox(touchPos, Utils.FloatToVector2(Utils.MOUSE_SIZE), transform.rotation.z, 64);
 #if UNITY_EDITOR
-            DrawOverlapBox(pos, Utils.FloatToVector2(Utils.MOUSE_SIZE), 0, Color.red);
+            DrawOverlapBox(touchPos, Utils.FloatToVector2(Utils.MOUSE_SIZE), 0, Color.red);
 #endif
             // Debug.Log("Mouse Clicked at: " + pos + " Hit: " + hit);
 
@@ -30,8 +35,64 @@ public class InputManager : Managers<InputManager>
 
         }
     }
+
+    private void TouchDetect()
+    {
+        if(Input.touchCount > 0)
+        {
+            touch = Input.GetTouch(0);
+        }
+        else
+        {
+            return;
+        }
+
+        if(touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+        {
+
+            // Debug.Log("Touch End");
+            isTouch = false;
+            touchPos = Vector2.zero;
+        }
+        else
+        {
+            // Debug.Log($"Touching {touch.phase}" );
+            isTouch = true;
+            touchPos = Camera.main.ScreenToWorldPoint(touch.position);
+        }
+
+    }
+    public static bool IsDown()
+    {
+
+        if (Utils.IS_MOBLIE)
+        {
+            if(Input.touchCount == 0)
+            {
+                return false;
+            }
+
+            Touch touch = Input.GetTouch(Input.touchCount - 1);
+
+            if(touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        else
+        {
+            if(!UnityEngine.InputSystem.Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                return false;
+            }
+
+            return Input.GetMouseButtonDown(0);
+        }
+    }
     
-        
+
 #if UNITY_EDITOR
     void DrawOverlapBox(Vector2 center, Vector2 size, float angleDeg, Color color, float duration = 0.05f)
     {
