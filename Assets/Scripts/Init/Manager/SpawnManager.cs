@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 
@@ -60,10 +61,18 @@ public class SpawnManager : Managers<SpawnManager>
 
         if (data[idx].pooling.Count > 0)
         {
-            return VerificationDeQueue(ref data[idx].pooling);
+            try
+            {
+                return VerificationDeQueue(ref data[idx].pooling);
+                
+            }
+            catch (InvalidOperationException)
+            {
+                Instantiate(data[idx].prefab, new Vector2(Utils.WAIT_POS_X, Utils.WAIT_POS_Y), Quaternion.identity);
+            }
         }
 
-        return Instantiate(data[idx].prefab);
+        return Instantiate(data[idx].prefab, new Vector2(Utils.WAIT_POS_X, Utils.WAIT_POS_Y), Quaternion.identity);
     }
 
     // 재귀호출로 null인 오브젝트를 걸러냄
