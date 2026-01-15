@@ -71,7 +71,7 @@ public class Effect : MonoBehaviour, IActiveObject
     }
 
     // 이펙트 비활성화 함수
-    public void Disable(bool hideEffect = false)
+    public void Disable(bool hideEffect = false, bool notRecord = false)
     {
         isActive = false;
 
