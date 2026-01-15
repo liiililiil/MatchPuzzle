@@ -8,11 +8,17 @@ public class SceneLoadManager : Managers<SceneLoadManager>
     public float progress {get; private set;}
     public bool isLoaded {get; private set;}
 
+    private byte phaseStopCaller;
+
     private static Coroutine coroutine = null;
-    protected override void OnAwake() {
-        SceneLoad("DebugStage");
+
+
+    public SimpleEvent OnStartLoading = new SimpleEvent();
+    public SimpleEvent OnCompleteLoading = new SimpleEvent();
+    protected void Start() {
+        SceneLoad("BombStrikeStage");
     }
-    public void SceneLoad(string scene)
+    public void SceneLoad(string scene, Action callback = null)
     {
 
         if(coroutine != null){
@@ -20,18 +26,23 @@ public class SceneLoadManager : Managers<SceneLoadManager>
             return;
         }
 
+        //버그 방지로 게임 중지시키기
+        EventManager.Instance.ForcePause(out phaseStopCaller);
+
         isLoaded = false;
-        coroutine = StartCoroutine(SceneLoadAsync(scene));
+        // 로딩 시작
+        OnStartLoading.Invoke();
+
+        coroutine = StartCoroutine(SceneLoadAsync(scene, callback));
     }
 
-    private IEnumerator SceneLoadAsync(string name)
+    private IEnumerator SceneLoadAsync(string name, Action callback)
     {
         AsyncOperation operation = SceneManager.LoadSceneAsync(name);
         operation.allowSceneActivation = false;
 
-        while (operation.isDone)
+        while (!operation.isDone)
         {
-            Debug.Log(operation.progress);
             if(operation.progress < 0.9f)
             {
                 progress = operation.progress;
@@ -47,10 +58,23 @@ public class SceneLoadManager : Managers<SceneLoadManager>
 
         isLoaded = true;
 
-        CoroutineStop(coroutine);
+        
+        // Debug.Log("완료");
+
+        //콜백
+        callback?.Invoke();
+
+        //완료 처리
+        OnCompleteLoading.Invoke();
+
+        //다시 흐르게 하기
+        EventManager.Instance.ForceRelease(phaseStopCaller, Phase.Drop);
+
+
+        CoroutineStop(ref coroutine);
     }
 
-    private void CoroutineStop(Coroutine coroutine)
+    private void CoroutineStop(ref Coroutine coroutine)
     {
         if(coroutine == null) return;
         StopCoroutine(coroutine);
