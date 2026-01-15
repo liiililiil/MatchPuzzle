@@ -10,16 +10,20 @@ public class TileMovement : MonoBehaviour
 
     public void SetPosition(Vector2 startPosition, Vector2 targetPosition)
     {
+        if(this.enabled) return;
+        this.enabled = true;
+        
+        if(tile == null)
+            tile = GetComponent<Tile>();
+
         startPos = startPosition;
+        // Debug.Log($"{startPos}");
+
+        tile.sprite.transform.position = startPosition;
+
         targetPos = targetPosition;
         time = 0f;
         
-        this.enabled = true;
-    }
-    
-    void Start()
-    {
-        tile = GetComponent<Tile>();
     }
 
     void Update()
