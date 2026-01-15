@@ -10,10 +10,15 @@ public class SmallDrop : DropAction, IDropAction
     public bool isCanDrop { get { return true; } }
     protected override void OnInvoke()
     {
+        if(!DropCheck()) tile.Calculate();
+    }
 
+    private bool DropCheck()
+    {
+        
         if (movement != null && movement.enabled == true)
         {
-            return;
+            return false;
         }
 
         //밑으로 하강 연산
@@ -25,17 +30,17 @@ public class SmallDrop : DropAction, IDropAction
                 //상대 좌표를 절대 좌표로 변환
                 Vector2 worldDir = dir == Vector2.right ? transform.right : -transform.right;
 
-                if (DropCheck(worldDir)) return;
+                if (DropCheck(worldDir)) return true;
             }
     
         }
         else
         {
-            return;
+            return true;
         }
-    
 
-        tile.Calculate();
+        return false;
+    
     }
 
     private bool DropCheck(Vector2 dir)
@@ -112,7 +117,12 @@ public class SmallDrop : DropAction, IDropAction
 
     private void ActiveateMovement(Vector2 startPos, Vector2 targetPos)
     {
-        if (movement == null) movement = tile.gameObject.AddComponent<TileMovement>();
+        if (movement == null)
+        {
+            movement = tile.gameObject.AddComponent<TileMovement>();
+            movement.enabled = false;
+        }    
+
         movement.SetPosition(startPos, targetPos);
     }
 
