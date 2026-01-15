@@ -18,6 +18,11 @@ public static class Utils
 
     public const float GAME_SPEED_MAX = 3f;
 
+    public const float ETC_ANIMATION_TIME = 1f;
+
+
+    public const float FAIL_BAR_Y_SIZE = 50;
+
     public static bool IS_MOBLIE = true;
 
 
@@ -56,65 +61,6 @@ public static class Utils
             // GetTileFromWorld를 이용해 타일을 찾고 정리 수행
             Tile tile = Utils.TryGetTile(target.transform.position, worldDir, 1);
             tile?.Organize();
-        }
-    }
-
-    public static bool IsDown(out Vector2 pos)
-    {
-
-        if (Utils.IS_MOBLIE)
-        {
-            if(Input.touchCount == 0)
-            {
-                pos = Vector2.zero;
-                return false;
-            }
-
-            Touch touch = Input.GetTouch(Input.touchCount - 1);
-
-            pos = Camera.main.ScreenToWorldPoint(touch.position);
-            return true;
-        }
-        else
-        {
-            if(!UnityEngine.InputSystem.Mouse.current.leftButton.wasPressedThisFrame)
-            {
-                pos = Vector2.zero;
-                return false;
-            }
-
-            pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            return Input.GetMouseButtonDown(0);
-        }
-    }
-
-    public static bool IsDown()
-    {
-
-        if (Utils.IS_MOBLIE)
-        {
-            if(Input.touchCount == 0)
-            {
-                return false;
-            }
-
-            Touch touch = Input.GetTouch(Input.touchCount - 1);
-
-            if(touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
-            {
-                return false;
-            }
-
-            return true;
-        }
-        else
-        {
-            if(!UnityEngine.InputSystem.Mouse.current.leftButton.wasPressedThisFrame)
-            {
-                return false;
-            }
-
-            return Input.GetMouseButtonDown(0);
         }
     }
     
