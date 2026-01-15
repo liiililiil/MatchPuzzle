@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d81fd336a2e27a741b0713d7c26313e9, type: 3}
+  m_Name: BombStrike
+  m_EditorClassIdentifier: Assembly-CSharp::StageClearTargetPreset
+  _stageClearTargets:
+  - type: 5
+    targetCount: 10
+  - type: 6
+    targetCount: 10
+  - type: 7
+    targetCount: 10
+  - type: 8
+    targetCount: 10
