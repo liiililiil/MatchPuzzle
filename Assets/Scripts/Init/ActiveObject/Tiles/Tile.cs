@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Tile : MonoBehaviour, IActiveObject
@@ -38,22 +39,6 @@ public class Tile : MonoBehaviour, IActiveObject
         get => (flag & TileFlag.isInit) != 0;
         set => flag = value ? flag | TileFlag.isInit : flag & ~TileFlag.isInit;
     }
-    private bool _switched
-    {
-        get => (flag & TileFlag.SWitched) != 0;
-        set => flag = value ? flag | TileFlag.SWitched : flag & ~TileFlag.SWitched;
-    }
-
-    //외부 접근용
-    public bool switched
-    {
-        get => _switched;
-        set
-        {
-            _switched = value;
-        }
-    }
-
 
     [SerializeField]
     private bool ingoreDropWhenSpawn;
@@ -83,6 +68,10 @@ public class Tile : MonoBehaviour, IActiveObject
         }
     }
 
+    private void Start() {
+        if(!isInit) Enable(transform.position, transform.rotation);
+    }
+
     private void InitAction<T>(out T action) where T : ITileAction
     {
         action = GetComponent<T>();
@@ -95,10 +84,10 @@ public class Tile : MonoBehaviour, IActiveObject
             action.Init(this);
         }
     }
-    private void Start()
-    {
-        this.Enable(transform.position, transform.rotation);
-    }
+    // private void Start()
+    // {
+    //     this.Enable(transform.position, transform.rotation);
+    // }
 
     public void hit(TileDestroyer tileDestroyer)
     {
@@ -106,8 +95,9 @@ public class Tile : MonoBehaviour, IActiveObject
         explodedAction.Invoke();
     }
 
-    public void Disable(bool hideEffect = false)
+    public void Disable(bool hideEffect = false, bool notRecord = false)
     {
+        
         // 리지드 바디 해제
         rigidbody2D.simulated = false;
         rigidbody2D.Sleep();
@@ -121,13 +111,12 @@ public class Tile : MonoBehaviour, IActiveObject
 
         // 비활성화 표기
         isActive = false;
-        _switched = false;
 
         // 콜라이더 비활성화
         GetComponent<BoxCollider2D>().enabled = false;
 
         // 비활성화 알림
-        EventManager.Instance.OnDisabledTile.Invoke(this, transform.position);
+        if(!notRecord) EventManager.Instance.OnDisabledTile.Invoke(this, transform.position);
 
         // 사라지는 이펙트 생성
         if(!hideEffect) SpawnManager.Instance.SpawnObject(EffectType.TileDisabled, transform.position, transform.rotation, this);
@@ -147,6 +136,9 @@ public class Tile : MonoBehaviour, IActiveObject
         //풀링
         SpawnManager.Instance.Pooling(tileType, gameObject);
     }
+
+    
+
 
     public void Enable(Vector2 position, Quaternion rotate, IActiveObject startBy = null)
     {
@@ -221,9 +213,9 @@ public class Tile : MonoBehaviour, IActiveObject
         {
             EventManager.Instance.InvokeDrop += dropAction.Invoke;
         }
-        catch
+        catch (Exception ex)
         {
-            Debug.LogError($"오류 발생 !", this);
+            Debug.LogError($"오류 발생 ! {ex}", this);
         }
     }
     public void Blast()
