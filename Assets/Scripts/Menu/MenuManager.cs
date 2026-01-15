@@ -30,16 +30,16 @@ public class MenuManager : MonoBehaviour
     private void Start()
     {
 
-        StartCoroutine(delayedInvoke());
+        // StartCoroutine(delayedInvoke());
         OnChangeMenuState.AddListener(MenuChangeHandler);
     }
 
-    IEnumerator delayedInvoke()
-    {
-        yield return new WaitForSeconds(0.5f);
-        // Debug.Log("MenuManager Start Invoke Main");
-        OnChangeMenuState.Invoke(MenuState.Main);
-    }
+    // IEnumerator delayedInvoke()
+    // {
+    //     yield return new WaitForSeconds(0.5f);
+    //     // Debug.Log("MenuManager Start Invoke Main");
+    //     OnChangeMenuState.Invoke(MenuState.Main);
+    // }
 
     private void MenuChangeHandler(MenuState menuState)
     {
