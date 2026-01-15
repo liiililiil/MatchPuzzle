@@ -128,18 +128,26 @@ public class OneTimeAction
         // 액션 호출
         for (int i = 0; i < buffer.Count; i++)
         {
-            buffer[i]?.Invoke();
+            //이미 파괴 되어 있는 경우 처리
+            try
+            {
+                buffer[i]?.Invoke();
+            }
+            catch (MissingReferenceException)
+            {
+                continue;
+            }
         }
     }
 
     public void Add(Action action)
     {
-        if (!hashSet.Contains(action))
-        {
-            hashSet.Add(action);
-            if (buffer.Capacity < hashSet.Count)
-                buffer.Capacity = hashSet.Count;
-        }
+        hashSet.Add(action);
+    }
+
+    public void Remove(Action action)
+    {
+        hashSet.Remove(action);
     }
 
     public void Clear()
@@ -153,7 +161,10 @@ public class OneTimeAction
         return oneTimeAction;
     }
 
-    public int Count => hashSet.Count;
+    public int getCount()
+    {
+        return Mathf.Max(hashSet.Count, buffer.Count);
+    }
 }
 
 public class SimpleEvent
@@ -171,9 +182,17 @@ public class SimpleEvent
 
     public void Invoke()
     {
-        foreach (var action in actionList)
+        for (int i = actionList.Count - 1; i >= 0; i--)
         {
-            action?.Invoke();
+            var action = actionList[i];
+            try
+            {
+                action?.Invoke();
+            }
+            catch (MissingReferenceException)
+            {
+                actionList.RemoveAt(i);
+            }
         }
     }
 
@@ -193,11 +212,19 @@ public class SimpleEvent<T>
         actionList.Remove(action);
     }
 
-    public void Invoke(T args)
+    public void Invoke(T arg)
     {
-        foreach (var action in actionList)
+        for (int i = actionList.Count - 1; i >= 0; i--)
         {
-            action?.Invoke(args);
+            var action = actionList[i];
+            try
+            {
+                action?.Invoke(arg);
+            }
+            catch (MissingReferenceException)
+            {
+                actionList.RemoveAt(i);
+            }
         }
     }
 }
@@ -218,9 +245,17 @@ public class SimpleEvent<T1, T2>
 
     public void Invoke(T1 arg1, T2 arg2)
     {
-        foreach (var action in actionList)
+        for (int i = actionList.Count - 1; i >= 0; i--)
         {
-            action?.Invoke(arg1, arg2);
+            var action = actionList[i];
+            try
+            {
+                action?.Invoke(arg1, arg2);
+            }
+            catch (MissingReferenceException)
+            {
+                actionList.RemoveAt(i);
+            }
         }
     }
 }
@@ -235,12 +270,14 @@ public class StagePrograss
 [Serializable]
 public enum Phase
 {
+    none,
     Drop,
     Focus,
     FocusWait,
     Calculate,
     Blast,
-    DestroyerWait
+    DestroyerWait,
+    MoveTest,
 }
 
 
@@ -258,10 +295,10 @@ public class TileRecode
         }
     }
 
-    public void Record(TileType type)
+    public void Record(TileType type, int count = 1)
     {
         int index = (int)type;
-        tileRecord[index] += 1;
+        tileRecord[index] += count;
     }
 
     public List<int> GetRecord()
@@ -281,6 +318,10 @@ public class TileRecode
         {
             tileRecord[i] = 0;
         }
+    }
+    public int getSize()
+    {
+        return System.Enum.GetValues(typeof(TileType)).Length;
     }
 }
 
