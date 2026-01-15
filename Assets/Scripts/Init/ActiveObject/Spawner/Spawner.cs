@@ -22,6 +22,7 @@ public class Spawner : MonoBehaviour
     // 스폰 확률 구조체
     [SerializeField]
     private SpawnRate[] spawnTable;
+    
     private void Start()
     {
 
@@ -61,7 +62,7 @@ public class Spawner : MonoBehaviour
     }
 
     // 리스너 해제
-    ~Spawner()
+    void OnDestroy()
     {
         EventManager.Instance.InvokeSpawnTile.RemoveListener(TrySpawn);
     }
