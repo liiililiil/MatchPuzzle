@@ -23,15 +23,6 @@ public class ExplosionBlast : BlastAction, IBlastAction
 
     protected override void OnInvoke()
     {
-        // //움직였지만 메인 포커싱 타일이 아닌겨우 폭발대신 바로 비활성화
-        // if (tile.switched && tile.switchedTileType == TileType.Empty)
-        // {
-        //     // 컬러 타일 이면 무시
-        //     if(TILE_CONSTANT.COLOR_TILES.Contains(tile.tileType) == true) return;
-        //     tile.Disable(true);
-        //     return;
-        // }
-
         //조합되는 폭발 검사
         foreach (CombineExplosionType combine in combineExplosionDestroyers)
         {
