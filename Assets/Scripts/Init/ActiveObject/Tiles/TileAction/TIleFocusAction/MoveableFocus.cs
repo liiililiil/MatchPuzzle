@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Globalization;
 using System.Linq;
 using UnityEngine;
 
@@ -48,10 +49,10 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
         Vector2Int posRecord = Vector2Int.zero;
 
         //포커싱 기록 시작
-        while (Utils.IsDown(out Vector2 mouseWorldPos))
+        while (InputManager.Instance.isTouch)
         {
             
-            Vector2 dis = (Vector2)((Vector3)mouseWorldPos - transform.position);
+            Vector2 dis = (Vector2)((Vector3)InputManager.Instance.touchPos - transform.position);
 
             Vector2Int focusAt;
 
@@ -118,20 +119,33 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
             tileRecord.GetComponent<ITileFocusAction>().Move(-posRecord);
             EventManager.Instance.InvokeReMove.Add(() => tileRecord.GetComponent<ITileFocusAction>().Move(posRecord));
 
-            // 폭탄 타일이랑 합쳐지면 그냥 소멸하고 일반타일이랑 합쳐지면 대기
-            if (!TILE_CONSTANT.COLOR_TILES.Contains(tile.tileType))
+            // 둘다 폭탄이거나 이 타일이 컬러 폭탄이면 그낭 소멸
+            if
+            (
+                (TILE_CONSTANT.BOMB_TILES.Contains(tile.tileType) && TILE_CONSTANT.BOMB_TILES.Contains(tileRecord.tileType) && tileRecord.tileType != TileType.ColorBomb) ||
+                (tile.tileType == TileType.ColorBomb)
+            )
             {
                 EventManager.Instance.InvokeFocusBlast.Add(() => tileRecord.GetComponent<Tile>().Disable(true));
             }
-
-            tile.Calculate();
-            tileRecord.Calculate();
-
-            EventManager.Instance.MoveTest();
-        } 
-        else
-        {
+            else
+            {
+                tileRecord.Calculate();
+            }
             
+
+            if
+            (
+                (tile.tileType != TileType.ColorBomb && tileRecord.tileType == TileType.ColorBomb)
+
+            )
+            {
+                EventManager.Instance.InvokeFocusBlast.Add(() => tile.Disable(true));
+            }
+            else
+            {
+                tile.Calculate();
+            }
         }
 
     }
@@ -204,7 +218,6 @@ public class MoveableFocus : TileFocusAction, ITileFocusAction
     }
     public override void Move(Vector2Int moveTo, bool isOperand = false)
     {
-        tile.switched = true;
         if (moveCoroutine != null)
         {
             return;
