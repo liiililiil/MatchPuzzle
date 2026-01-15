@@ -86,7 +86,7 @@ public class TileDestroyer : MonoBehaviour, IActiveObject
     }
 
     //비활성화
-    public void Disable(bool hideEffect = false)
+    public void Disable(bool hideEffect = false, bool notRecord = false)
     {
         EventManager.Instance.activeDestroyer--;
 
