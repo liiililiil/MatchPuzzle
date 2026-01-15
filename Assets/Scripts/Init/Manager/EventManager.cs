@@ -1,5 +1,3 @@
-
-using System.Collections;
 using UnityEngine;
 
 
@@ -18,10 +16,6 @@ public class EventManager : Managers<EventManager>
     public OneTimeAction InvokeFocusBlast = new OneTimeAction();
     public OneTimeAction InvokeReMove = new OneTimeAction();
 
-    //스테이지 시작
-    [HideInInspector]
-    public SimpleEvent OnStageStart = new SimpleEvent();
-
     //타일 전체에 대한 이벤트
     [HideInInspector]
     public SimpleEvent InvokeSpawnTile = new SimpleEvent();
@@ -38,6 +32,8 @@ public class EventManager : Managers<EventManager>
     [HideInInspector]
     public SimpleEvent<IActiveObject, Vector2> OnSpawnedActiveOjbect = new SimpleEvent<IActiveObject, Vector2>();
 
+    public SimpleEvent InvokeEnterFocusPhase = new SimpleEvent();
+
     [HideInInspector]
     public SimpleEvent OnMovedTile = new SimpleEvent();
 
@@ -45,22 +41,65 @@ public class EventManager : Managers<EventManager>
     public int moveTestTiles;
     public int activeDestroyer;
 
-    public bool isCanFocus;
-    private Coroutine moveTestCoroutine;
+    private bool needMoveTest = false;
+    private bool forcePhase;
+
+    private byte forceStopCaller;
+    private bool ignoreForceStopCaller = false;
 
     [SerializeField]
-    public Phase phase { get; private set; } = Phase.Drop;
-    
-    public void MoveTest()
-    {
-        if(moveTestCoroutine != null) return;
+    private Phase _phase = Phase.Drop;
+    public Phase phase {get => _phase; private set => _phase = value; }
 
-        moveTestCoroutine = StartCoroutine(MoveTestWait());
+    public void ForcePause(out byte callBackValue)
+    {
+        forcePhase = true;
+
+        byte buffer = (byte)Random.Range(byte.MinValue, byte.MaxValue+1);
+        if(buffer == forceStopCaller)
+        {
+            unchecked{buffer++;}   
+        }
+
+        
+        // Debug.Log("강제 멈춤!");
+
+        forceStopCaller = buffer;
+        callBackValue = buffer;
     }
 
+    public void ForcePause(bool _ignoreForceStopCaller)
+    {
+        forcePhase = true;
+        ignoreForceStopCaller = _ignoreForceStopCaller;
+        Debug.Log("강제 멈춤!");
+
+    }
+
+    public void ForceRelease(byte caller, Phase targetPhase = Phase.none)
+    {
+        if(!ignoreForceStopCaller && caller != forceStopCaller)
+        {
+            Debug.LogWarning($"호출한 객체가 멈춤을 호출한 객체가 아닙니다! {caller} {forceStopCaller}");
+            return;
+        }
+
+        if(targetPhase != Phase.none){
+            phase = targetPhase;
+        }
+        
+        // Debug.Log($"{phase}");
+
+        ignoreForceStopCaller = false;
+        forcePhase = false;
+    }
+    
 
     private void FixedUpdate() {
         // Debug.Log(phase);
+        //임의로 멈춘 상태
+        if(forcePhase) return;
+
         switch (phase)
         {
             case Phase.Drop:
@@ -81,6 +120,10 @@ public class EventManager : Managers<EventManager>
             case Phase.DestroyerWait:
                 DestroyerWaitPhase();
                 break;
+
+            case Phase.MoveTest:
+                MoveTestPhase();
+                break;
         }
     }
 
@@ -91,7 +134,7 @@ public class EventManager : Managers<EventManager>
         InvokeDrop.Invoke();
         InvokeSpawnTile.Invoke();   
 
-        if(dropTiles <= 0 && InvokeDrop.Count <= 0)
+        if(dropTiles <= 0 && InvokeDrop.getCount() <= 0)
         {
             phase = Phase.Calculate;
         }
@@ -129,9 +172,9 @@ public class EventManager : Managers<EventManager>
         InvokeCalReset.Invoke();
         InvokeCalculate.Invoke();
 
-        if (InvokeBlast.Count <= 0)
+        if (InvokeBlast.getCount() <= 0)
         {
-            isCanFocus = true;
+            InvokeEnterFocusPhase.Invoke();
             phase = Phase.Focus;
         }
         else
@@ -144,7 +187,7 @@ public class EventManager : Managers<EventManager>
     {
         GameSpeedManager.Instance.StopSpeedIncrease();
 
-        if(Utils.IsDown())
+        if(InputManager.Instance.isTouch)
         {
             phase = Phase.FocusWait;
             return;
@@ -153,56 +196,102 @@ public class EventManager : Managers<EventManager>
 
     private void FocusWaitPhase()
     {
-        if(!Utils.IsDown() && moveTestCoroutine == null)
+        if(!InputManager.Instance.isTouch)
         {
-            phase = Phase.Blast;
+            needMoveTest = true;
+            phase = Phase.MoveTest;
         }
     }
-        
 
-    IEnumerator MoveTestWait()
+    private void MoveTestPhase()
     {
-        
-        while (moveTestTiles > 0)
+        if (moveTestTiles > 0)
         {
-            yield return null;
+            // Debug.Log("MoveTestPhase 대기 중...", this);
+            return;
         }
 
         
-        InvokeCalReset.Invoke();
-        InvokeCalculate.Invoke();
 
 
-        // 폭발이 필요 없는 경우 되돌리기
-        if (InvokeBlast.Count <= 0)
+        if (needMoveTest)
         {
-            // 되돌리기
-            InvokeFocusBlast.Clear();
-            InvokeReMove.Invoke();
-        }
-        else
-        {
-            // 폭발
-            Instance.OnMovedTile.Invoke();
-            InvokeReMove.Clear();
-            InvokeFocusBlast.Invoke();
+            needMoveTest = false;
+            
+            InvokeCalReset.Invoke();
+            InvokeCalculate.Invoke();
+            // Debug.Log($"invokeblast count: {InvokeBlast.getCount()}", this);
+
+            // 폭발이 필요 없는 경우 되돌리기
+            if (InvokeBlast.getCount() <= 0)
+            {
+                // Debug.Log("되돌리기", this);
+                InvokeFocusBlast.Clear();
+                InvokeReMove.Invoke();
+            }
+            else
+            {
+                // 폭발
+                Instance.OnMovedTile.Invoke();
+                InvokeReMove.Clear();
+                InvokeFocusBlast.Invoke();
+            }
+
         }
 
-        while (moveTestTiles > 0)
+        if (moveTestTiles > 0)
         {
-            yield return null;
+            return;
         }
+
+        phase = Phase.Blast;
         
-        CourtineStop(ref moveTestCoroutine);
     }
-    private void CourtineStop(ref Coroutine coroutine)
-    {
-        if (coroutine != null)
-        {
-            StopCoroutine(coroutine);
-            coroutine = null;
-        }
-    }
+
+    // private void ForcePausePhase()
+    // {
+    //     // 외부에서 개입되여 멈춘상태
+    //     return;
+    // }
+        
+
+    // IEnumerator MoveTestWait()
+    // {
+        
+    //     while (moveTestTiles > 0)
+    //     {
+    //         yield return null;
+    //     }
+
+        
+    //     InvokeCalReset.Invoke();
+    //     InvokeCalculate.Invoke();
+
+
+    //     // 폭발이 필요 없는 경우 되돌리기
+    //     if (InvokeBlast.getCount() <= 0 || InvokeFocusBlast.getCount() <= 0)
+    //     {
+    //         // 되돌리기
+    //         // Debug.Log($"되돌리기 {InvokeBlast.getCount()}", this);
+    //         InvokeFocusBlast.Clear();
+    //         InvokeReMove.Invoke();
+    //     }
+    //     else
+    //     {
+    //         // 폭발
+    //         Instance.OnMovedTile.Invoke();
+    //         InvokeReMove.Clear();
+    //         InvokeFocusBlast.Invoke();
+    //     }
+
+    //     while (moveTestTiles > 0)
+    //     {
+    //         yield return null;
+    //     }
+        
+    //     CourtineStop(ref moveTestCoroutine);
+    // }
+
 
     
 
